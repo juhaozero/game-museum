@@ -10,8 +10,21 @@
 
 ```bash
 npm install
+cp .env.example .env   # 可选：配置子路径
 npm run dev
 ```
+
+### 路由前缀（可选）
+
+复制 `.env.example` 为 `.env`，设置 `PUBLIC_ROUTE_SUFFIX`：
+
+```env
+PUBLIC_ROUTE_SUFFIX=/museum
+```
+
+- 本地开发：`http://localhost:5173/museum`
+- 打包后静态资源与路由均挂在该前缀下
+- 根路径部署时留空即可
 
 ## 生成 manifest（阶段 1）
 

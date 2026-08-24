@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-surface: var(--surface);
+  --color-fg: var(--text);
+  --color-muted: var(--text-muted);
+  --color-hairline: var(--hairline);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-star: var(--star);
+  --color-box-plastic: var(--box-plastic);
+  --color-box-inner: var(--box-inner);
+  --color-motif: var(--motif);
+}
+
+:root {
+  --bg: #e8eef2;
+  --bg-elevated: #f2f6f8;
+  --surface: #dce5eb;
+  --text: #12181c;
+  --text-muted: #5a6872;
+  --hairline: rgba(18, 24, 28, 0.08);
+  --accent: #2f7f8a;
+  --accent-soft: rgba(47, 127, 138, 0.14);
+  --star: #9a7b3c;
+  --box-plastic: #b8c4cc;
+  --box-inner: #0a0e12;
+  --motif: rgba(47, 127, 138, 0.06);
+}
+
+.dark {
+  --bg: #0e1418;
+  --bg-elevated: #161d22;
+  --surface: #1c252c;
+  --text: #e8eef2;
+  --text-muted: #8a9aa6;
+  --hairline: rgba(232, 238, 242, 0.08);
+  --accent: #5eb0bb;
+  --accent-soft: rgba(94, 176, 187, 0.16);
+  --star: #c4a56a;
+  --box-plastic: #2a343c;
+  --box-inner: #06080a;
+  --motif: rgba(94, 176, 187, 0.07);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}

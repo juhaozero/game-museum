@@ -1,21 +1,10 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-24T08:00:33.214Z",
+  "generatedAt": "2026-08-24T09:32:17.949Z",
   "cosBaseUrl": "https://my-bucket.cos.ap-shanghai.myqcloud.com",
   "cosPathPrefix": "Screenshots",
-  "layout": "category-first",
-  "itemCount": 1,
-  "gameCount": 1,
-  "items": [
-    {
-      "id": "cce35f985eed3fae",
-      "gameId": "905727afc18fefd9",
-      "gameName": "示例游戏",
-      "category": "RPG",
-      "fileName": "001.png",
-      "relativePath": "RPG/示例游戏/001.png",
-      "url": "https://my-bucket.cos.ap-shanghai.myqcloud.com/Screenshots/RPG/%E7%A4%BA%E4%BE%8B%E6%B8%B8%E6%88%8F/001.png",
-      "isCover": true
-    }
-  ]
+  "layout": "game-first",
+  "itemCount": 0,
+  "gameCount": 0,
+  "items": []
 }

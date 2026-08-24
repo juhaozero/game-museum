@@ -9,9 +9,9 @@
 ## 开发
 
 ```bash
-npm install
+pnpm install
 cp .env.example .env   # 可选：配置子路径
-npm run dev
+pnpm run dev
 ```
 
 ### 路由前缀（可选）
@@ -33,7 +33,7 @@ cp scripts/manifest.config.example.js scripts/manifest.config.local.js
 # 编辑 COS 域名与目录布局
 
 # 整理本地 Screenshots/ 后执行
-npm run manifest
+pnpm run manifest
 ```
 
 详见 [docs/manifest.md](./docs/manifest.md)。
@@ -41,6 +41,6 @@ npm run manifest
 ## 构建
 
 ```bash
-npm run build
-npm run preview
+pnpm run build
+pnpm run preview
 ```

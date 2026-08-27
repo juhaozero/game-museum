@@ -16,7 +16,7 @@ export function CategoryChips({
   if (categories.length <= 1) return null
 
   return (
-    <div className="relative z-20 border-b border-hairline bg-bg-elevated/60 px-6 py-2 backdrop-blur-sm md:px-10">
+    <div className="relative z-header border-b border-hairline bg-bg-elevated/60 px-4 py-2 backdrop-blur-sm sm:px-6 md:px-10">
       <div
         className="flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         role="tablist"

@@ -1,5 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { ScreenshotGrid } from '@/components/gallery/ScreenshotGrid'
+import { ImageWithState } from '@/components/ui/ImageWithState'
 import { useAppContext } from '@/hooks/useAppContext'
 import { buildShelfUrl } from '@/utils/routes'
 
@@ -8,12 +10,25 @@ export function GameGalleryPage() {
   const { manifestState, gallery } = useAppContext()
 
   if (manifestState.status === 'loading') {
-    return <p className="text-muted">加载 manifest…</p>
+    return (
+      <div
+        aria-busy="true"
+        aria-label="加载中"
+        className="mx-auto max-w-7xl space-y-6"
+      >
+        <div className="h-4 w-40 animate-pulse rounded bg-surface" />
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+          {Array.from({ length: 8 }, (_, i) => (
+            <div key={i} className="aspect-video animate-pulse rounded bg-surface" />
+          ))}
+        </div>
+      </div>
+    )
   }
 
   if (manifestState.status === 'error') {
     return (
-      <p className="text-muted">
+      <p className="text-pretty text-muted">
         {manifestState.message}。请先运行{' '}
         <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-xs">
           npm run manifest
@@ -25,6 +40,10 @@ export function GameGalleryPage() {
   const game = gallery.getGameById(gameId)
   const shots = gameId ? gallery.getScreenshotsByGameId(gameId) : []
   const backUrl = buildShelfUrl(gallery.selectedCategory, gallery.searchQuery)
+  const favCover = game
+    ? gallery.favoriteScreenshots.find((s) => s.gameId === game.id)?.url
+    : undefined
+  const coverUrl = favCover ?? game?.coverUrl
 
   if (!game) {
     return (
@@ -34,29 +53,46 @@ export function GameGalleryPage() {
             ← 馆藏
           </Link>
         </p>
-        <p className="text-muted">未找到该游戏。</p>
+        <p className="text-pretty text-muted">未找到该游戏。</p>
       </section>
     )
   }
 
   return (
     <section className="mx-auto max-w-7xl">
-      <p className="mb-2 text-sm text-muted">
+      <p className="mb-6 text-sm text-muted">
         <Link to={backUrl} className="text-muted no-underline hover:text-accent">
           ← 馆藏
         </Link>
         <span className="mx-2">/</span>
         <span className="text-fg">{game.name}</span>
       </p>
-      <p className="mb-8 font-mono text-xs text-muted">
+
+      {coverUrl && (
+        <motion.div
+          layoutId={`cover-${game.id}`}
+          className="mb-8 max-w-md overflow-hidden rounded border border-hairline"
+          transition={{ duration: 0.22, ease: 'easeOut' }}
+        >
+          <div className="aspect-video">
+            <ImageWithState
+              src={coverUrl}
+              alt=""
+              fallbackGlyph={game.name.slice(0, 1)}
+            />
+          </div>
+        </motion.div>
+      )}
+
+      <p className="mb-6 font-mono text-xs tabular-nums text-muted">
         {game.category} · {game.shotCount} shots
       </p>
 
-      <ScreenshotGrid items={shots} showGameName={false} emptyMessage="该游戏暂无截图" />
-
-      <p className="mt-8 text-xs text-muted">
-        虚拟列表与 Lightbox 将在后续阶段接入。
-      </p>
+      <ScreenshotGrid
+        items={shots}
+        showGameName={false}
+        emptyMessage="该游戏暂无截图"
+      />
     </section>
   )
 }

@@ -1,7 +1,5 @@
 # GameShot Museum
 
-私人游戏截图博物馆（纯前端静态站）。
-
 - 设计：`docs/ui.md`
 - 开发流程：`docs/dev.md`
 - **数据流水线：`docs/manifest.md`**

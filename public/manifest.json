@@ -1,10 +1,21 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-24T09:32:17.949Z",
+  "generatedAt": "2026-08-27T00:46:29.334Z",
   "cosBaseUrl": "https://my-bucket.cos.ap-shanghai.myqcloud.com",
   "cosPathPrefix": "Screenshots",
   "layout": "game-first",
-  "itemCount": 0,
-  "gameCount": 0,
-  "items": []
+  "itemCount": 1,
+  "gameCount": 1,
+  "items": [
+    {
+      "id": "eb603cd6b91014bd",
+      "gameId": "8dc43cbde26fefaf",
+      "gameName": "01",
+      "category": "未分类",
+      "fileName": "57941037.jpg",
+      "relativePath": "01/57941037.jpg",
+      "url": "https://my-bucket.cos.ap-shanghai.myqcloud.com/Screenshots/01/57941037.jpg",
+      "isCover": true
+    }
+  ]
 }

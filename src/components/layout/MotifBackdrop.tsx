@@ -1,12 +1,12 @@
-/** 首页氛围：抽象主机/手柄线稿，无品牌商标 */
+/** 首页氛围：抽象主机/手柄线稿，无品牌商标；极慢呼吸 */
 export function MotifBackdrop() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+      className="pointer-events-none absolute inset-0 z-motif overflow-hidden"
     >
       <svg
-        className="absolute -right-8 bottom-8 h-[420px] w-[420px] text-motif opacity-100"
+        className="motif-breathe absolute -right-8 bottom-8 h-[420px] w-[420px] text-motif"
         viewBox="0 0 200 200"
         fill="none"
       >

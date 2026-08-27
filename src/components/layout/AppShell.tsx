@@ -2,13 +2,14 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { CategoryChips } from '@/components/layout/CategoryChips'
 import { TopBar } from '@/components/layout/TopBar'
 import { MotifBackdrop } from '@/components/layout/MotifBackdrop'
+import { Lightbox } from '@/components/lightbox'
 import { useGalleryFilters } from '@/hooks/useGalleryFilters'
 import { useGalleryRouting } from '@/hooks/useGalleryRouting'
 import { useManifest } from '@/hooks/useManifest'
 import { useScrollToTop } from '@/hooks/useScrollToTop'
 import { isShelfPath } from '@/utils/routes'
 
-/** 全宽展柜壳：顶栏 + 分类 Chip + 主内容 */
+/** 全宽展柜壳：顶栏 + 分类 Chip + 主内容（无侧栏） */
 export function AppShell() {
   const location = useLocation()
   const manifestState = useManifest()
@@ -18,14 +19,15 @@ export function AppShell() {
 
   useScrollToTop()
 
+  const onShelf = isShelfPath(location.pathname)
   const showCategoryChips =
-    isShelfPath(location.pathname) &&
+    onShelf &&
     manifestState.status === 'ready' &&
     gallery.categories.length > 1
 
   return (
-    <div className="relative flex min-h-full flex-col bg-bg text-fg">
-      <MotifBackdrop />
+    <div className="relative flex min-h-full flex-col bg-bg text-fg transition-colors duration-200">
+      {onShelf && <MotifBackdrop />}
       <TopBar
         filteredCount={gallery.stats.filteredGameCount}
         isFiltering={gallery.isFiltering}
@@ -38,9 +40,10 @@ export function AppShell() {
           onSelect={navigateToCategory}
         />
       )}
-      <main className="relative z-10 flex-1 px-8 py-10 md:px-12 md:py-12 lg:px-16">
+      <main className="relative z-content flex-1 px-6 py-10 sm:px-10 md:px-12 md:py-12 lg:px-16">
         <Outlet context={{ manifestState, gallery }} />
       </main>
+      <Lightbox />
     </div>
   )
 }

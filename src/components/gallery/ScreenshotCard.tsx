@@ -1,34 +1,75 @@
+import { motion, useReducedMotion } from 'motion/react'
 import type { ScreenshotItem } from '@/types/manifest'
+import { FavoriteStar } from '@/components/ui/FavoriteStar'
+import { ImageWithState } from '@/components/ui/ImageWithState'
+import { useGalleryStore } from '@/store/useGalleryStore'
+import { useLightboxStore } from '@/store/useLightboxStore'
 import { cn } from '@/utils/cn'
 
 type ScreenshotCardProps = {
   item: ScreenshotItem
+  items: ScreenshotItem[]
+  index: number
   showGameName?: boolean
   className?: string
 }
 
-/** 阶段 3：普通截图卡片（阶段 4 再接懒加载 / 虚拟列表） */
+/** Level 2 展墙卡片：16:9 裁切 · hover 星标 · 点击进 Lightbox */
 export function ScreenshotCard({
   item,
+  items,
+  index,
   showGameName = true,
   className,
 }: ScreenshotCardProps) {
+  const isFavorite = useGalleryStore((s) => s.isFavorite(item.id))
+  const toggleFavorite = useGalleryStore((s) => s.toggleFavorite)
+  const openAt = useLightboxStore((s) => s.openAt)
+  const reduceMotion = useReducedMotion()
+
   return (
-    <figure
+    <motion.figure
+      layout={!reduceMotion}
       className={cn(
-        'overflow-hidden rounded border border-hairline bg-surface',
+        'group relative overflow-hidden rounded border border-hairline bg-surface',
         className,
       )}
+      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '0px 0px -40px 0px' }}
+      transition={{ duration: 0.28, ease: 'easeOut' }}
     >
-      <img
-        src={item.url}
-        alt={item.fileName}
-        className="aspect-video w-full object-cover"
-        loading="lazy"
-      />
-      <figcaption className="truncate px-2 py-1.5 text-xs text-muted">
+      <button
+        type="button"
+        onClick={() => openAt(items, index)}
+        className="relative block w-full cursor-zoom-in overflow-hidden text-left"
+        aria-label={`查看 ${item.fileName}`}
+      >
+        <motion.div
+          layoutId={`shot-${item.id}`}
+          className="aspect-video w-full"
+          transition={{ duration: 0.22, ease: 'easeOut' }}
+        >
+          <ImageWithState
+            src={item.url}
+            alt={item.fileName}
+            imgClassName="transition-transform duration-200 ease-out group-hover:scale-[1.02]"
+          />
+        </motion.div>
+      </button>
+
+      <div className="pointer-events-none absolute right-2 top-2 z-[1]">
+        <div className="pointer-events-auto">
+          <FavoriteStar
+            active={isFavorite}
+            onToggle={() => toggleFavorite(item.id)}
+          />
+        </div>
+      </div>
+
+      <figcaption className="truncate px-2 py-1.5 text-xs text-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100">
         {showGameName ? `${item.gameName} · ${item.fileName}` : item.fileName}
       </figcaption>
-    </figure>
+    </motion.figure>
   )
 }

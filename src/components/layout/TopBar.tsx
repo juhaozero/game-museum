@@ -25,13 +25,7 @@ export function TopBar({
   const location = useLocation()
   const searchEnabled = isShelfPath(location.pathname)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [menuPath, setMenuPath] = useState(location.pathname)
   const menuRef = useRef<HTMLDivElement>(null)
-
-  if (location.pathname !== menuPath) {
-    setMenuPath(location.pathname)
-    if (menuOpen) setMenuOpen(false)
-  }
 
   const handleClear = () => {
     if (onClearFilters) {
@@ -40,6 +34,11 @@ export function TopBar({
       clearStoreFilters()
     }
   }
+
+  // 路由变化时关闭移动端菜单
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [location.pathname])
 
   useEffect(() => {
     if (!menuOpen) return

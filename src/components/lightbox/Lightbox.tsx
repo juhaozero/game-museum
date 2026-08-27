@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
+import { useLocation } from 'react-router-dom'
 import { FavoriteStar } from '@/components/ui/FavoriteStar'
 import { useGalleryStore } from '@/store/useGalleryStore'
 import { useLightboxStore } from '@/store/useLightboxStore'
@@ -16,12 +17,22 @@ export function Lightbox() {
   const reduceMotion = useReducedMotion()
   const titleId = useId()
   const closeRef = useRef<HTMLButtonElement>(null)
+  const location = useLocation()
+  const routeKey = `${location.pathname}${location.search}`
+  const prevRouteKeyRef = useRef(routeKey)
 
   const item = items[index]
   const isFavorite = useGalleryStore((s) =>
     item ? s.isFavorite(item.id) : false,
   )
   const toggleFavorite = useGalleryStore((s) => s.toggleFavorite)
+
+  // 路由切换时关闭，避免遮罩/滚动锁残留
+  useEffect(() => {
+    if (prevRouteKeyRef.current === routeKey) return
+    prevRouteKeyRef.current = routeKey
+    close()
+  }, [routeKey, close])
 
   useEffect(() => {
     if (!isOpen) return

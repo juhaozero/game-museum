@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import {
   useLocation,
   useNavigate,
@@ -31,8 +31,8 @@ export function useGalleryRouting() {
 
   const isShelfRoute = isShelfPathname(location.pathname)
 
-  // URL → store（路径变化 / 浏览器后退）
-  useEffect(() => {
+  // URL → store：layoutEffect 在绘制前同步，避免筛选闪错
+  useLayoutEffect(() => {
     if (!isShelfRoute) return
 
     const pathChanged = prevPathRef.current !== location.pathname
@@ -92,18 +92,21 @@ export function useGalleryRouting() {
 
   const navigateToCategory = useCallback(
     (category: string | null) => {
+      // 先写 store，再导航，避免首帧仍用旧分类
+      pendingHydrationRef.current = true
+      setSelectedCategory(category)
       navigate(buildShelfUrl(category, searchQuery), { replace: false })
     },
-    [navigate, searchQuery],
+    [navigate, searchQuery, setSelectedCategory],
   )
 
   const clearFiltersAndNavigate = useCallback(() => {
     pendingHydrationRef.current = true
     prevPathRef.current = '/'
     prevSearchRef.current = ''
-    navigate('/', { replace: true })
     setSearchQuery('')
     setSelectedCategory(null)
+    navigate('/', { replace: true })
   }, [navigate, setSearchQuery, setSelectedCategory])
 
   return {

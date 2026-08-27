@@ -22,6 +22,13 @@ export function ImageWithState({
 }: ImageWithStateProps) {
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading')
   const [retryKey, setRetryKey] = useState(0)
+  const [loadedSrc, setLoadedSrc] = useState(src)
+
+  // src 变化时在 render 中重置（React 推荐的 props→state 同步方式）
+  if (src !== loadedSrc) {
+    setLoadedSrc(src)
+    setStatus('loading')
+  }
 
   if (status === 'error') {
     return (
@@ -61,7 +68,7 @@ export function ImageWithState({
         />
       )}
       <img
-        key={retryKey}
+        key={`${src}-${retryKey}`}
         src={src}
         alt={alt}
         className={cn(

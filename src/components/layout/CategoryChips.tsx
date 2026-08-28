@@ -1,4 +1,5 @@
 import type { CategorySummary } from '@/types/manifest'
+import { useI18n } from '@/i18n/useI18n'
 import { cn } from '@/utils/cn'
 
 type CategoryChipsProps = {
@@ -13,6 +14,8 @@ export function CategoryChips({
   selectedCategory,
   onSelect,
 }: CategoryChipsProps) {
+  const { t } = useI18n()
+
   if (categories.length <= 1) return null
 
   return (
@@ -20,12 +23,12 @@ export function CategoryChips({
       <div
         className="flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         role="tablist"
-        aria-label="游戏分类"
+        aria-label={t('categories')}
       >
         <Chip
           active={selectedCategory === null}
           onClick={() => onSelect(null)}
-          label="全部"
+          label={t('allCategories')}
         />
         {categories.map((cat) => (
           <Chip

@@ -1,42 +1,57 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import type { Locale } from '@/i18n/messages'
+import { translate } from '@/i18n/messages'
 
 export type ThemeMode = 'light' | 'dark'
-/** 展柜列数：2 大图 / 3 宽松（默认）/ 4 标准 */
-export type DensityCols = 2 | 3 | 4
 
 type PreferencesState = {
   theme: ThemeMode
-  density: DensityCols
+  locale: Locale
   setTheme: (theme: ThemeMode) => void
   toggleTheme: () => void
-  setDensity: (density: DensityCols) => void
+  setLocale: (locale: Locale) => void
+  toggleLocale: () => void
+}
+
+type PersistedSlice = {
+  theme?: ThemeMode
+  locale?: Locale
 }
 
 function applyThemeClass(theme: ThemeMode) {
   document.documentElement.classList.toggle('dark', theme === 'dark')
 }
 
-function readPersistedTheme(): ThemeMode {
+function applyLocale(locale: Locale) {
+  document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en'
+  document.title = translate(locale, 'siteTitle')
+}
+
+function readPersisted(): { theme: ThemeMode; locale: Locale } {
   try {
     const raw = localStorage.getItem('gameshot-preferences')
-    if (!raw) return 'dark'
-    const parsed = JSON.parse(raw) as { state?: { theme?: ThemeMode } }
-    return parsed.state?.theme === 'light' ? 'light' : 'dark'
+    if (!raw) return { theme: 'dark', locale: 'zh' }
+    const parsed = JSON.parse(raw) as { state?: PersistedSlice }
+    const theme = parsed.state?.theme === 'light' ? 'light' : 'dark'
+    const locale = parsed.state?.locale === 'en' ? 'en' : 'zh'
+    return { theme, locale }
   } catch {
-    return 'dark'
+    return { theme: 'dark', locale: 'zh' }
   }
 }
 
 if (typeof document !== 'undefined') {
-  applyThemeClass(readPersistedTheme())
+  const { theme, locale } = readPersisted()
+  applyThemeClass(theme)
+  applyLocale(locale)
 }
 
 export const usePreferencesStore = create<PreferencesState>()(
   persist(
     (set, get) => ({
       theme: 'dark',
-      density: 3,
+      locale: 'zh',
       setTheme: (theme) => {
         applyThemeClass(theme)
         set({ theme })
@@ -46,12 +61,22 @@ export const usePreferencesStore = create<PreferencesState>()(
         applyThemeClass(next)
         set({ theme: next })
       },
-      setDensity: (density) => set({ density }),
+      setLocale: (locale) => {
+        applyLocale(locale)
+        set({ locale })
+      },
+      toggleLocale: () => {
+        const next = get().locale === 'zh' ? 'en' : 'zh'
+        applyLocale(next)
+        set({ locale: next })
+      },
     }),
     {
       name: 'gameshot-preferences',
       onRehydrateStorage: () => (state) => {
-        if (state) applyThemeClass(state.theme)
+        if (!state) return
+        applyThemeClass(state.theme)
+        applyLocale(state.locale)
       },
     },
   ),

@@ -31,3 +31,4 @@ scripts/manifest.config.local.js
 
 # Local env (use .env.example as template)
 .env
+public/manifest.json

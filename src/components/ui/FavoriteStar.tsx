@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react'
+import { useI18n } from '@/i18n/useI18n'
 import { cn } from '@/utils/cn'
 
 type FavoriteStarProps = {
@@ -17,11 +18,12 @@ export function FavoriteStar({
   visibility = 'hover',
 }: FavoriteStarProps) {
   const reduceMotion = useReducedMotion()
+  const { t } = useI18n()
 
   return (
     <button
       type="button"
-      aria-label={active ? '取消收藏' : '收藏'}
+      aria-label={active ? t('unfavorite') : t('favorite')}
       aria-pressed={active}
       onClick={(e) => {
         e.preventDefault()

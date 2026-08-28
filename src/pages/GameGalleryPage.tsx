@@ -3,18 +3,20 @@ import { motion } from 'motion/react'
 import { ScreenshotGrid } from '@/components/gallery/ScreenshotGrid'
 import { ImageWithState } from '@/components/ui/ImageWithState'
 import { useAppContext } from '@/hooks/useAppContext'
+import { useI18n } from '@/i18n/useI18n'
 import { publicUiEnv } from '@/utils/publicEnv'
 import { buildShelfUrl } from '@/utils/routes'
 
 export function GameGalleryPage() {
   const { gameId } = useParams()
   const { manifestState, gallery } = useAppContext()
+  const { t } = useI18n()
 
   if (manifestState.status === 'loading') {
     return (
       <div
         aria-busy="true"
-        aria-label="加载中"
+        aria-label={t('loading')}
         className="mx-auto max-w-7xl space-y-6"
       >
         <div className="h-4 w-40 animate-pulse rounded bg-surface" />
@@ -30,7 +32,7 @@ export function GameGalleryPage() {
   if (manifestState.status === 'error') {
     return (
       <p className="text-pretty text-muted">
-        {manifestState.message}。请先运行{' '}
+        {manifestState.message}. {t('runManifestHint')}{' '}
         <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-xs">
           npm run manifest
         </code>
@@ -51,10 +53,10 @@ export function GameGalleryPage() {
       <section className="mx-auto max-w-7xl">
         <p className="mb-8 text-sm text-muted">
           <Link to={backUrl} className="text-muted no-underline hover:text-accent">
-            ← 馆藏
+            {t('backToShelf')}
           </Link>
         </p>
-        <p className="text-pretty text-muted">未找到该游戏。</p>
+        <p className="text-pretty text-muted">{t('gameNotFound')}</p>
       </section>
     )
   }
@@ -63,7 +65,7 @@ export function GameGalleryPage() {
     <section className="mx-auto max-w-7xl">
       <p className="mb-6 text-sm text-muted">
         <Link to={backUrl} className="text-muted no-underline hover:text-accent">
-          ← 馆藏
+          {t('backToShelf')}
         </Link>
         <span className="mx-2">/</span>
         <span className="text-fg">{game.name}</span>
@@ -86,14 +88,14 @@ export function GameGalleryPage() {
       )}
 
       <p className="mb-6 font-mono text-xs tabular-nums text-muted">
-        {game.category} · {game.shotCount} shots
+        {game.category} · {t('shotsLabel', { count: game.shotCount })}
       </p>
 
       <ScreenshotGrid
         items={shots}
         showGameName={false}
         showFileName={publicUiEnv.showImageFileName}
-        emptyMessage="该游戏暂无截图"
+        emptyMessage={t('noScreenshotsForGame')}
       />
     </section>
   )

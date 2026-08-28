@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { ScreenshotItem } from '@/types/manifest'
 import { ScreenshotCard } from '@/components/gallery/ScreenshotCard'
+import { useI18n } from '@/i18n/useI18n'
 import { cn } from '@/utils/cn'
 
 type ScreenshotGridProps = {
@@ -17,12 +18,17 @@ export function ScreenshotGrid({
   showGameName = true,
   showFileName = true,
   className,
-  emptyMessage = '暂无截图',
+  emptyMessage,
 }: ScreenshotGridProps) {
   const reduceMotion = useReducedMotion()
+  const { t } = useI18n()
 
   if (items.length === 0) {
-    return <p className="text-pretty text-muted">{emptyMessage}</p>
+    return (
+      <p className="text-pretty text-muted">
+        {emptyMessage ?? t('noScreenshots')}
+      </p>
+    )
   }
 
   return (

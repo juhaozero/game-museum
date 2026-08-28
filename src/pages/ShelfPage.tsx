@@ -2,24 +2,32 @@ import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { GameBox } from '@/components/gallery/GameBox'
 import { ShelfSkeleton } from '@/components/ui/ShelfSkeleton'
+import { MOCK_SHELF_GAMES } from '@/data/mockShelfGames'
 import { useAppContext } from '@/hooks/useAppContext'
-import { usePreferencesStore } from '@/store/usePreferencesStore'
-import { cn } from '@/utils/cn'
+import { useI18n } from '@/i18n/useI18n'
+
+type ShelfItem = {
+  id: string
+  name: string
+  shotCount: number
+  coverUrl?: string
+  href?: string
+}
 
 export function ShelfPage() {
-  const density = usePreferencesStore((s) => s.density)
   const { manifestState, gallery } = useAppContext()
   const { filteredGames, isFiltering } = gallery
   const reduceMotion = useReducedMotion()
+  const { t } = useI18n()
 
   if (manifestState.status === 'loading') {
-    return <ShelfSkeleton density={density} />
+    return <ShelfSkeleton />
   }
 
   if (manifestState.status === 'error') {
     return (
       <p className="text-pretty text-muted">
-        {manifestState.message}。请先运行{' '}
+        {manifestState.message}. {t('runManifestHint')}{' '}
         <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-xs">
           npm run manifest
         </code>
@@ -27,30 +35,30 @@ export function ShelfPage() {
     )
   }
 
-  if (gallery.allGames.length === 0) {
-    return (
-      <div className="mx-auto max-w-xl text-pretty text-muted">
-        <p>manifest 为空。请整理本地截图并生成清单，详见 docs/manifest.md。</p>
-        <pre className="mt-4 overflow-x-auto rounded border border-hairline bg-surface p-4 font-mono text-xs text-fg">
-          {`Screenshots/游戏名/001.jpg\nnpm run manifest`}
-        </pre>
-      </div>
-    )
-  }
+  // 无 manifest 时用 mock 展示 Level 1 盒墙骨架
+  const useMock = gallery.allGames.length === 0
+  const items: ShelfItem[] = useMock
+    ? MOCK_SHELF_GAMES.map((g) => ({ ...g }))
+    : filteredGames.map((game) => {
+        const favCover = gallery.favoriteScreenshots.find(
+          (s) => s.gameId === game.id,
+        )?.url
+        return {
+          id: game.id,
+          name: game.name,
+          shotCount: game.shotCount,
+          coverUrl: (favCover ?? game.coverUrl) || undefined,
+          href: `/game/${game.id}`,
+        }
+      })
 
-  if (isFiltering && filteredGames.length === 0) {
+  if (!useMock && isFiltering && filteredGames.length === 0) {
     return (
       <div className="mx-auto max-w-xl text-center text-pretty text-muted">
         <p>
-          {gallery.debouncedSearch.trim() ? (
-            <>
-              没有找到与「
-              <span className="text-fg">{gallery.debouncedSearch}</span>
-              」匹配的游戏。
-            </>
-          ) : (
-            <>当前分类下没有游戏。</>
-          )}
+          {gallery.debouncedSearch.trim()
+            ? t('noMatchSearch', { query: gallery.debouncedSearch })
+            : t('noGamesInCategory')}
         </p>
       </div>
     )
@@ -59,12 +67,7 @@ export function ShelfPage() {
   return (
     <section>
       <motion.ul
-        className={cn(
-          'mx-auto grid max-w-7xl list-none gap-7 p-0 md:gap-9 lg:gap-10',
-          density === 2 && 'grid-cols-1 sm:grid-cols-2',
-          density === 3 && 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-          density === 4 && 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4',
-        )}
+        className="mx-auto grid max-w-7xl list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2 lg:grid-cols-3"
         initial="hidden"
         animate="show"
         variants={{
@@ -77,11 +80,16 @@ export function ShelfPage() {
         }}
       >
         <AnimatePresence mode="popLayout">
-          {filteredGames.map((game) => {
-            const favCover = gallery.favoriteScreenshots.find(
-              (s) => s.gameId === game.id,
-            )?.url
-            const coverUrl = favCover ?? game.coverUrl
+          {items.map((game) => {
+            const box = (
+              <GameBox
+                gameId={game.id}
+                title={game.name}
+                shotCount={game.shotCount}
+                coverUrl={game.coverUrl}
+                sharedTransition={!useMock}
+              />
+            )
 
             return (
               <motion.li
@@ -103,17 +111,16 @@ export function ShelfPage() {
                 }}
                 transition={{ layout: { duration: 0.3, ease: 'easeOut' } }}
               >
-                <Link
-                  to={`/game/${game.id}`}
-                  className="block no-underline outline-offset-4"
-                >
-                  <GameBox
-                    gameId={game.id}
-                    title={game.name}
-                    shotCount={game.shotCount}
-                    coverUrl={coverUrl || undefined}
-                  />
-                </Link>
+                {game.href ? (
+                  <Link
+                    to={game.href}
+                    className="block no-underline outline-offset-4"
+                  >
+                    {box}
+                  </Link>
+                ) : (
+                  box
+                )}
               </motion.li>
             )
           })}

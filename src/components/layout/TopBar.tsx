@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import { useI18n } from '@/i18n/useI18n'
 import { useGalleryStore } from '@/store/useGalleryStore'
 import { usePreferencesStore } from '@/store/usePreferencesStore'
 import { cn } from '@/utils/cn'
@@ -16,7 +17,8 @@ export function TopBar({
   isFiltering = false,
   onClearFilters,
 }: TopBarProps) {
-  const { theme, density, toggleTheme, setDensity } = usePreferencesStore()
+  const { theme, toggleTheme } = usePreferencesStore()
+  const { locale, toggleLocale, t } = useI18n()
   const searchQuery = useGalleryStore((s) => s.searchQuery)
   const selectedCategory = useGalleryStore((s) => s.selectedCategory)
   const setSearchQuery = useGalleryStore((s) => s.setSearchQuery)
@@ -65,39 +67,25 @@ export function TopBar({
         }
         onClick={() => setMenuOpen(false)}
       >
-        收藏
+        ♥ {t('favorites')}
       </NavLink>
 
-      <div
-        className="flex overflow-hidden rounded border border-hairline"
-        role="group"
-        aria-label="展柜密度"
+      <button
+        type="button"
+        onClick={toggleLocale}
+        className="rounded px-2.5 py-1.5 font-mono text-xs tabular-nums text-muted transition-colors hover:text-fg"
+        aria-label={locale === 'zh' ? t('langToEn') : t('langToZh')}
       >
-        {([] as const).map((cols) => (
-          <button
-            key={cols}
-            type="button"
-            onClick={() => setDensity(cols)}
-            className={cn(
-              'px-2 py-1 font-mono text-xs tabular-nums transition-colors',
-              density === cols
-                ? 'bg-accent-soft text-accent'
-                : 'bg-transparent text-muted hover:text-fg',
-            )}
-            aria-pressed={density === cols}
-          >
-            {cols}
-          </button>
-        ))}
-      </div>
+        {locale === 'zh' ? t('langLabelEn') : t('langLabel')}
+      </button>
 
       <button
         type="button"
         onClick={toggleTheme}
         className="rounded px-2.5 py-1.5 text-sm text-muted transition-colors hover:text-fg"
-        aria-label={theme === 'dark' ? '切换浅色' : '切换深色'}
+        aria-label={theme === 'dark' ? t('themeToLight') : t('themeToDark')}
       >
-        {theme === 'dark' ? '浅色' : '深色'}
+        {theme === 'dark' ? t('themeLight') : t('themeDark')}
       </button>
     </>
   )
@@ -108,16 +96,16 @@ export function TopBar({
         to={homeUrl}
         className="shrink-0 text-sm font-medium text-fg no-underline"
       >
-        GameShot Museum
+        {t('siteTitle')}
       </Link>
 
       <label className="relative min-w-0 flex-1">
-        <span className="sr-only">搜索游戏</span>
+        <span className="sr-only">{t('searchGames')}</span>
         <input
           type="search"
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder="搜索游戏…"
+          placeholder={t('searchPlaceholder')}
           disabled={!searchEnabled}
           className={cn(
             'w-full max-w-xl rounded border border-hairline bg-surface px-3 py-1.5 text-sm text-fg outline-none placeholder:text-muted focus:border-accent',
@@ -131,14 +119,14 @@ export function TopBar({
             onClick={handleClear}
             className="absolute right-2 top-1/2 -translate-y-1/2 rounded px-1.5 py-0.5 text-xs text-muted hover:text-fg"
           >
-            清除
+            {t('clear')}
           </button>
         )}
       </label>
 
       {isFiltering && searchEnabled && filteredCount !== undefined && (
         <span className="hidden shrink-0 font-mono text-xs tabular-nums text-muted sm:inline">
-          {filteredCount} 款
+          {t('gameCount', { count: filteredCount })}
         </span>
       )}
 
@@ -150,11 +138,11 @@ export function TopBar({
         <button
           type="button"
           aria-expanded={menuOpen}
-          aria-label="打开菜单"
+          aria-label={t('openMenu')}
           onClick={() => setMenuOpen((v) => !v)}
           className="rounded px-2.5 py-1.5 text-sm text-muted hover:text-fg"
         >
-          菜单
+          {t('menu')}
         </button>
         {menuOpen && (
           <div className="absolute right-0 top-full z-dropdown mt-1 flex min-w-[160px] flex-col gap-1 rounded border border-hairline bg-bg-elevated p-2 shadow-md">

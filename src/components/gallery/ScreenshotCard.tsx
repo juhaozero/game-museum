@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'motion/react'
 import type { ScreenshotItem } from '@/types/manifest'
 import { FavoriteStar } from '@/components/ui/FavoriteStar'
 import { ImageWithState } from '@/components/ui/ImageWithState'
+import { useI18n } from '@/i18n/useI18n'
 import { useGalleryStore } from '@/store/useGalleryStore'
 import { useLightboxStore } from '@/store/useLightboxStore'
 import { cn } from '@/utils/cn'
@@ -35,6 +36,7 @@ export function ScreenshotCard({
   const toggleFavorite = useGalleryStore((s) => s.toggleFavorite)
   const openAt = useLightboxStore((s) => s.openAt)
   const reduceMotion = useReducedMotion()
+  const { t } = useI18n()
 
   return (
     <motion.figure
@@ -52,7 +54,7 @@ export function ScreenshotCard({
         type="button"
         onClick={() => openAt(items, index)}
         className="relative block w-full cursor-zoom-in overflow-hidden text-left"
-        aria-label={`查看 ${item.fileName}`}
+        aria-label={t('viewShot', { name: item.fileName })}
       >
         <motion.div
           layoutId={`shot-${item.id}`}

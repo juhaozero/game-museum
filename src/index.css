@@ -39,6 +39,21 @@
   --box-plastic: #b8c4cc;
   --box-inner: #0a0e12;
   --motif: rgba(47, 127, 138, 0.06);
+
+  /* §3.5 氛围层（浅色） */
+  --ambient-spotlight: radial-gradient(
+    ellipse 80% 60% at 50% 22%,
+    var(--bg-elevated),
+    var(--bg) 75%
+  );
+  --ambient-grid-opacity: 0.03;
+  --ambient-noise-opacity: 0.04;
+
+  /* 盒壳内高光 / 接触影（走 token，不硬编码业务色） */
+  --box-bevel-hi: color-mix(in srgb, white 22%, transparent);
+  --box-bevel-lo: color-mix(in srgb, black 18%, transparent);
+  --contact-shadow: color-mix(in srgb, black 22%, transparent);
+  --contact-shadow-strong: color-mix(in srgb, black 38%, transparent);
 }
 
 .dark {
@@ -54,6 +69,17 @@
   --box-plastic: #2a343c;
   --box-inner: #06080a;
   --motif: rgba(94, 176, 187, 0.07);
+
+  /* §3.5 氛围层（深色）：teal 走 --accent-soft */
+  --ambient-spotlight:
+    radial-gradient(
+      ellipse 70% 50% at 50% 18%,
+      var(--accent-soft),
+      transparent 70%
+    ),
+    var(--bg);
+  --ambient-grid-opacity: 0.02;
+  --ambient-noise-opacity: 0.07;
 }
 
 @layer base {
@@ -153,7 +179,7 @@
 .game-box-shadow::before {
   background: radial-gradient(
     ellipse at center,
-    rgba(0, 0, 0, 0.22) 0%,
+    var(--contact-shadow) 0%,
     transparent 70%
   );
   opacity: 1;
@@ -162,7 +188,7 @@
 .game-box-shadow::after {
   background: radial-gradient(
     ellipse at center,
-    rgba(0, 0, 0, 0.38) 0%,
+    var(--contact-shadow-strong) 0%,
     transparent 70%
   );
   opacity: 0;

@@ -73,7 +73,7 @@ export function TopBar({
         role="group"
         aria-label="展柜密度"
       >
-        {([2, 3, 4] as const).map((cols) => (
+        {([] as const).map((cols) => (
           <button
             key={cols}
             type="button"

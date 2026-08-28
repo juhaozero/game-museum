@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 import { ScreenshotGrid } from '@/components/gallery/ScreenshotGrid'
 import { ImageWithState } from '@/components/ui/ImageWithState'
 import { useAppContext } from '@/hooks/useAppContext'
+import { publicUiEnv } from '@/utils/publicEnv'
 import { buildShelfUrl } from '@/utils/routes'
 
 export function GameGalleryPage() {
@@ -91,6 +92,7 @@ export function GameGalleryPage() {
       <ScreenshotGrid
         items={shots}
         showGameName={false}
+        showFileName={publicUiEnv.showImageFileName}
         emptyMessage="该游戏暂无截图"
       />
     </section>

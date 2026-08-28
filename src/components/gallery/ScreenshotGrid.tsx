@@ -6,6 +6,7 @@ import { cn } from '@/utils/cn'
 type ScreenshotGridProps = {
   items: ScreenshotItem[]
   showGameName?: boolean
+  showFileName?: boolean
   className?: string
   emptyMessage?: string
 }
@@ -14,6 +15,7 @@ type ScreenshotGridProps = {
 export function ScreenshotGrid({
   items,
   showGameName = true,
+  showFileName = true,
   className,
   emptyMessage = '暂无截图',
 }: ScreenshotGridProps) {
@@ -55,6 +57,7 @@ export function ScreenshotGrid({
               items={items}
               index={index}
               showGameName={showGameName}
+              showFileName={showFileName}
             />
           </motion.li>
         ))}

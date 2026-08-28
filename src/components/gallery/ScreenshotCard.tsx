@@ -11,6 +11,7 @@ type ScreenshotCardProps = {
   items: ScreenshotItem[]
   index: number
   showGameName?: boolean
+  showFileName?: boolean
   className?: string
 }
 
@@ -20,8 +21,16 @@ export function ScreenshotCard({
   items,
   index,
   showGameName = true,
+  showFileName = true,
   className,
 }: ScreenshotCardProps) {
+  const caption = showGameName
+    ? showFileName
+      ? `${item.gameName} · ${item.fileName}`
+      : item.gameName
+    : showFileName
+      ? item.fileName
+      : null
   const isFavorite = useGalleryStore((s) => s.isFavorite(item.id))
   const toggleFavorite = useGalleryStore((s) => s.toggleFavorite)
   const openAt = useLightboxStore((s) => s.openAt)
@@ -67,9 +76,11 @@ export function ScreenshotCard({
         </div>
       </div>
 
-      <figcaption className="truncate px-2 py-1.5 text-xs text-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-        {showGameName ? `${item.gameName} · ${item.fileName}` : item.fileName}
-      </figcaption>
+      {caption && (
+        <figcaption className="truncate px-2 py-1.5 text-xs text-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          {caption}
+        </figcaption>
+      )}
     </motion.figure>
   )
 }

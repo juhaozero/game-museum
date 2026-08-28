@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ScreenshotGrid } from '@/components/gallery/ScreenshotGrid'
 import { useAppContext } from '@/hooks/useAppContext'
+import { publicUiEnv } from '@/utils/publicEnv'
 import { buildShelfUrl } from '@/utils/routes'
 
 export function FavoritesPage() {
@@ -70,7 +71,11 @@ export function FavoritesPage() {
           )}
         </div>
       ) : (
-        <ScreenshotGrid items={favoriteScreenshots} />
+        <ScreenshotGrid
+          items={favoriteScreenshots}
+          showGameName={publicUiEnv.showScreenshotGameName}
+          showFileName={publicUiEnv.showImageFileName}
+        />
       )}
     </section>
   )

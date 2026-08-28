@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom'
 import { FavoriteStar } from '@/components/ui/FavoriteStar'
 import { useGalleryStore } from '@/store/useGalleryStore'
 import { useLightboxStore } from '@/store/useLightboxStore'
+import { publicUiEnv } from '@/utils/publicEnv'
 
 /** Level 3 · Lightbox：共享元素放大、键盘切换、右侧信息面板 */
 export function Lightbox() {
@@ -185,10 +186,14 @@ export function Lightbox() {
               <p className="mt-1 text-pretty text-white">{item.gameName}</p>
               <p className="mt-4 text-xs text-white/45">分类</p>
               <p className="mt-1 text-white/90">{item.category}</p>
-              <p className="mt-4 text-xs text-white/45">文件</p>
-              <p className="mt-1 break-all font-mono text-xs text-white/70">
-                {item.fileName}
-              </p>
+              {publicUiEnv.showImageFileName && (
+                <>
+                  <p className="mt-4 text-xs text-white/45">文件</p>
+                  <p className="mt-1 break-all font-mono text-xs text-white/70">
+                    {item.fileName}
+                  </p>
+                </>
+              )}
               <p className="mt-6 text-xs text-white/40">
                 ← → 切换 · Esc 关闭 · 滚轮缩放
               </p>

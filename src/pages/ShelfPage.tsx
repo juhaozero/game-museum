@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { GameBox } from '@/components/gallery/GameBox'
-import { ShelfDock } from '@/components/layout/ShelfDock'
+// import { ShelfDock } from '@/components/layout/ShelfDock'
 import { ShelfHero } from '@/components/layout/ShelfHero'
 import { ShelfSkeleton } from '@/components/ui/ShelfSkeleton'
 import { MOCK_SHELF_GAMES } from '@/data/mockShelfGames'
 import { useAppContext } from '@/hooks/useAppContext'
-import { useGalleryRouting } from '@/hooks/useGalleryRouting'
+//import { useGalleryRouting } from '@/hooks/useGalleryRouting'
 import { useI18n } from '@/i18n/useI18n'
 
 type ShelfItem = {
@@ -21,7 +21,7 @@ export function ShelfPage() {
   const { manifestState, gallery } = useAppContext()
   const { filteredGames, isFiltering, stats, categories, selectedCategory } =
     gallery
-  const { navigateToCategory, clearFiltersAndNavigate } = useGalleryRouting()
+  //const { navigateToCategory, clearFiltersAndNavigate } = useGalleryRouting()
   const reduceMotion = useReducedMotion()
   const { t } = useI18n()
 
@@ -141,7 +141,7 @@ export function ShelfPage() {
           </motion.ul>
         )}
 
-        <ShelfDock
+        {/* <ShelfDock
           shown={shownCount}
           total={totalCount}
           categories={categories}
@@ -149,7 +149,7 @@ export function ShelfPage() {
           isFiltering={isFiltering}
           onSelectCategory={navigateToCategory}
           onClear={clearFiltersAndNavigate}
-        />
+        /> */}
       </div>
     </div>
   )

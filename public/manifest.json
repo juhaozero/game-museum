@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-31T03:51:12.030Z",
+  "generatedAt": "2026-08-31T07:46:43.734Z",
   "cosBaseUrl": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com",
   "cosPathPrefix": "Screenshots",
   "layout": "game-first",
@@ -8,13 +8,13 @@
   "gameCount": 1,
   "items": [
     {
-      "id": "cfa6ac32a10e6672",
+      "id": "23dfad4f4bda2bc2",
       "gameId": "e2df7b2c9bffdec8",
       "gameName": "testgame",
       "category": "未分类",
-      "fileName": "57941037.jpg",
-      "relativePath": "testgame/57941037.jpg",
-      "url": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com/Screenshots/testgame/57941037.jpg",
+      "fileName": "resized.png",
+      "relativePath": "testgame/resized.png",
+      "url": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com/Screenshots/testgame/resized.png",
       "isCover": true
     }
   ]

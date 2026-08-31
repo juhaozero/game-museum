@@ -8,7 +8,7 @@ type CategoryChipsProps = {
   onSelect: (category: string | null) => void
 }
 
-/** 顶栏轻量分类筛选（无侧栏） */
+/** 浮层圆角 Chip，呼应图3顶栏 */
 export function CategoryChips({
   categories,
   selectedCategory,
@@ -19,9 +19,9 @@ export function CategoryChips({
   if (categories.length <= 1) return null
 
   return (
-    <div className="relative z-header border-b border-hairline bg-bg-elevated/60 px-4 py-2 backdrop-blur-sm sm:px-6 md:px-10">
+    <div className="relative z-header px-3 pt-2 sm:px-4 md:px-5">
       <div
-        className="flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-2 overflow-x-auto rounded-full border border-hairline bg-bg-elevated/40 px-2 py-1.5 backdrop-blur-md [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         role="tablist"
         aria-label={t('categories')}
       >
@@ -64,13 +64,13 @@ function Chip({
       className={cn(
         'shrink-0 rounded-full border px-3 py-1 text-xs transition-colors',
         active
-          ? 'border-accent bg-accent-soft text-accent'
-          : 'border-hairline text-muted hover:text-fg',
+          ? 'border-accent bg-accent-soft text-accent shadow-[0_0_12px_var(--shelf-glow-soft)]'
+          : 'border-transparent text-muted hover:border-hairline hover:text-fg',
       )}
     >
       {label}
       {count !== undefined && (
-        <span className="ml-1 font-mono opacity-70">{count}</span>
+        <span className="ml-1.5 font-mono text-[10px] opacity-70">{count}</span>
       )}
     </button>
   )

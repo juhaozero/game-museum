@@ -225,6 +225,7 @@ const manifest = await loadManifest()
 
 ## 7. 注意事项
 
+- **封面 / 截图比例与体积推荐**见根目录 [README.md · 图片规范](../README.md#图片规范封面--截图)（脚本本身不强制校验分辨率与文件大小）。  
 - `Screenshots/` 整目录已在 `.gitignore`，请勿提交原图。  
 - `cosBaseUrl` 仍为占位时会打印警告。  
 - COS 需配置 CORS（若跨域）与公有读或 CDN 域名。  

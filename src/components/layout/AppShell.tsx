@@ -1,28 +1,19 @@
-import { Outlet, useLocation } from 'react-router-dom'
-import { CategoryChips } from '@/components/layout/CategoryChips'
+import { Outlet } from 'react-router-dom'
 import { TopBar } from '@/components/layout/TopBar'
 import { Lightbox } from '@/components/lightbox'
 import { useGalleryFilters } from '@/hooks/useGalleryFilters'
 import { useGalleryRouting } from '@/hooks/useGalleryRouting'
 import { useManifest } from '@/hooks/useManifest'
 import { useScrollToTop } from '@/hooks/useScrollToTop'
-import { isShelfPath } from '@/utils/routes'
 
-/** 全宽展柜壳：顶栏 + 分类 Chip + 主内容（无侧栏）；氛围背景由 App 根节点提供 */
+/** 影院货架壳：浮层顶栏 + 主内容（Hero/封面墙在 ShelfPage） */
 export function AppShell() {
-  const location = useLocation()
   const manifestState = useManifest()
   const items = manifestState.status === 'ready' ? manifestState.data.items : []
   const gallery = useGalleryFilters(items)
-  const { navigateToCategory, clearFiltersAndNavigate } = useGalleryRouting()
+  const { clearFiltersAndNavigate } = useGalleryRouting()
 
   useScrollToTop()
-
-  const onShelf = isShelfPath(location.pathname)
-  const showCategoryChips =
-    onShelf &&
-    manifestState.status === 'ready' &&
-    gallery.categories.length > 1
 
   return (
     <div className="relative flex min-h-full flex-col text-fg transition-colors duration-200">
@@ -31,15 +22,7 @@ export function AppShell() {
         isFiltering={gallery.isFiltering}
         onClearFilters={clearFiltersAndNavigate}
       />
-      {showCategoryChips && (
-        <CategoryChips
-          categories={gallery.categories}
-          selectedCategory={gallery.selectedCategory}
-          onSelect={navigateToCategory}
-        />
-      )}
-      {/* 主区 padding 56px（桌面），与 §3.4 / 任务规格对齐 */}
-      <main className="relative z-content flex-1 p-6 sm:p-10 md:p-14">
+      <main className="relative z-content flex-1 px-4 pb-8 pt-6 sm:px-6 md:px-8 md:pt-8 lg:px-10">
         <Outlet context={{ manifestState, gallery }} />
       </main>
       <Lightbox />

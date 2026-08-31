@@ -1,20 +1,28 @@
-/** Manifest 加载中的盒墙骨架（固定宽松 3 列，gap 32px） */
 import { useI18n } from '@/i18n/useI18n'
 
+/** 馆藏加载骨架：左 Hero + 右封面墙 */
 export function ShelfSkeleton() {
   const { t } = useI18n()
 
   return (
-    <ul
+    <div
       aria-busy="true"
       aria-label={t('loading')}
-      className="mx-auto grid max-w-7xl list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2 lg:grid-cols-3"
+      className="flex flex-col gap-8 lg:grid lg:grid-cols-[280px_1fr] lg:gap-10"
     >
-      {Array.from({ length: 6 }, (_, i) => (
-        <li key={i} className="mx-auto w-full max-w-[240px]">
-          <div className="aspect-[135/170] animate-pulse rounded-md bg-surface" />
-        </li>
-      ))}
-    </ul>
+      <div className="space-y-4">
+        <div className="h-10 w-4/5 animate-pulse rounded-xl bg-surface" />
+        <div className="h-16 w-full animate-pulse rounded-xl bg-surface/70" />
+        <div className="h-10 w-full animate-pulse rounded-xl bg-surface/50" />
+      </div>
+      <ul className="grid list-none grid-cols-2 gap-4 p-0 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4">
+        {Array.from({ length: 8 }, (_, i) => (
+          <li key={i}>
+            <div className="aspect-[2/3] animate-pulse rounded-2xl bg-surface" />
+            <div className="mx-auto mt-2 h-1 w-1/2 rounded-full bg-accent-soft" />
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }

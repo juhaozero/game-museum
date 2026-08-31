@@ -74,10 +74,10 @@ export function GameGalleryPage() {
       {coverUrl && (
         <motion.div
           layoutId={`cover-${game.id}`}
-          className="mb-8 max-w-md overflow-hidden rounded border border-hairline"
+          className="mb-8 max-w-[200px] overflow-hidden rounded-2xl border border-hairline"
           transition={{ duration: 0.22, ease: 'easeOut' }}
         >
-          <div className="aspect-video">
+          <div className="aspect-[2/3]">
             <ImageWithState
               src={coverUrl}
               alt=""

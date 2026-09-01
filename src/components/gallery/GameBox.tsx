@@ -15,7 +15,7 @@ type GameBoxProps = {
 }
 
 /**
- * 封面：倾斜交互 + 卡带厚边框 / 底部琥珀灯条
+ * 封面：倾斜交互 + 卡带脊线 / 底部灯条
  */
 export function GameBox({
   gameId,
@@ -80,7 +80,11 @@ export function GameBox({
             </p>
           </div>
         </div>
-        {!cinema && <span className="cover-shelf-glow" aria-hidden />}
+        {cinema ? (
+          <span className="cart-shelf-glow" aria-hidden />
+        ) : (
+          <span className="cover-shelf-glow" aria-hidden />
+        )}
       </div>
     </motion.article>
   )

@@ -9,7 +9,7 @@ type ShelfHeroProps = {
   gameIds: string[]
 }
 
-/** Arcade Archive · 左侧叙事 Hero（可读标题 + 打字机标签） */
+/** Arcade Archive · 左侧叙事 Hero（可读中文标题 + HUD 标签） */
 export function ShelfHero({
   gameCount,
   shotCount,
@@ -35,7 +35,7 @@ export function ShelfHero({
           />
           {t('heroBadge')}
         </p>
-        <h1 className="type-display text-balance text-3xl text-fg sm:text-4xl lg:text-[2.4rem]">
+        <h1 className="type-display text-balance text-3xl text-fg sm:text-4xl lg:text-[2.35rem]">
           {t('heroTitle')}
         </h1>
         <p className="mt-3 text-pretty text-[14px] leading-relaxed text-muted">

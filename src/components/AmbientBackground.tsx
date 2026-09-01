@@ -1,4 +1,4 @@
-/** Arcade Archive：深靛底 + 琥珀地光 + CRT scanline */
+/** Arcade Archive：深色馆藏底 + 地光 + 暗角 + CRT scanline */
 export default function AmbientBackground() {
   return (
     <>
@@ -21,6 +21,11 @@ export default function AmbientBackground() {
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
         style={{ background: 'var(--ambient-floor)' }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{ background: 'var(--ambient-vignette)' }}
       />
       <div
         aria-hidden

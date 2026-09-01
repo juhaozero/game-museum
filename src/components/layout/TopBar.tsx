@@ -50,7 +50,7 @@ export function TopBar({
 
   const navClass = ({ isActive }: { isActive: boolean }) =>
     cn(
-      'rounded px-3 py-1.5 text-[13px] font-medium tracking-normal no-underline transition-colors',
+      'rounded px-3.5 py-1.5 text-[13px] font-medium tracking-[0.08em] no-underline transition-colors',
       isActive
         ? 'bg-accent text-[var(--bg)]'
         : 'text-muted hover:bg-accent-soft hover:text-accent',
@@ -69,16 +69,16 @@ export function TopBar({
         >
           <span
             aria-hidden
-            className="type-display flex size-8 items-center justify-center rounded bg-accent text-[12px] font-bold text-[var(--bg)]"
+            className="font-display flex size-8 items-center justify-center rounded bg-accent text-[12px] font-bold text-[var(--bg)]"
           >
             GM
           </span>
-          <span className="hidden min-[420px]:flex flex-col">
-            <span className="type-display text-[14px] text-fg">
+          <span className="hidden min-[420px]:flex flex-col gap-0.5">
+            <span className="type-display text-[15px] leading-snug text-fg">
               {t('brandLine1')}
               <span className="text-accent">{t('brandLine2')}</span>
             </span>
-            <span className="type-label text-muted">
+            <span className="type-label text-[11px] text-muted">
               {t('brandTagline')}
             </span>
           </span>

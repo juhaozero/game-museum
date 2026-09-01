@@ -3,7 +3,7 @@ import { translate } from '@/i18n/messages'
 
 describe('translate', () => {
   it('returns zh site title by default locale', () => {
-    expect(translate('zh', 'siteTitle')).toBe('GameShot 博物馆')
+    expect(translate('zh', 'siteTitle')).toBe('游戏截图博物馆')
   })
 
   it('returns en site title', () => {

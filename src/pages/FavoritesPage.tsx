@@ -9,18 +9,22 @@ export function FavoritesPage() {
   const { manifestState, gallery } = useAppContext()
   const { favoriteScreenshots, stats } = gallery
   const { t } = useI18n()
+  const backUrl = buildShelfUrl(gallery.selectedCategory, gallery.searchQuery)
 
   if (manifestState.status === 'loading') {
     return (
       <div
         aria-busy="true"
-        className="mx-auto max-w-7xl space-y-4"
+        className="exhibit-page mx-auto max-w-6xl space-y-6"
         aria-label={t('loading')}
       >
-        <div className="h-4 w-32 animate-pulse rounded bg-surface" />
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <div className="h-4 w-40 animate-pulse rounded bg-surface" />
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
           {Array.from({ length: 4 }, (_, i) => (
-            <div key={i} className="aspect-video animate-pulse rounded bg-surface" />
+            <div
+              key={i}
+              className="aspect-video animate-pulse rounded bg-surface"
+            />
           ))}
         </div>
       </div>
@@ -41,22 +45,31 @@ export function FavoritesPage() {
   const orphanCount = stats.favoriteCount - stats.favoriteVisibleCount
 
   return (
-    <section className="mx-auto max-w-7xl">
-      <p className="mb-8 text-sm text-muted">
+    <section className="exhibit-page exhibit-page--highlights mx-auto max-w-6xl">
+      <header className="exhibit-header mb-8 md:mb-10">
         <Link
-          to={buildShelfUrl(gallery.selectedCategory, gallery.searchQuery)}
-          className="text-muted no-underline hover:text-accent"
+          to={backUrl}
+          className="mb-5 inline-flex items-center gap-1.5 text-[13px] text-muted no-underline transition-colors hover:text-accent"
         >
           {t('backToShelf')}
         </Link>
-        <span className="mx-2">/</span>
-        <span className="text-fg">{t('myFavorites')}</span>
+
+        <p className="type-label mb-2 inline-flex items-center gap-2 text-accent">
+          <span
+            aria-hidden
+            className="inline-block size-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--shelf-glow)]"
+          />
+          {t('navFavorites')}
+        </p>
+        <h1 className="type-display text-balance text-2xl text-fg sm:text-3xl">
+          {t('myFavorites')}
+        </h1>
         {stats.favoriteVisibleCount > 0 && (
-          <span className="ml-2 font-mono text-xs tabular-nums">
+          <p className="type-label mt-2 tabular-nums text-muted">
             {t('shotCount', { count: stats.favoriteVisibleCount })}
-          </span>
+          </p>
         )}
-      </p>
+      </header>
 
       {favoriteScreenshots.length === 0 ? (
         <div className="text-pretty text-muted">
@@ -77,6 +90,7 @@ export function FavoritesPage() {
           items={favoriteScreenshots}
           showGameName={publicUiEnv.showScreenshotGameName}
           showFileName={publicUiEnv.showImageFileName}
+          variant="exhibition"
         />
       )}
     </section>

@@ -70,7 +70,7 @@ function Chip({
     >
       {label}
       {count !== undefined && (
-        <span className="ml-1.5 font-mono text-[10px] opacity-70">{count}</span>
+        <span className="type-label ml-1.5 opacity-70">{count}</span>
       )}
     </button>
   )

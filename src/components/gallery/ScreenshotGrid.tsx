@@ -10,18 +10,21 @@ type ScreenshotGridProps = {
   showFileName?: boolean
   className?: string
   emptyMessage?: string
+  variant?: 'default' | 'exhibition'
 }
 
-/** 疏朗截图网格（滚动 reveal 在卡片内 whileInView） */
+/** 截图网格 / 展厅展墙 */
 export function ScreenshotGrid({
   items,
   showGameName = true,
   showFileName = true,
   className,
   emptyMessage,
+  variant = 'default',
 }: ScreenshotGridProps) {
   const reduceMotion = useReducedMotion()
   const { t } = useI18n()
+  const isExhibition = variant === 'exhibition'
 
   if (items.length === 0) {
     return (
@@ -34,7 +37,10 @@ export function ScreenshotGrid({
   return (
     <motion.ul
       className={cn(
-        'grid list-none grid-cols-1 gap-5 p-0 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4',
+        'grid list-none gap-5 p-0 md:gap-6',
+        isExhibition
+          ? 'exhibit-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+          : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
         className,
       )}
       initial="hidden"
@@ -64,6 +70,9 @@ export function ScreenshotGrid({
               index={index}
               showGameName={showGameName}
               showFileName={showFileName}
+              variant={variant}
+              exhibitIndex={index + 1}
+              exhibitTotal={items.length}
             />
           </motion.li>
         ))}

@@ -1,5 +1,6 @@
 import { motion } from 'motion/react'
 import { ImageWithState } from '@/components/ui/ImageWithState'
+import { useCoverTilt } from '@/hooks/usePointerParallax'
 import { cn } from '@/utils/cn'
 
 type GameBoxProps = {
@@ -9,10 +10,12 @@ type GameBoxProps = {
   coverUrl?: string
   className?: string
   sharedTransition?: boolean
+  /** 街机卡带封面样式 */
+  cinema?: boolean
 }
 
 /**
- * 货架封面：圆角海报 + 底部柔光灯带；标题仅 hover 叠层（对齐参考图）
+ * 封面：倾斜交互 + 卡带厚边框 / 底部琥珀灯条
  */
 export function GameBox({
   gameId,
@@ -21,11 +24,32 @@ export function GameBox({
   coverUrl,
   className,
   sharedTransition = true,
+  cinema = false,
 }: GameBoxProps) {
+  const tilt = useCoverTilt(cinema ? 8 : 6)
+
   return (
-    <article className={cn('group relative w-full', className)}>
-      <div className="cover-lift relative">
-        <div className="relative overflow-hidden rounded-2xl border border-hairline/60 bg-surface shadow-[0_8px_28px_var(--contact-shadow)]">
+    <motion.article
+      className={cn('group relative w-full', className)}
+      style={tilt.reduceMotion ? undefined : tilt.style}
+      onPointerEnter={tilt.onPointerEnter}
+      onPointerMove={tilt.onPointerMove}
+      onPointerLeave={tilt.onPointerLeave}
+    >
+      <div
+        className={cn(
+          'relative',
+          cinema ? 'cinema-screen-lift' : 'cover-lift',
+        )}
+      >
+        <div
+          className={cn(
+            'relative overflow-hidden bg-surface',
+            cinema
+              ? 'cinema-screen'
+              : 'rounded-md border border-[color:var(--cabinet-edge)] shadow-[0_8px_22px_var(--contact-shadow)]',
+          )}
+        >
           <div className="aspect-[2/3] w-full overflow-hidden">
             {sharedTransition ? (
               <motion.div
@@ -42,23 +66,23 @@ export function GameBox({
 
           <div
             className={cn(
-              'pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent px-3 pb-3 pt-12 transition-opacity duration-200',
+              'pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-2.5 pb-2.5 pt-10 transition-opacity duration-200',
               coverUrl
                 ? 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'
                 : 'opacity-100',
             )}
           >
-            <h2 className="line-clamp-2 text-balance text-[13px] font-medium leading-snug text-white">
+            <h2 className="line-clamp-2 text-balance text-[12px] font-medium leading-snug text-white sm:text-[13px]">
               {title}
             </h2>
-            <p className="mt-0.5 font-mono text-[10px] tabular-nums text-white/70">
+            <p className="type-label mt-0.5 tabular-nums text-white/75">
               {shotCount} shots
             </p>
           </div>
         </div>
-        <span className="cover-shelf-glow" aria-hidden />
+        {!cinema && <span className="cover-shelf-glow" aria-hidden />}
       </div>
-    </article>
+    </motion.article>
   )
 }
 
@@ -82,7 +106,7 @@ function CoverMedia({
       src={coverUrl}
       alt=""
       fallbackGlyph={title.slice(0, 1)}
-      imgClassName="transition-transform duration-200 ease-out group-hover:scale-[1.04]"
+      imgClassName="transition-transform duration-200 ease-out group-hover:scale-[1.06]"
     />
   )
 }

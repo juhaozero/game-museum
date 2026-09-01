@@ -62,4 +62,50 @@ export default {
 
   /** 是否递归扫描子目录（game-first 下一般 false） */
   recursive: false,
+
+  /**
+   * 首页 filmstrip「精选展品」
+   * 运行 npm run manifest 后写入 public/manifest.json 的 featured 段
+   */
+  featured: {
+    /** 是否生成精选列表；false 则首页不显示 filmstrip */
+    enabled: true,
+
+    /**
+     * auto   — 自动挑选（优先非封面、尽量覆盖不同游戏）
+     * manual — 仅展示 picks 中的截图，顺序即陈列顺序
+     */
+    mode: 'auto',
+
+    /** auto 模式：最多条数 */
+    count: 8,
+
+    /** auto 模式：尽量每款游戏只取一张 */
+    diverseGames: true,
+
+    /**
+     * manual 模式：截图相对路径（与 layout 一致）
+     * game-first:     '游戏名/文件名.jpg'
+     * category-first: '分类/游戏名/文件名.jpg'
+     *
+     * 支持字符串或 { path, caption } 对象
+     */
+    picks: [
+      // { path: 'testgame/001.jpg', caption: '开场瞬间' },
+    ],
+
+    /**
+     * 展签文案，key 为 relativePath（auto / manual 均可用）
+     * 未配置时 filmstrip 铭牌显示游戏名
+     */
+    captions: {
+      // 'testgame/resized.png': '测试展品',
+    },
+
+    /** 可选：覆盖 filmstrip 标题与提示（写入 manifest，前端优先于 i18n） */
+    labels: {
+      // title: '本周精选',
+      // hint: '点开展品',
+    },
+  },
 }

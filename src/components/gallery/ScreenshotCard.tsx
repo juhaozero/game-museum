@@ -14,9 +14,12 @@ type ScreenshotCardProps = {
   showGameName?: boolean
   showFileName?: boolean
   className?: string
+  variant?: 'default' | 'exhibition'
+  exhibitIndex?: number
+  exhibitTotal?: number
 }
 
-/** Level 2 展墙卡片：16:9 裁切 · hover 星标 · 点击进 Lightbox */
+/** 展墙卡片：默认网格 / exhibition 画框 + 序号牌 */
 export function ScreenshotCard({
   item,
   items,
@@ -24,6 +27,9 @@ export function ScreenshotCard({
   showGameName = true,
   showFileName = true,
   className,
+  variant = 'default',
+  exhibitIndex,
+  exhibitTotal,
 }: ScreenshotCardProps) {
   const caption = showGameName
     ? showFileName
@@ -37,12 +43,18 @@ export function ScreenshotCard({
   const openAt = useLightboxStore((s) => s.openAt)
   const reduceMotion = useReducedMotion()
   const { t } = useI18n()
+  const isExhibition = variant === 'exhibition'
+  const plaqueIndex = exhibitIndex ?? index + 1
+  const plaqueTotal = exhibitTotal ?? items.length
 
   return (
     <motion.figure
       layout={!reduceMotion}
       className={cn(
-        'group relative overflow-hidden rounded border border-hairline bg-surface',
+        'group relative overflow-hidden',
+        isExhibition
+          ? 'exhibit-frame hud-frame bg-box-inner'
+          : 'rounded border border-hairline bg-surface',
         className,
       )}
       initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
@@ -50,6 +62,15 @@ export function ScreenshotCard({
       viewport={{ once: true, margin: '0px 0px -40px 0px' }}
       transition={{ duration: 0.28, ease: 'easeOut' }}
     >
+      {isExhibition && (
+        <span className="exhibit-index" aria-hidden>
+          {t('exhibitIndex', {
+            index: String(plaqueIndex).padStart(2, '0'),
+            total: String(plaqueTotal).padStart(2, '0'),
+          })}
+        </span>
+      )}
+
       <button
         type="button"
         onClick={() => openAt(items, index)}
@@ -64,7 +85,7 @@ export function ScreenshotCard({
           <ImageWithState
             src={item.url}
             alt={item.fileName}
-            imgClassName="transition-transform duration-200 ease-out group-hover:scale-[1.02]"
+            imgClassName="transition-transform duration-200 ease-out group-hover:scale-[1.03]"
           />
         </motion.div>
       </button>
@@ -78,10 +99,16 @@ export function ScreenshotCard({
         </div>
       </div>
 
-      {caption && (
-        <figcaption className="truncate px-2 py-1.5 text-xs text-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          {caption}
+      {isExhibition ? (
+        <figcaption className="exhibit-caption truncate px-3 py-2 text-[11px] text-muted">
+          {item.fileName}
         </figcaption>
+      ) : (
+        caption && (
+          <figcaption className="truncate px-2 py-1.5 text-xs text-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            {caption}
+          </figcaption>
+        )
       )}
     </motion.figure>
   )

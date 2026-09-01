@@ -13,7 +13,7 @@ type ShelfDockProps = {
   onClear: () => void
 }
 
-/** 底部浮层控制条：筛选 + 计数 */
+/** Arcade Archive · 底部柜体导览：主题筛选 + 计数 */
 export function ShelfDock({
   shown,
   total,
@@ -29,24 +29,24 @@ export function ShelfDock({
 
   return (
     <div className="pointer-events-none sticky bottom-4 z-dock mt-8 flex justify-center px-1">
-      <div className="pointer-events-auto glass-panel relative flex max-w-full flex-wrap items-center gap-2 rounded-2xl px-3 py-2 shadow-[0_16px_48px_var(--contact-shadow)] sm:gap-3 sm:rounded-full sm:px-4">
+      <div className="pointer-events-auto arcade-panel relative flex max-w-full flex-wrap items-center gap-2 px-3 py-2 sm:gap-3 sm:px-4">
         {showFilter && (
           <div className="relative">
             <button
               type="button"
               onClick={() => setFilterOpen((v) => !v)}
               className={cn(
-                'rounded-full border px-3 py-1.5 text-[11px] uppercase tracking-[0.1em] transition-colors',
+                'rounded border px-3 py-1.5 text-[13px] font-medium transition-colors',
                 selectedCategory || filterOpen
-                  ? 'border-accent bg-accent-soft text-accent'
-                  : 'border-hairline text-muted hover:text-fg',
+                  ? 'border-accent bg-accent text-[var(--bg)]'
+                  : 'border-[color:var(--cabinet-edge)] text-muted hover:border-accent hover:text-accent',
               )}
             >
               {t('filter')}
               {selectedCategory ? ` · ${selectedCategory}` : ''}
             </button>
             {filterOpen && (
-              <div className="glass-panel absolute bottom-full left-0 z-dropdown mb-2 flex max-h-56 min-w-[180px] flex-col gap-1 overflow-y-auto rounded-2xl p-2 shadow-lg">
+              <div className="arcade-panel absolute bottom-full left-0 z-dropdown mb-2 flex max-h-56 min-w-[180px] flex-col gap-1 overflow-y-auto p-2">
                 <DockChip
                   active={selectedCategory === null}
                   label={t('allCategories')}
@@ -76,13 +76,13 @@ export function ShelfDock({
           <button
             type="button"
             onClick={onClear}
-            className="rounded-full px-2.5 py-1.5 text-[11px] text-muted hover:text-fg"
+            className="rounded px-2.5 py-1.5 text-[13px] text-muted hover:text-accent"
           >
             {t('clearFilters')}
           </button>
         )}
 
-        <span className="px-1 font-mono text-[11px] tabular-nums text-muted">
+        <span className="type-label px-1 tabular-nums text-muted">
           {t('displaying', { shown, total })}
         </span>
       </div>
@@ -106,15 +106,15 @@ function DockChip({
       type="button"
       onClick={onClick}
       className={cn(
-        'rounded-xl px-3 py-2 text-left text-xs transition-colors',
+        'rounded px-3 py-2 text-left text-[13px] transition-colors',
         active
-          ? 'bg-accent-soft text-accent'
-          : 'text-muted hover:bg-white/5 hover:text-fg',
+          ? 'bg-accent text-[var(--bg)]'
+          : 'text-muted hover:bg-accent-soft hover:text-accent',
       )}
     >
       {label}
       {count !== undefined && (
-        <span className="ml-2 font-mono opacity-70">{count}</span>
+        <span className="type-label ml-2 opacity-70">{count}</span>
       )}
     </button>
   )

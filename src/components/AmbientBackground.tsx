@@ -1,4 +1,4 @@
-/** 影院地光背景（Generated_image）：暗角 + 中段地光 + 噪点 */
+/** Arcade Archive：深靛底 + 琥珀地光 + CRT scanline */
 export default function AmbientBackground() {
   return (
     <>
@@ -17,16 +17,26 @@ export default function AmbientBackground() {
         className="pointer-events-none fixed inset-0 z-0"
         style={{ background: 'var(--ambient-spotlight)' }}
       />
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{ background: 'var(--ambient-floor)' }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0 ambient-scanlines"
+      />
+
       <svg
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-0 h-full w-full mix-blend-multiply dark:mix-blend-screen"
+        className="pointer-events-none fixed inset-0 z-0 h-full w-full mix-blend-multiply dark:mix-blend-soft-light"
         style={{ opacity: 'var(--ambient-noise-opacity)' }}
       >
         <defs>
           <filter id="ambient-grain" x="0%" y="0%" width="100%" height="100%">
             <feTurbulence
               type="fractalNoise"
-              baseFrequency="0.85"
+              baseFrequency="0.9"
               numOctaves="2"
               stitchTiles="stitch"
             />

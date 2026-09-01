@@ -30,4 +30,14 @@ export default {
     'cover.webp',
   ],
   recursive: false,
+
+  featured: {
+    enabled: true,
+    mode: 'auto',
+    count: 8,
+    diverseGames: true,
+    picks: [],
+    captions: {},
+    labels: {},
+  },
 }

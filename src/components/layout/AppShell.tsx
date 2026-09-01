@@ -6,7 +6,7 @@ import { useGalleryRouting } from '@/hooks/useGalleryRouting'
 import { useManifest } from '@/hooks/useManifest'
 import { useScrollToTop } from '@/hooks/useScrollToTop'
 
-/** 影院货架壳：浮层顶栏 + 主内容（Hero/封面墙在 ShelfPage） */
+/** Arcade Archive · 柜体壳：顶栏 + 主内容 */
 export function AppShell() {
   const manifestState = useManifest()
   const items = manifestState.status === 'ready' ? manifestState.data.items : []
@@ -22,7 +22,7 @@ export function AppShell() {
         isFiltering={gallery.isFiltering}
         onClearFilters={clearFiltersAndNavigate}
       />
-      <main className="relative z-content flex-1 px-4 pb-8 pt-6 sm:px-6 md:px-8 md:pt-8 lg:px-10">
+      <main className="relative z-content flex-1 overflow-x-clip px-3 pb-12 pt-4 sm:px-5 md:px-6 md:pt-6 lg:px-8 xl:px-10">
         <Outlet context={{ manifestState, gallery }} />
       </main>
       <Lightbox />

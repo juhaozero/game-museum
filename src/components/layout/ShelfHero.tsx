@@ -9,7 +9,7 @@ type ShelfHeroProps = {
   gameIds: string[]
 }
 
-/** 左侧叙事 Hero：标题 / 统计 / 随机封面 */
+/** Arcade Archive · 左侧叙事 Hero（可读标题 + 打字机标签） */
 export function ShelfHero({
   gameCount,
   shotCount,
@@ -26,21 +26,32 @@ export function ShelfHero({
   }
 
   return (
-    <aside className="flex h-full flex-col gap-8 lg:max-w-[280px] lg:pt-2">
-      <div>
-        <h1 className="text-balance text-3xl font-bold leading-[1.2] tracking-tight text-fg sm:text-4xl lg:text-[2.5rem]">
+    <aside className="relative z-0 flex h-full flex-col gap-8 lg:max-w-[260px] lg:pt-6 lg:pr-2">
+      <div className="rounded-md border border-[color:var(--cabinet-edge)] bg-[color:var(--cabinet)] p-4 lg:border-0 lg:bg-transparent lg:p-0">
+        <p className="type-label mb-3 inline-flex items-center gap-2 text-accent">
+          <span
+            aria-hidden
+            className="inline-block size-1.5 rounded-[1px] bg-accent"
+          />
+          {t('heroBadge')}
+        </p>
+        <h1 className="type-display text-balance text-3xl text-fg sm:text-4xl lg:text-[2.4rem]">
           {t('heroTitle')}
         </h1>
-        <p className="mt-3 text-pretty text-[13px] leading-relaxed text-muted">
+        <p className="mt-3 text-pretty text-[14px] leading-relaxed text-muted">
           {t('heroBody')}
         </p>
       </div>
 
-      <ul className="flex flex-col gap-5 p-0">
+      <ul className="flex flex-col gap-[18px] p-0">
         <Stat icon={<GamepadIcon />} label={t('statGames')} value={gameCount} />
         <Stat icon={<ShotIcon />} label={t('statShots')} value={shotCount} />
         {categoryCount > 1 && (
-          <Stat icon={<TagIcon />} label={t('statCategories')} value={categoryCount} />
+          <Stat
+            icon={<TagIcon />}
+            label={t('statCategories')}
+            value={categoryCount}
+          />
         )}
       </ul>
 
@@ -48,9 +59,9 @@ export function ShelfHero({
         type="button"
         onClick={goRandom}
         disabled={gameIds.length === 0}
-        className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full border border-hairline bg-surface/40 px-4 py-3 text-sm font-medium text-fg transition-colors hover:border-accent hover:bg-accent-soft hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-auto inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-accent bg-transparent px-4 text-[14px] font-semibold text-accent transition-colors hover:bg-accent hover:text-[var(--bg)] disabled:cursor-not-allowed disabled:opacity-40"
       >
-        <span aria-hidden>⇄</span>
+        <ShuffleIcon />
         {t('randomCover')}
       </button>
     </aside>
@@ -70,10 +81,12 @@ function Stat({
     <li className="flex list-none items-center gap-3">
       <span className="text-accent">{icon}</span>
       <span className="flex flex-col">
-        <span className="text-2xl font-bold leading-none tabular-nums tracking-tight text-fg">
+        <span className="type-stat text-2xl leading-none text-fg">
           {value.toLocaleString()}
         </span>
-        <span className="mt-1.5 text-[13px] leading-relaxed text-muted">{label}</span>
+        <span className="mt-1.5 text-[13px] leading-relaxed text-muted">
+          {label}
+        </span>
       </span>
     </li>
   )
@@ -136,4 +149,16 @@ function TagIcon() {
   )
 }
 
-
+function ShuffleIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M16 3h5v5M21 3l-7 7M3 16l5-5M16 21h5v-5M21 21l-6.5-6.5M3 8l5 5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}

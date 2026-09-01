@@ -23,6 +23,9 @@ if (process.env.NODE_ENV !== 'test') {
 
 export default defineConfig({
   base,
+  build: {
+    outDir: 'museum',
+  },
   envPrefix: ['PUBLIC_', 'NEXT_PUBLIC_'],
   plugins: [react(), tailwindcss()],
   resolve: {

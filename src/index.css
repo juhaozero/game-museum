@@ -3,8 +3,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-sans: 'IBM Plex Sans', 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Oxanium', 'IBM Plex Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'Oxanium', 'IBM Plex Sans', ui-monospace, monospace;
 
   --color-bg: var(--bg);
   --color-bg-elevated: var(--bg-elevated);
@@ -29,82 +30,100 @@
   --z-lightbox: 50;
 }
 
+/* Arcade Archive · 浅色：偏中性纸感 + 柔铜 accent（少黄） */
 :root {
-  --bg: #e6ecf1;
-  --bg-elevated: #f1f5f8;
-  --surface: #d8e2ea;
-  --text: #12181c;
-  --text-muted: #5a6872;
-  --hairline: rgba(18, 24, 28, 0.1);
-  --accent: #2f7f8a;
-  --accent-soft: rgba(47, 127, 138, 0.14);
-  --star: #9a7b3c;
-  --box-plastic: #b8c4cc;
-  --box-inner: #0a0e12;
-  --motif: rgba(47, 127, 138, 0.06);
-  --glass: rgba(255, 255, 255, 0.55);
-  --glass-border: rgba(18, 24, 28, 0.08);
+  --bg: #e6e5e1;
+  --bg-elevated: #f0efeb;
+  --surface: #f7f6f3;
+  --text: #1a1b1e;
+  --text-muted: #65666e;
+  --hairline: rgba(26, 27, 30, 0.12);
+  --accent: #9a7a4f;
+  --accent-soft: rgba(154, 122, 79, 0.12);
+  --star: #a88955;
+  --box-plastic: #c8c5bc;
+  --box-inner: #1a1b1e;
+  --motif: rgba(154, 122, 79, 0.06);
+  --glass: rgba(240, 239, 235, 0.9);
+  --glass-border: rgba(26, 27, 30, 0.12);
+  --cabinet: #d5d3cc;
+  --cabinet-edge: color-mix(in srgb, #1a1b1e 14%, transparent);
 
   --ambient-base: radial-gradient(
-    ellipse 110% 80% at 50% 40%,
-    var(--bg) 30%,
-    color-mix(in srgb, var(--bg) 85%, #94a3b8) 100%
+    ellipse 100% 100% at 50% 40%,
+    #f0efeb 0%,
+    #e6e5e1 55%,
+    #dad8d2 100%
   );
   --ambient-horizon: radial-gradient(
-    ellipse 90% 30% at 55% 58%,
-    color-mix(in srgb, var(--accent) 16%, transparent) 0%,
-    transparent 70%
+    ellipse 90% 45% at 50% 78%,
+    color-mix(in srgb, var(--accent) 9%, transparent) 0%,
+    transparent 65%
   );
   --ambient-spotlight: radial-gradient(
-    ellipse 50% 35% at 20% 20%,
-    color-mix(in srgb, white 40%, transparent),
+    ellipse 50% 40% at 12% 18%,
+    color-mix(in srgb, var(--accent) 6%, transparent),
     transparent 70%
   );
+  --ambient-floor: linear-gradient(
+    180deg,
+    transparent 55%,
+    color-mix(in srgb, var(--accent) 6%, transparent) 100%
+  );
+  --ambient-scanline-opacity: 0.02;
   --ambient-noise-opacity: 0.03;
-  --shelf-glow: color-mix(in srgb, var(--accent) 50%, white);
-  --shelf-glow-soft: color-mix(in srgb, var(--accent) 30%, transparent);
-  --contact-shadow: color-mix(in srgb, black 18%, transparent);
-  --contact-shadow-strong: color-mix(in srgb, black 32%, transparent);
+  --shelf-glow: color-mix(in srgb, var(--accent) 40%, white);
+  --shelf-glow-soft: color-mix(in srgb, var(--accent) 18%, transparent);
+  --contact-shadow: color-mix(in srgb, #1e2030 14%, transparent);
+  --contact-shadow-strong: color-mix(in srgb, #1e2030 24%, transparent);
 }
 
+/* Arcade Archive · 深色：深靛柜体 + 柔铜指示（非亮黄琥珀） */
 .dark {
-  /* 对齐 Generated_image：深炭黑影院底 */
-  --bg: #0c0e12;
-  --bg-elevated: #141820;
-  --surface: #1a2030;
-  --text: #eef2f6;
-  --text-muted: #8b97a8;
-  --hairline: rgba(238, 242, 246, 0.1);
-  --accent: #5ec8d8;
-  --accent-soft: rgba(94, 200, 216, 0.16);
-  --star: #c4a56a;
-  --box-plastic: #222836;
-  --box-inner: #06080c;
-  --motif: rgba(94, 200, 216, 0.08);
-  --glass: rgba(20, 24, 32, 0.62);
-  --glass-border: rgba(238, 242, 246, 0.1);
+  --bg: #0f1219;
+  --bg-elevated: #171b26;
+  --surface: #1c2230;
+  --text: #e6e4df;
+  --text-muted: #8b8f9c;
+  --hairline: rgba(230, 228, 223, 0.1);
+  --accent: #c4a574;
+  --accent-soft: rgba(196, 165, 116, 0.12);
+  --star: #c4a574;
+  --box-plastic: #2a3040;
+  --box-inner: #0a0c12;
+  --motif: rgba(196, 165, 116, 0.06);
+  --glass: rgba(23, 27, 38, 0.92);
+  --glass-border: rgba(230, 228, 223, 0.1);
+  --cabinet: #171b26;
+  --cabinet-edge: color-mix(in srgb, #e6e4df 12%, transparent);
 
   --ambient-base: radial-gradient(
-    ellipse 120% 90% at 50% 42%,
-    #12161e 20%,
-    #0c0e12 55%,
-    #080a0e 100%
+    ellipse 100% 100% at 50% 45%,
+    #141824 0%,
+    #0f1219 70%,
+    #0a0c12 100%
   );
   --ambient-horizon: radial-gradient(
-    ellipse 100% 36% at 58% 56%,
-    color-mix(in srgb, var(--accent) 20%, transparent) 0%,
-    transparent 72%
+    ellipse 90% 48% at 50% 80%,
+    color-mix(in srgb, var(--accent) 8%, transparent) 0%,
+    transparent 62%
   );
   --ambient-spotlight: radial-gradient(
-    ellipse 45% 40% at 18% 25%,
-    color-mix(in srgb, var(--accent) 12%, transparent),
-    transparent 70%
+    ellipse 48% 38% at 10% 16%,
+    color-mix(in srgb, var(--accent) 5%, transparent),
+    transparent 68%
   );
-  --ambient-noise-opacity: 0.055;
-  --shelf-glow: color-mix(in srgb, var(--accent) 75%, white);
-  --shelf-glow-soft: color-mix(in srgb, var(--accent) 40%, transparent);
+  --ambient-floor: linear-gradient(
+    180deg,
+    transparent 52%,
+    color-mix(in srgb, var(--accent) 6%, transparent) 100%
+  );
+  --ambient-scanline-opacity: 0.025;
+  --ambient-noise-opacity: 0.035;
+  --shelf-glow: color-mix(in srgb, var(--accent) 55%, white);
+  --shelf-glow-soft: color-mix(in srgb, var(--accent) 22%, transparent);
   --contact-shadow: color-mix(in srgb, black 45%, transparent);
-  --contact-shadow-strong: color-mix(in srgb, black 65%, transparent);
+  --contact-shadow-strong: color-mix(in srgb, black 62%, transparent);
 }
 
 @layer base {
@@ -158,24 +177,231 @@
 
   .glass-panel {
     background: var(--glass);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--cabinet-edge);
+    border-radius: 6px;
+    box-shadow: inset 0 -1px 0 color-mix(in srgb, black 8%, transparent);
+  }
+
+  .arcade-panel {
+    background: var(--cabinet);
+    border: 1px solid var(--cabinet-edge);
+    border-radius: 6px;
+    box-shadow: inset 0 -1px 0 color-mix(in srgb, black 10%, transparent);
+  }
+
+  /* 游戏 UI 标签：Oxanium，轻 tracking */
+  .type-label {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    line-height: 1.35;
+  }
+
+  .type-display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  .type-stat {
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: 0.01em;
   }
 }
 
-/* 封面货架灯带 */
+/* —— 氛围：CRT scanline（无 HUD 网格 / 漂浮光斑） —— */
+.ambient-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    color-mix(in srgb, var(--text) 18%, transparent) 2px,
+    color-mix(in srgb, var(--text) 18%, transparent) 3px
+  );
+  opacity: var(--ambient-scanline-opacity);
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 45%, black, transparent 78%);
+}
+
+/* 兼容旧类名：不再显示 HUD 角标 */
+.hud-frame {
+  position: relative;
+}
+
+/* —— Arcade shelf wall（无 3D 透视） —— */
+.cinema-stage {
+  position: relative;
+  isolation: isolate;
+  min-height: calc(100vh - 7.5rem);
+}
+
+.cinema-viewport {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.cinema-wall {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.cinema-wall::before {
+  content: '';
+  position: absolute;
+  inset: -6% -4% -10% -3%;
+  z-index: -1;
+  border-radius: 8px;
+  border: 1px solid var(--cabinet-edge);
+  background:
+    radial-gradient(
+      ellipse 70% 50% at 50% 100%,
+      color-mix(in srgb, var(--accent) 6%, transparent),
+      transparent 65%
+    ),
+    color-mix(in srgb, var(--bg-elevated) 40%, transparent);
+  pointer-events: none;
+}
+
+.cinema-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+@media (min-width: 640px) {
+  .cinema-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cinema-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .cinema-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px 14px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .cinema-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.cinema-floor {
+  pointer-events: none;
+  position: relative;
+  z-index: 0;
+  margin-top: 8px;
+  height: clamp(48px, 8vh, 88px);
+  border-radius: 0 0 4px 4px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--accent) 8%, transparent) 0%,
+      transparent 50%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--fg) 5%, transparent) 0,
+      color-mix(in srgb, var(--fg) 5%, transparent) 1px,
+      transparent 1px,
+      transparent 40px
+    );
+  mask-image: linear-gradient(180deg, black 0%, transparent 90%);
+  opacity: 0.7;
+}
+
+/* 卡带封面（原 cinema-screen） */
+.cinema-screen {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid var(--cabinet-edge);
+  background: var(--box-inner);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent),
+    0 8px 22px var(--contact-shadow);
+}
+
+.cinema-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.18;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    color-mix(in srgb, black 35%, transparent) 1px,
+    color-mix(in srgb, black 35%, transparent) 2px
+  );
+}
+
+.cinema-screen::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  z-index: 3;
+  pointer-events: none;
+  background: var(--accent);
+  opacity: 0.35;
+  transition: opacity 180ms ease-out;
+}
+
+.group:hover .cinema-screen::after,
+.group:focus-within .cinema-screen::after {
+  opacity: 1;
+}
+
+.cinema-screen-lift {
+  transition:
+    transform 180ms ease-out,
+    filter 180ms ease-out;
+}
+
+.group:hover .cinema-screen-lift {
+  transform: translateY(-5px);
+  filter: drop-shadow(0 14px 22px var(--contact-shadow-strong));
+}
+
+/* 旧货架灯带（非 arcade 场景可复用） */
 .cover-shelf-glow {
   position: absolute;
-  left: 10%;
-  right: 10%;
+  left: 12%;
+  right: 12%;
   bottom: -2px;
-  height: 2px;
-  border-radius: 999px;
-  background: var(--shelf-glow);
-  box-shadow:
-    0 0 10px 2px var(--shelf-glow-soft),
-    0 0 24px 8px var(--shelf-glow-soft);
+  height: 10px;
+  border-radius: 2px;
+  background: radial-gradient(
+    ellipse at center,
+    var(--shelf-glow),
+    transparent 70%
+  );
+  filter: blur(6px);
   opacity: 0.85;
   transition: opacity 200ms ease-out;
   pointer-events: none;
@@ -187,20 +413,341 @@
 
 .cover-lift {
   transition:
-    transform 200ms ease-out,
-    filter 200ms ease-out;
+    transform 180ms ease-out,
+    filter 180ms ease-out;
 }
 
 .group:hover .cover-lift {
-  transform: translateY(-6px);
-  filter: drop-shadow(0 12px 24px var(--contact-shadow-strong));
+  transform: translateY(-5px);
+  filter: drop-shadow(0 12px 20px var(--contact-shadow-strong));
+}
+
+/* —— Filmstrip 街机 marquee —— */
+.filmstrip {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--cabinet-edge);
+  border-radius: 6px;
+  padding: 12px 14px;
+  background: color-mix(in srgb, var(--cabinet) 70%, transparent);
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, black 8%, transparent);
+}
+
+.filmstrip-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.filmstrip-label {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+
+.filmstrip-hint {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+.filmstrip-count {
+  margin-left: 0.35rem;
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.filmstrip-viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 6%,
+    black 94%,
+    transparent
+  );
+}
+
+.filmstrip-viewport--scroll:hover .filmstrip-track--animate {
+  animation-play-state: paused;
+}
+
+.filmstrip-track {
+  display: flex;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 2px 0 4px;
+  width: max-content;
+}
+
+.filmstrip-track--animate {
+  animation: filmstrip-scroll 36s linear infinite;
+}
+
+@keyframes filmstrip-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.filmstrip-shot {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 1px solid var(--cabinet-edge);
+  background: transparent;
+  cursor: zoom-in;
+  border-radius: 4px;
+  overflow: hidden;
+  transition:
+    transform 180ms ease-out,
+    border-color 180ms ease-out;
+}
+
+.filmstrip-shot:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--cabinet-edge));
+}
+
+.filmstrip-item {
+  flex-shrink: 0;
+}
+
+.filmstrip--wide {
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.filmstrip--wide .filmstrip-head {
+  padding-inline: 0;
+}
+
+.filmstrip--wide .filmstrip-label {
+  font-size: 14px;
+  letter-spacing: 0.05em;
+}
+
+.filmstrip--wide .filmstrip-viewport {
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 3%,
+    black 97%,
+    transparent
+  );
+}
+
+.filmstrip--wide .filmstrip-track {
+  gap: 12px;
+  padding: 2px 0 4px;
+}
+
+.filmstrip--wide .filmstrip-track--animate {
+  animation-duration: 42s;
+}
+
+/* —— Lightbox 展厅聚光 —— */
+.lightbox-overlay {
+  background: color-mix(in srgb, black 88%, var(--bg) 12%);
+}
+
+.lightbox-vignette,
+.lightbox-spotlight {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.lightbox-vignette {
+  background: radial-gradient(
+    ellipse 85% 70% at 50% 44%,
+    transparent 0%,
+    color-mix(in srgb, black 70%, transparent) 100%
+  );
+}
+
+.lightbox-spotlight {
+  background: radial-gradient(
+    ellipse 42% 34% at 50% 42%,
+    color-mix(in srgb, var(--accent) 14%, transparent) 0%,
+    transparent 72%
+  );
+}
+
+.lightbox-nav-btn {
+  border-radius: 6px;
+  border: 1px solid var(--cabinet-edge);
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  padding: 0.75rem 0.65rem;
+  color: var(--text-muted);
+  transition: color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.lightbox-nav-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.lightbox-frame {
+  border-radius: 6px;
+  border: 1px solid var(--cabinet-edge);
+}
+
+.lightbox-plaque {
+  border-left: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  border-radius: 0;
+}
+
+.exhibit-page {
+  position: relative;
+}
+
+.exhibit-page::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: -2rem -1rem auto;
+  height: 280px;
+  background: radial-gradient(
+    ellipse 55% 80% at 18% 0%,
+    color-mix(in srgb, var(--accent) 10%, transparent) 0%,
+    transparent 70%
+  );
+}
+
+.exhibit-page--highlights::before {
+  background: radial-gradient(
+    ellipse 60% 85% at 22% 0%,
+    color-mix(in srgb, var(--accent) 14%, var(--star) 4%) 0%,
+    transparent 72%
+  );
+}
+
+.exhibit-header {
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 1.25rem;
+}
+
+.exhibit-entry-cover {
+  width: fit-content;
+}
+
+.exhibit-frame {
+  border-radius: 6px;
+  border: 1px solid var(--cabinet-edge);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent),
+    0 10px 24px var(--contact-shadow);
+  transition:
+    transform 180ms ease-out,
+    border-color 180ms ease-out;
+}
+
+.exhibit-frame:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--cabinet-edge));
+}
+
+.exhibit-index {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  z-index: 2;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  border: 1px solid var(--cabinet-edge);
+  pointer-events: none;
+}
+
+.exhibit-plaque {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  z-index: 2;
+  max-width: calc(100% - 16px);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  border: 1px solid var(--cabinet-edge);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.exhibit-plaque--stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 4px 8px;
+  border-radius: 0;
+  white-space: normal;
+}
+
+.exhibit-plaque-title {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.25;
+}
+
+.exhibit-plaque-sub {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 9px;
+  font-weight: 400;
+  opacity: 0.78;
+  line-height: 1.2;
+  color: var(--text-muted);
+}
+
+.exhibit-caption {
+  border-top: 1px solid var(--cabinet-edge);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+}
+
+.exhibit-grid {
+  padding-top: 0.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .cinema-screen-lift,
+  .group:hover .cinema-screen-lift,
   .cover-shelf-glow,
   .cover-lift,
   .group:hover .cover-lift {
     transition: none;
     transform: none;
+    filter: none;
+  }
+
+  .filmstrip-track--animate {
+    animation: none;
   }
 }

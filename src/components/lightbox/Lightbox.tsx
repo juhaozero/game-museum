@@ -71,21 +71,28 @@ export function Lightbox() {
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          className="fixed inset-0 z-lightbox flex h-dvh flex-col bg-black/80 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
+          className="lightbox-overlay fixed inset-0 z-lightbox flex h-dvh flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: reduceMotion ? 0.15 : 0.2 }}
           onClick={close}
         >
+          <div className="lightbox-vignette" aria-hidden />
+          <div className="lightbox-spotlight" aria-hidden />
+
           <div
-            className="flex items-center justify-between gap-3 px-4 py-3 text-white/80"
+            className="relative z-[1] flex items-center justify-between gap-3 px-4 py-3 text-white/80"
             onClick={(e) => e.stopPropagation()}
           >
             <p id={titleId} className="min-w-0 truncate text-sm">
+              <span className="type-label text-accent">
+                {t('lightboxExhibit')}
+              </span>
+              <span className="mx-2 text-white/35">·</span>
               {item.gameName}
               <span className="mx-2 text-white/40">·</span>
-              <span className="font-mono text-xs tabular-nums text-white/50">
+              <span className="type-label tabular-nums text-white/55">
                 {index + 1} / {items.length}
               </span>
             </p>
@@ -109,7 +116,7 @@ export function Lightbox() {
           </div>
 
           <div
-            className="relative flex min-h-0 flex-1"
+            className="relative z-[1] flex min-h-0 flex-1"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative flex min-w-0 flex-1 items-center justify-center px-2 md:px-6">
@@ -117,7 +124,7 @@ export function Lightbox() {
                 type="button"
                 onClick={prev}
                 aria-label={t('prevShot')}
-                className="absolute left-2 z-10 hidden rounded bg-black/40 px-2 py-3 text-white/80 hover:text-white md:block"
+                className="lightbox-nav-btn absolute left-2 z-10 hidden md:block"
               >
                 ‹
               </button>
@@ -137,7 +144,7 @@ export function Lightbox() {
                 >
                   <motion.div
                     layoutId={`shot-${item.id}`}
-                    className="max-h-full max-w-full"
+                    className="lightbox-frame exhibit-frame max-h-full max-w-full overflow-hidden"
                     transition={{ duration: 0.22, ease: 'easeOut' }}
                   >
                     <TransformWrapper
@@ -166,14 +173,14 @@ export function Lightbox() {
                 type="button"
                 onClick={next}
                 aria-label={t('nextShot')}
-                className="absolute right-2 z-10 hidden rounded bg-black/40 px-2 py-3 text-white/80 hover:text-white md:block"
+                className="lightbox-nav-btn absolute right-2 z-10 hidden md:block"
               >
                 ›
               </button>
             </div>
 
             <motion.aside
-              className="hidden w-64 shrink-0 border-l border-white/10 bg-black/40 p-5 text-sm text-white/80 lg:block"
+              className="lightbox-plaque hidden w-64 shrink-0 p-5 text-sm text-white/80 lg:block"
               initial={
                 reduceMotion ? { opacity: 0 } : { opacity: 0, x: 16 }
               }
@@ -184,14 +191,17 @@ export function Lightbox() {
                 ease: 'easeOut',
               }}
             >
-              <p className="text-xs text-white/45">{t('game')}</p>
+              <p className="type-label text-accent">
+                {t('lightboxExhibit')}
+              </p>
+              <p className="mt-4 text-xs text-white/45">{t('game')}</p>
               <p className="mt-1 text-pretty text-white">{item.gameName}</p>
               <p className="mt-4 text-xs text-white/45">{t('category')}</p>
               <p className="mt-1 text-white/90">{item.category}</p>
               {publicUiEnv.showImageFileName && (
                 <>
                   <p className="mt-4 text-xs text-white/45">{t('file')}</p>
-                  <p className="mt-1 break-all font-mono text-xs text-white/70">
+                  <p className="type-label mt-1 break-all text-white/70">
                     {item.fileName}
                   </p>
                 </>

@@ -10,6 +10,7 @@ import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
+import { resolveFeatured } from './resolve-featured.js'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 
@@ -212,6 +213,9 @@ function scanSource(config) {
 }
 
 function buildManifest(config, items) {
+  const { featured, warnings } = resolveFeatured(config.featured, items)
+  for (const message of warnings) console.warn(message)
+
   const gameIds = new Set(items.map((item) => item.gameId))
   return {
     version: 1,
@@ -221,6 +225,7 @@ function buildManifest(config, items) {
     layout: config.layout,
     itemCount: items.length,
     gameCount: gameIds.size,
+    featured,
     items: items.sort((a, b) => a.relativePath.localeCompare(b.relativePath, 'zh-CN')),
   }
 }
@@ -248,6 +253,11 @@ async function main() {
   console.log(`[manifest] 配置: ${path.relative(ROOT, configFile)}`)
   console.log(`[manifest] 扫描: ${resolveConfigPath(config.sourceDir)} (${config.layout})`)
   console.log(`[manifest] 游戏: ${manifest.gameCount} · 截图: ${manifest.itemCount}`)
+  if (manifest.featured?.enabled) {
+    console.log(
+      `[manifest] 精选展品: ${manifest.featured.items.length} 条 (${manifest.featured.mode})`,
+    )
+  }
   console.log(`[manifest] 输出: ${outputPath}`)
 }
 

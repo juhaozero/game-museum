@@ -13,4 +13,13 @@ export const MOCK_SHELF_GAMES: MockShelfGame[] = [
   { id: 'mock-ori', name: 'Ori and the Blind Forest', shotCount: 15 },
   { id: 'mock-outer-wilds', name: 'Outer Wilds', shotCount: 21 },
   { id: 'mock-slay-the-spire', name: 'Slay the Spire', shotCount: 12 },
+  { id: 'mock-sekiro', name: 'Sekiro', shotCount: 28 },
+  { id: 'mock-elden', name: 'Elden Ring', shotCount: 40 },
+  { id: 'mock-witcher', name: 'The Witcher 3', shotCount: 36 },
+  { id: 'mock-rdr2', name: 'Red Dead Redemption 2', shotCount: 30 },
+  { id: 'mock-gow', name: 'God of War', shotCount: 22 },
+  { id: 'mock-horizon', name: 'Horizon Zero Dawn', shotCount: 19 },
+  { id: 'mock-cyber', name: 'Cyberpunk 2077', shotCount: 27 },
+  { id: 'mock-tsushima', name: 'Ghost of Tsushima', shotCount: 25 },
+  { id: 'mock-tlou', name: 'The Last of Us', shotCount: 17 },
 ]

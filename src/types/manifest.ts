@@ -11,6 +11,25 @@ export type ScreenshotItem = {
   isCover?: boolean
 }
 
+/** 精选展品（filmstrip 条目，可含展签） */
+export type FeaturedExhibitItem = ScreenshotItem & {
+  caption?: string
+}
+
+export type FeaturedExhibitMode = 'auto' | 'manual'
+
+export type ManifestFeatured = {
+  enabled: boolean
+  mode: FeaturedExhibitMode
+  count: number
+  /** manifest 生成时写入的可选 UI 文案 */
+  labels?: {
+    title?: string
+    hint?: string
+  }
+  items: FeaturedExhibitItem[]
+}
+
 export type ManifestLayout = 'category-first' | 'game-first'
 
 export type Manifest = {
@@ -21,6 +40,8 @@ export type Manifest = {
   layout: ManifestLayout
   itemCount: number
   gameCount: number
+  /** 首页 filmstrip 精选展品（由 manifest.config featured 生成） */
+  featured?: ManifestFeatured
   items: ScreenshotItem[]
 }
 

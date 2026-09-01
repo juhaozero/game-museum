@@ -1,11 +1,33 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-31T07:46:43.734Z",
+  "generatedAt": "2026-09-01T05:38:00.682Z",
   "cosBaseUrl": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com",
   "cosPathPrefix": "Screenshots",
   "layout": "game-first",
   "itemCount": 1,
   "gameCount": 1,
+  "featured": {
+    "enabled": true,
+    "mode": "manual",
+    "count": 8,
+    "labels": {
+      "title": "精选展品",
+      "hint": "点开展品"
+    },
+    "items": [
+      {
+        "id": "23dfad4f4bda2bc2",
+        "gameId": "e2df7b2c9bffdec8",
+        "gameName": "testgame",
+        "category": "未分类",
+        "fileName": "resized.png",
+        "relativePath": "testgame/resized.png",
+        "url": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com/Screenshots/testgame/resized.png",
+        "isCover": true,
+        "caption": "测试展品"
+      }
+    ]
+  },
   "items": [
     {
       "id": "23dfad4f4bda2bc2",

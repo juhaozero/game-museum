@@ -17,12 +17,15 @@ export function GameGalleryPage() {
       <div
         aria-busy="true"
         aria-label={t('loading')}
-        className="mx-auto max-w-7xl space-y-6"
+        className="exhibit-page mx-auto max-w-6xl space-y-6"
       >
         <div className="h-4 w-40 animate-pulse rounded bg-surface" />
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 8 }, (_, i) => (
-            <div key={i} className="aspect-video animate-pulse rounded bg-surface" />
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+          {Array.from({ length: 6 }, (_, i) => (
+            <div
+              key={i}
+              className="aspect-video animate-pulse rounded bg-surface"
+            />
           ))}
         </div>
       </div>
@@ -50,9 +53,12 @@ export function GameGalleryPage() {
 
   if (!game) {
     return (
-      <section className="mx-auto max-w-7xl">
+      <section className="exhibit-page mx-auto max-w-6xl">
         <p className="mb-8 text-sm text-muted">
-          <Link to={backUrl} className="text-muted no-underline hover:text-accent">
+          <Link
+            to={backUrl}
+            className="text-muted no-underline hover:text-accent"
+          >
             {t('backToShelf')}
           </Link>
         </p>
@@ -62,40 +68,56 @@ export function GameGalleryPage() {
   }
 
   return (
-    <section className="mx-auto max-w-7xl">
-      <p className="mb-6 text-sm text-muted">
-        <Link to={backUrl} className="text-muted no-underline hover:text-accent">
+    <section className="exhibit-page mx-auto max-w-6xl">
+      <header className="exhibit-header mb-8 md:mb-10">
+        <Link
+          to={backUrl}
+          className="mb-5 inline-flex items-center gap-1.5 text-[13px] text-muted no-underline transition-colors hover:text-accent"
+        >
           {t('backToShelf')}
         </Link>
-        <span className="mx-2">/</span>
-        <span className="text-fg">{game.name}</span>
-      </p>
 
-      {coverUrl && (
-        <motion.div
-          layoutId={`cover-${game.id}`}
-          className="mb-8 max-w-[200px] overflow-hidden rounded-2xl border border-hairline"
-          transition={{ duration: 0.22, ease: 'easeOut' }}
-        >
-          <div className="aspect-[2/3]">
-            <ImageWithState
-              src={coverUrl}
-              alt=""
-              fallbackGlyph={game.name.slice(0, 1)}
-            />
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:gap-8">
+          {coverUrl && (
+            <motion.div
+              layoutId={`cover-${game.id}`}
+              className="exhibit-entry-cover cinema-screen shrink-0 overflow-hidden"
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+            >
+              <div className="aspect-[2/3] w-[120px] sm:w-[140px]">
+                <ImageWithState
+                  src={coverUrl}
+                  alt=""
+                  fallbackGlyph={game.name.slice(0, 1)}
+                />
+              </div>
+            </motion.div>
+          )}
+
+          <div className="min-w-0 flex-1">
+            <p className="type-label mb-2 inline-flex items-center gap-2 text-accent">
+              <span
+                aria-hidden
+                className="inline-block size-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--shelf-glow)]"
+              />
+              {t('exhibitWall')}
+            </p>
+            <h1 className="type-display text-balance text-2xl text-fg sm:text-3xl">
+              {game.name}
+            </h1>
+            <p className="type-label mt-2 tabular-nums text-muted">
+              {game.category} · {t('shotsLabel', { count: game.shotCount })}
+            </p>
           </div>
-        </motion.div>
-      )}
-
-      <p className="mb-6 font-mono text-xs tabular-nums text-muted">
-        {game.category} · {t('shotsLabel', { count: game.shotCount })}
-      </p>
+        </div>
+      </header>
 
       <ScreenshotGrid
         items={shots}
         showGameName={false}
         showFileName={publicUiEnv.showImageFileName}
         emptyMessage={t('noScreenshotsForGame')}
+        variant="exhibition"
       />
     </section>
   )

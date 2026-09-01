@@ -1,54 +1,39 @@
 # GameShot Museum — UI 设计稿（实现同步）
 
-> **版本**：v2.0 · 对齐 `docs/Generated_image.png`（影院货架 / Horizon Shelf）  
-> 气质：**深色影院展陈** · 浮层玻璃导航 · 左侧叙事 Hero · 柔光货架封面墙 · 明暗 / 语言记住上次。  
-> 参考图：[`Generated_image.png`](./Generated_image.png)
+> **版本**：v3.0 · Arcade Archive（复古街机馆）  
+> 气质：**深靛柜体 + 柔铜指示灯** · mono 字标 · 卡带封面 · CRT scanline。  
+> 方向预览：[`museum-redesign-preview.html`](./museum-redesign-preview.html)（方向 C）
 
 ---
 
 ## 1. 设计结论
 
-私人游戏截图博物馆：左侧讲故事与数据，右侧是圆角封面货架；每张封面坐在 **teal 柔光灯带**上。点封面进截图展墙，再进 Lightbox。无外框封板，元素浮在深炭黑画布上。
+私人游戏截图博物馆走 **街机馆 / 玩家档案** 路线：左侧 Hero 讲故事与数据，右侧是卡带式封面墙。点封面进截图展墙，再进 Lightbox。
 
-**记忆锚点**：封面底部货架灯带 + 浮层玻璃胶囊顶栏。
+**记忆锚点**：柔铜 accent + 方角柜体边框 + 卡带厚边 + filmstrip marquee 面板。
+
+**刻意不做**：玻璃胶囊顶栏、teal 柔光、3D 透视银幕墙、HUD 角标、漂浮光斑。
 
 ---
 
 ## 2. 信息架构
 
 ```text
-┌─ 浮层玻璃顶栏 ──────────────────────────────────────────┐
-│  🏛 GAMESHOT MUSEUM   货架 · 星标    [⌕ 搜索]  EN  ☾   │
+┌─ 柜体顶栏（方角 arcade-panel） ─────────────────────────┐
+│  GM  游戏截图博物馆   收藏室 · 高光展   [⌕]  EN  ☾      │
+└─────────────────────────────────────────────────────────┘
+┌─ FEATURED marquee ──────────────────────────────────────┐
+│  ▌▌ ▌▌ ▌▌ ▌▌                                            │
 └─────────────────────────────────────────────────────────┘
 ┌──────────────┬──────────────────────────────────────────┐
-│  Hero        │  封面货架墙（圆角 + 灯带）                  │
-│  大标题      │  ▌▌ ▌▌ ▌▌ ▌▌                             │
-│  简介        │  ▌▌ ▌▌ ▌▌ ▌▌                             │
+│  Hero        │  卡带展墙（平铺，无 3D）                     │
+│  mono 标题   │  ▌▌ ▌▌ ▌▌ ▌▌ ▌▌                           │
 │  统计        │                                          │
-│  随机封面    │  ┌─ 浮层底栏：筛选 · 显示 N/总 ─────────┐ │
-│              │  └────────────────────────────────────┘ │
+│  RANDOM CTA  │                                          │
 └──────────────┴──────────────────────────────────────────┘
-        │ 点击封面
-        ▼
-  Level 2 截图展墙 → Level 3 Lightbox
 ```
 
-| 能力 | 落点 |
-| --- | --- |
-| 货架 / 星标 | 顶栏中央 Nav（Shelf / Stars） |
-| 搜索 | 顶栏右侧胶囊 |
-| 分类筛选 | 底部 Dock「筛选」弹出 |
-| 主题 / 语言 | 顶栏圆形工具钮 |
-| 随机封面 | Hero CTA → `/game/:id` |
-| 密度切换 | 无（列数响应式） |
-
-### 路由
-
-| 路径 | 页面 |
-| --- | --- |
-| `/` · `/category/:slug` | 馆藏货架（Hero + 墙 + Dock） |
-| `/favorites` | 我的收藏 |
-| `/game/:gameId` | 截图展墙 |
+路由与能力落点不变（货架 / 高光 / 搜索 / Dock / 主题语言）。
 
 ---
 
@@ -56,53 +41,51 @@
 
 ### 3.1 关键词
 
-影院 · 货架柔光 · 玻璃浮层 · 圆角 · 疏朗  
-**不是**：工业方角轨、外框展板、密铺无留白、暖黄画廊灯。
+街机柜 · 卡带 · CRT · mono · 柔铜 · 方角  
+**不是**：玻璃浮层、胶囊 pill、影院 3D、冷 teal SaaS、高饱和琥珀黄。
 
-### 3.2 色彩（深色默认对齐参考图）
+### 3.2 色彩（Arcade Archive）
 
 ```css
-.dark {
-  --bg: #0c0e12;
-  --bg-elevated: #141820;
-  --surface: #1a2030;
-  --text: #eef2f6;
-  --text-muted: #8b97a8;
-  --accent: #5ec8d8; /* 货架灯 / 激活 */
-  --glass: rgba(20, 24, 32, 0.62);
-  --glass-border: rgba(238, 242, 246, 0.1);
-  --shelf-glow / --shelf-glow-soft; /* 封面灯带 */
+:root { /* 浅色中性纸 */
+  --bg: #e6e5e1;
+  --accent: #9a7a4f; /* 柔铜，少黄 */
+  --cabinet-edge: #32363f;
+}
+.dark { /* 深靛柜体 */
+  --bg: #0f1219;
+  --accent: #c4a574;
+  --cabinet: #171b26;
+  --cabinet-edge: #2c3342;
 }
 ```
 
-浅色保留 Console Slate 可读版；深色为展陈主场景。
-
 ### 3.3 字体
 
-- UI：`IBM Plex Sans`（Hero 大标题 semibold / tracking-tight）
-- 计数 / 状态：`IBM Plex Mono`
-- 导航：小号大写 + letter-spacing
+- 正文：`IBM Plex Sans`（中文回退系统黑体）
+- 标题 / 品牌 / 标签 / 计数：`Oxanium`（游戏 HUD 几何感，无打字机）
+- **不做**：Courier / 全大写密集 tracking
 
 ### 3.4 形状
 
-| 元素 | 圆角 |
+| 元素 | 边框 |
 | --- | --- |
-| 顶栏 / 搜索 / 工具 | `rounded-full` |
-| 封面 | `rounded-2xl`（~16px） |
-| Dock / 菜单 | `rounded-2xl` → `sm:rounded-full` |
-| 统计图标格 | `rounded-xl` |
+| 顶栏 / Dock / filmstrip | `1px` 半透明 `--cabinet-edge` |
+| 封面 / 展品 | `1px` 轻边，无厚黑描边 / 无 4px 底条 |
+| 圆角 | `6px` 左右 |
 
 ### 3.5 氛围背景
 
 ```text
-z-0  暗角底色     --ambient-base
-z-0  中段地光     --ambient-horizon（横向 ellipse）
-z-0  左侧淡光     --ambient-spotlight
-z-0  微噪点       feTurbulence
+z-0  深靛/暖纸底   --ambient-base
+z-0  底部琥珀地光  --ambient-horizon
+z-0  左侧弱光      --ambient-spotlight
+z-0  CRT scanline  .ambient-scanlines
+z-0  微噪点
 z-10 主内容
 ```
 
-无网格、无 L4 展板。
+无 HUD 网格、无漂浮 orb。
 
 ---
 
@@ -110,109 +93,67 @@ z-10 主内容
 
 ### 4.1 TopBar
 
-- 浮层：`glass-panel` + `rounded-full`，左右留白 `px-4/6/8`
-- 左：博物馆图标 + 站名 + tagline
-- 中（md+）：馆藏 / 收藏 Nav，激活态半透明胶囊 + 轻 glow
-- 右：⌕ 胶囊搜索 · 语言 · 主题
-- 移动端：汉堡菜单收纳 Nav / 语言 / 主题
+- `arcade-panel`：方角、2px 柜边、内嵌底阴影
+- Mark：`GM` 琥珀实心底
+- Nav：mono uppercase；激活态 = 琥珀底 + 深色字
 
-### 4.2 ShelfHero（lg+ 左栏）
+### 4.2 ShelfHero
 
-- 大标题 `heroTitle`
-- 短文案 `heroBody`
-- 三行统计：游戏 / 截图 / 分类
-- 底：`随机封面` 胶囊按钮
+- 标题 mono bold
+- CTA：`border-2 border-accent`，hover 填充反色
 
-### 4.3 GameBox（封面）
+### 4.3 GameBox（卡带）
 
-- 比例 `2:3`，`rounded-2xl`
-- 底部 `cover-shelf-glow`（teal 灯带）
-- Hover：上浮 6px + 灯带更亮 + 底部渐变叠层显示标题/shots
-- 无外置标题栏（对齐参考图「纯封面货架」）
+- 比例 `2:3`
+- 厚边框 + 底部琥珀灯条 + 轻 scanline 叠层
+- Hover：上浮 5px（无 3D translateZ）
 
-### 4.4 封面网格
+### 4.4 FeaturedFilmstrip
 
-| 断点 | 列数（有 Hero 时右侧） |
-| --- | --- |
-| 默认 | 2 |
-| sm | 3 |
-| md | 4 |
-| lg | 3（旁有 Hero） |
-| xl | 4 |
-| 2xl | 5 |
-
-间距：`gap-x-4/5` · `gap-y-8/10`（给灯带留白）。
+- 外框 marquee 面板（cabinet border）
+- 截图 2px 方角边框；plaque 用 mono + 琥珀字
 
 ### 4.5 ShelfDock
 
-- `sticky bottom-4` 居中浮层
-- 筛选（分类列表）· 清除 · `显示 {shown} / 共 {total} 款`
-
-### 4.6 Level 2 / 3
-
-截图墙与 Lightbox 逻辑不变；视觉继承圆角 / accent / glass。
+- `arcade-panel` 方角；筛选 chip 同柜体语言
 
 ---
 
 ## 5. 动效
 
-只动 `transform` / `opacity` / `filter`。
+只动 `transform` / `opacity`。
 
 | 场景 | 参数 |
 | --- | --- |
-| 封面入场 | stagger ~45ms，y 14→0，280ms |
-| 封面 hover | translateY(-6px) + 灯带 opacity，200ms |
-| 共享元素 | layoutId 220ms |
-| reduced-motion | 关闭位移，保留 opacity |
+| 封面入场 | stagger ~35ms，y 18→0 |
+| 封面 hover | translateY(-5px) |
+| filmstrip | 横向 loop，hover pause |
+| reduced-motion | 关闭位移与滚动 |
 
 ---
 
-## 6. i18n / 持久化
-
-- `src/i18n/messages.ts`：Hero / Dock / Nav 文案
-- `gameshot-preferences`：theme（默认 dark）、locale
-- `gameshot-gallery`：favoriteIds
-
----
-
-## 7. 文件对照
+## 6. 文件对照
 
 ```text
 src/components/
-  AmbientBackground.tsx      # 地光背景
-  layout/
-    TopBar.tsx               # 浮层玻璃导航
-    ShelfHero.tsx            # 左 Hero
-    ShelfDock.tsx            # 底栏筛选
-    AppShell.tsx
-  gallery/GameBox.tsx        # 货架封面
-pages/ShelfPage.tsx          # Hero + 墙 + Dock
-index.css                    # token + glass-panel + shelf-glow
-docs/Generated_image.png     # 视觉参考
+  AmbientBackground.tsx      # base + horizon + scanlines
+  layout/TopBar.tsx          # arcade-panel 柜体顶栏
+  layout/ShelfHero.tsx       # mono Hero
+  layout/ShelfDock.tsx       # 方角 Dock
+  gallery/GameBox.tsx        # 卡带封面
+  gallery/FeaturedFilmstrip.tsx
+index.css                    # Arcade Archive tokens + 样式
+docs/museum-redesign-preview.html
 ```
 
 ---
 
-## 8. 状态清单
+## 7. 状态清单
 
-- [x] 浮层玻璃顶栏
-- [x] 左侧 Hero + 随机封面
-- [x] 圆角封面 + 货架灯带
-- [x] 底部 Dock 筛选 / 计数
-- [x] 氛围地光背景
-- [x] i18n / 主题
+- [x] 柜体顶栏（去 glass pill）
+- [x] 琥珀 / 深靛 token 双主题
+- [x] 卡带封面 + scanline
+- [x] filmstrip marquee
+- [x] CRT 氛围背景
+- [x] Dock / Lightbox 方角化
 - [ ] 虚拟列表（大数据量）
-- [ ] 参考图中的分页器（当前用全量网格 + 计数，未做分页）
-
----
-
-## 9. 与参考图的取舍
-
-| 参考图 | 本实现 |
-| --- | --- |
-| 中央多级 Nav（Platforms…） | 仅馆藏 / 收藏（真实路由） |
-| 用户头像 | 语言 + 主题圆形钮 |
-| 底部分页 | 计数展示；筛选进 Dock |
-| 商标封面 | 用户 manifest 封面 |
-
-> 避免通用 UI：用**货架灯带 + 浮层玻璃**当记忆锚点，而不是又一套暗色卡片仪表盘。

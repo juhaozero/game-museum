@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+museum
 dist-ssr
 *.local
 

@@ -88,24 +88,31 @@ export default {
      * game-first:     '游戏名/文件名.jpg'
      * category-first: '分类/游戏名/文件名.jpg'
      *
-     * 支持字符串或 { path, caption } 对象
+     * 支持字符串或 { path, caption }；caption 可为字符串或 { zh, en }
      */
     picks: [
-      // { path: 'testgame/001.jpg', caption: '开场瞬间' },
+      // {
+      //   path: 'testgame/001.jpg',
+      //   caption: { zh: '开场瞬间', en: 'Opening beat' },
+      // },
     ],
 
     /**
      * 展签文案，key 为 relativePath（auto / manual 均可用）
+     * 值：字符串（双语共用）或 { zh, en }
      * 未配置时 filmstrip 铭牌显示游戏名
      */
     captions: {
-      // 'testgame/resized.png': '测试展品',
+      // 'testgame/resized.png': { zh: '测试展品', en: 'Test exhibit' },
     },
 
-    /** 可选：覆盖 filmstrip 标题与提示（写入 manifest，前端优先于 i18n） */
+    /**
+     * filmstrip 标题与提示：字符串或 { zh, en }
+     * 未写某语言时，该语言回退前端 i18n
+     */
     labels: {
-      // title: '本周精选',
-      // hint: '点开展品',
+      // title: { zh: '本周精选', en: 'This week' },
+      // hint: { zh: '点开展品', en: 'Open exhibit' },
     },
   },
 }

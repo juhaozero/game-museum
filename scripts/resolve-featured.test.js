@@ -80,4 +80,31 @@ describe('resolveFeatured', () => {
     )
     expect(featured.items[0]?.caption).toBe('开场')
   })
+
+  it('keeps bilingual labels and captions', () => {
+    const { featured } = resolveFeatured(
+      {
+        mode: 'manual',
+        picks: [
+          {
+            path: 'game-b/001.jpg',
+            caption: { zh: 'Boss 战', en: 'Boss fight' },
+          },
+        ],
+        labels: {
+          title: { zh: '本周精选', en: 'This week' },
+          hint: { zh: '点开展品', en: 'Open exhibit' },
+        },
+      },
+      sampleItems,
+    )
+    expect(featured.labels).toEqual({
+      title: { zh: '本周精选', en: 'This week' },
+      hint: { zh: '点开展品', en: 'Open exhibit' },
+    })
+    expect(featured.items[0]?.caption).toEqual({
+      zh: 'Boss 战',
+      en: 'Boss fight',
+    })
+  })
 })

@@ -38,15 +38,26 @@ describe('resolveFeaturedExhibits', () => {
         enabled: true,
         mode: 'manual',
         count: 1,
-        labels: { title: '本周精选', hint: '点开展品' },
-        items: [{ ...sampleItems[1]!, caption: '精选' }],
+        labels: {
+          title: { zh: '本周精选', en: 'This week' },
+          hint: { zh: '点开展品', en: 'Open exhibit' },
+        },
+        items: [
+          {
+            ...sampleItems[1]!,
+            caption: { zh: '精选', en: 'Featured' },
+          },
+        ],
       },
       items: sampleItems,
     }
 
     const featured = resolveFeaturedExhibits(manifest)
-    expect(featured.labels?.title).toBe('本周精选')
-    expect(featured.items[0]?.caption).toBe('精选')
+    expect(featured.labels?.title).toEqual({ zh: '本周精选', en: 'This week' })
+    expect(featured.items[0]?.caption).toEqual({
+      zh: '精选',
+      en: 'Featured',
+    })
   })
 
   it('falls back to legacy auto pick when featured is absent', () => {

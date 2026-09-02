@@ -127,11 +127,39 @@ cp scripts/manifest.config.example.js scripts/manifest.config.local.js
 | `gameCategories` | `{ "游戏名": "分类" }` 覆盖表 |
 | `imageExtensions` | 识别的图片后缀 |
 | `coverFileNames` | 约定封面文件名列表（如 `cover.jpg`）；也可用 `meta.json` 的 `cover` |
+| `featured` | 首页 filmstrip 精选；见下方 |
 
 也可通过环境变量指定配置：
 
 ```bash
 MANIFEST_CONFIG=./my-config.js npm run manifest
+```
+
+### `featured` 展策文案（中英）
+
+`labels` / `captions` / `picks[].caption` 支持：
+
+| 写法 | 行为 |
+|------|------|
+| 字符串 | 中英界面共用该文案（兼容旧配置） |
+| `{ zh, en }` | 按顶栏语言切换；某语言缺省则回退前端 i18n（标题/提示）或游戏名（展签） |
+
+```js
+featured: {
+  labels: {
+    title: { zh: '精选图片', en: 'Featured shots' },
+    hint: { zh: '点开查看', en: 'Click to view' },
+  },
+  captions: {
+    '艾尔登法环/01.jpg': { zh: '交界地黄昏', en: 'Limgrave dusk' },
+  },
+  picks: [
+    {
+      path: '艾尔登法环/01.jpg',
+      caption: { zh: '交界地黄昏', en: 'Limgrave dusk' },
+    },
+  ],
+}
 ```
 
 ### `sourceDir` 路径写法

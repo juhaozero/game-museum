@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-02T06:11:38.299Z",
+  "generatedAt": "2026-09-02T08:51:23.571Z",
   "cosBaseUrl": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com",
   "cosPathPrefix": "Screenshots",
   "layout": "game-first",
@@ -11,8 +11,14 @@
     "mode": "manual",
     "count": 8,
     "labels": {
-      "title": "精选图片",
-      "hint": "点开查看"
+      "title": {
+        "zh": "精选图片",
+        "en": "Featured shots"
+      },
+      "hint": {
+        "zh": "点开查看",
+        "en": "Click to view"
+      }
     },
     "items": [
       {
@@ -24,7 +30,10 @@
         "relativePath": "艾尔登法环/01.jpg",
         "url": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com/Screenshots/%E8%89%BE%E5%B0%94%E7%99%BB%E6%B3%95%E7%8E%AF/01.jpg",
         "isCover": false,
-        "caption": "艾尔登法环"
+        "caption": {
+          "zh": "艾尔登法环",
+          "en": "Elden Ring"
+        }
       }
     ]
   },

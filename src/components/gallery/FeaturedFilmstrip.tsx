@@ -1,18 +1,19 @@
 import { useMemo } from 'react'
 import { useReducedMotion } from 'motion/react'
-import type { FeaturedExhibitItem } from '@/types/manifest'
+import type { FeaturedExhibitItem, LocalizedText } from '@/types/manifest'
 import { ImageWithState } from '@/components/ui/ImageWithState'
 import { useI18n } from '@/i18n/useI18n'
 import { useLightboxStore } from '@/store/useLightboxStore'
 import { cn } from '@/utils/cn'
+import { pickLocalized } from '@/utils/localized'
 
 type FeaturedFilmstripProps = {
   items: FeaturedExhibitItem[]
   /** Lightbox 浏览全集（默认同 items） */
   lightboxPool?: FeaturedExhibitItem[]
-  /** manifest.featured.labels 覆盖 i18n */
-  title?: string
-  hint?: string
+  /** manifest.featured.labels 覆盖 i18n（可中英分写） */
+  title?: LocalizedText
+  hint?: LocalizedText
   /** compact = Hero 侧栏；wide = 全宽横条 */
   variant?: 'compact' | 'wide'
   className?: string
@@ -27,7 +28,7 @@ export function FeaturedFilmstrip({
   variant = 'compact',
   className,
 }: FeaturedFilmstripProps) {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const openAt = useLightboxStore((s) => s.openAt)
   const reduceMotion = useReducedMotion()
   const pool = lightboxPool ?? items
@@ -42,8 +43,8 @@ export function FeaturedFilmstrip({
   const isWide = variant === 'wide'
   const scrollThreshold = isWide ? 2 : 3
   const canScroll = items.length >= scrollThreshold && !reduceMotion
-  const stripTitle = title?.trim() || t('featuredTitle')
-  const stripHint = hint?.trim() || t('featuredHint')
+  const stripTitle = pickLocalized(title, locale) || t('featuredTitle')
+  const stripHint = pickLocalized(hint, locale) || t('featuredHint')
 
   return (
     <section
@@ -74,9 +75,10 @@ export function FeaturedFilmstrip({
           {trackItems.map((item, i) => {
             const indexInPool = pool.findIndex((s) => s.id === item.id)
             const openIndex = indexInPool >= 0 ? indexInPool : 0
-            const plaqueTitle = item.caption?.trim() || item.gameName
+            const plaqueCaption = pickLocalized(item.caption, locale)
+            const plaqueTitle = plaqueCaption || item.gameName
             const plaqueSub =
-              item.caption?.trim() && item.caption.trim() !== item.gameName
+              plaqueCaption && plaqueCaption !== item.gameName
                 ? item.gameName
                 : null
 
@@ -87,7 +89,7 @@ export function FeaturedFilmstrip({
                   className="group filmstrip-shot exhibit-frame"
                   onClick={() => openAt(pool, openIndex)}
                   aria-label={t('viewShot', {
-                    name: item.caption?.trim() || item.gameName,
+                    name: plaqueCaption || item.gameName,
                   })}
                 >
                   <span

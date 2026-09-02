@@ -13,19 +13,23 @@ export type ScreenshotItem = {
 
 /** 精选展品（filmstrip 条目，可含展签） */
 export type FeaturedExhibitItem = ScreenshotItem & {
-  caption?: string
+  /** 展签；字符串或 { zh, en } */
+  caption?: LocalizedText
 }
 
 export type FeaturedExhibitMode = 'auto' | 'manual'
+
+/** 展策文案：单语字符串，或按 locale 划分 */
+export type LocalizedText = string | { zh?: string; en?: string }
 
 export type ManifestFeatured = {
   enabled: boolean
   mode: FeaturedExhibitMode
   count: number
-  /** manifest 生成时写入的可选 UI 文案 */
+  /** manifest 生成时写入的可选 UI 文案（可中英分写） */
   labels?: {
-    title?: string
-    hint?: string
+    title?: LocalizedText
+    hint?: LocalizedText
   }
   items: FeaturedExhibitItem[]
 }

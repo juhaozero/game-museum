@@ -1,5 +1,9 @@
 /**
  * 解析 manifest.config.js 中的 featured 配置，生成 manifest.featured
+ *
+ * 展策文案（labels / captions）支持：
+ * - 字符串：所有语言共用
+ * - { zh, en }：按前端 locale 选取
  */
 
 const DEFAULT_FEATURED = {
@@ -16,6 +20,20 @@ function normalizeRelativePath(value) {
   return String(value).replace(/\\/g, '/').replace(/^\/+/, '')
 }
 
+/** @param {unknown} value @returns {string | { zh?: string, en?: string } | undefined} */
+export function sanitizeLocalizedText(value) {
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    return trimmed || undefined
+  }
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined
+
+  const out = {}
+  if (typeof value.zh === 'string' && value.zh.trim()) out.zh = value.zh.trim()
+  if (typeof value.en === 'string' && value.en.trim()) out.en = value.en.trim()
+  return Object.keys(out).length > 0 ? out : undefined
+}
+
 function normalizePickEntry(entry) {
   if (typeof entry === 'string') {
     return { path: normalizeRelativePath(entry), caption: undefined }
@@ -23,7 +41,7 @@ function normalizePickEntry(entry) {
   if (entry && typeof entry === 'object' && typeof entry.path === 'string') {
     return {
       path: normalizeRelativePath(entry.path),
-      caption: typeof entry.caption === 'string' ? entry.caption.trim() : undefined,
+      caption: sanitizeLocalizedText(entry.caption),
     }
   }
   return null
@@ -90,8 +108,7 @@ function pickFeaturedManual(config, items, warnings) {
 
 function captionForItem(config, item) {
   const fromMap = config.captions?.[normalizeRelativePath(item.relativePath)]
-  if (typeof fromMap === 'string' && fromMap.trim()) return fromMap.trim()
-  return undefined
+  return sanitizeLocalizedText(fromMap)
 }
 
 export function normalizeFeaturedConfig(raw) {
@@ -138,17 +155,17 @@ export function resolveFeatured(rawConfig, items) {
       resolvedItems = []
     } else {
       resolvedItems = pickFeaturedManual(config, items, warnings).map(
-        ({ item, caption: inlineCaption }) => ({
-          ...item,
-          caption: inlineCaption ?? captionForItem(config, item),
-        }),
+        ({ item, caption: inlineCaption }) => {
+          const caption = inlineCaption ?? captionForItem(config, item)
+          return caption ? { ...item, caption } : { ...item }
+        },
       )
     }
   } else {
-    resolvedItems = pickFeaturedAuto(config, items).map((item) => ({
-      ...item,
-      caption: captionForItem(config, item),
-    }))
+    resolvedItems = pickFeaturedAuto(config, items).map((item) => {
+      const caption = captionForItem(config, item)
+      return caption ? { ...item, caption } : { ...item }
+    })
   }
 
   return {
@@ -164,8 +181,8 @@ export function resolveFeatured(rawConfig, items) {
 }
 
 function sanitizeLabels(labels) {
-  const title = typeof labels.title === 'string' ? labels.title.trim() : ''
-  const hint = typeof labels.hint === 'string' ? labels.hint.trim() : ''
+  const title = sanitizeLocalizedText(labels.title)
+  const hint = sanitizeLocalizedText(labels.hint)
   const out = {}
   if (title) out.title = title
   if (hint) out.hint = hint

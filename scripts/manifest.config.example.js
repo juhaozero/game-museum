@@ -36,8 +36,18 @@ export default {
     mode: 'auto',
     count: 8,
     diverseGames: true,
-    picks: [],
-    captions: {},
-    labels: {},
+    picks: [
+      // {
+      //   path: 'RPG/塞尔达传说/001.jpg',
+      //   caption: { zh: '神庙之前', en: 'Before the shrine' },
+      // },
+    ],
+    captions: {
+      // 'RPG/塞尔达传说/001.jpg': { zh: '神庙之前', en: 'Before the shrine' },
+    },
+    labels: {
+      // title: { zh: '本周精选', en: 'This week' },
+      // hint: { zh: '点开展品', en: 'Open exhibit' },
+    },
   },
 }

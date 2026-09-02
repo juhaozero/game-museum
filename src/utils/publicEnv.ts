@@ -18,6 +18,7 @@ export function parseEnvBool(
 const UI_ENV_KEYS = [
   'PUBLIC_SHOW_IMAGE_FILENAME',
   'PUBLIC_SHOW_SCREENSHOT_GAME_NAME',
+  'PUBLIC_ENABLE_LIGHT_MODE',
 ] as const
 
 function defaultEnv(): Record<string, string | undefined> {
@@ -40,6 +41,8 @@ export type PublicUiEnv = {
   showImageFileName: boolean
   /** 收藏等多游戏列表是否在标题中显示游戏名 */
   showScreenshotGameName: boolean
+  /** 是否开放浅色模式切换（关闭时强制深色，隐藏主题按钮） */
+  enableLightMode: boolean
 }
 
 export function getPublicUiEnv(
@@ -52,6 +55,7 @@ export function getPublicUiEnv(
       e.PUBLIC_SHOW_SCREENSHOT_GAME_NAME,
       true,
     ),
+    enableLightMode: parseEnvBool(e.PUBLIC_ENABLE_LIGHT_MODE, false),
   }
 }
 

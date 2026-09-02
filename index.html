@@ -5,16 +5,22 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GameShot Museum</title>
-    <!-- 深色主场：首屏前应用主题，避免浅色闪烁；无偏好时默认 dark -->
+    <!-- 深色主场：首屏前应用主题；PUBLIC_ENABLE_LIGHT_MODE 关闭时强制 dark -->
     <script>
       ;(function () {
         try {
-          var raw = localStorage.getItem('gameshot-preferences')
+          var rawFlag = '%PUBLIC_ENABLE_LIGHT_MODE%'
+          var enableLight =
+            rawFlag.indexOf('%') === -1 &&
+            /^(1|true|yes|on)$/i.test(String(rawFlag).trim())
           var theme = 'dark'
-          if (raw) {
-            var parsed = JSON.parse(raw)
-            if (parsed && parsed.state && parsed.state.theme === 'light') {
-              theme = 'light'
+          if (enableLight) {
+            var raw = localStorage.getItem('gameshot-preferences')
+            if (raw) {
+              var parsed = JSON.parse(raw)
+              if (parsed && parsed.state && parsed.state.theme === 'light') {
+                theme = 'light'
+              }
             }
           }
           document.documentElement.classList.toggle('dark', theme === 'dark')

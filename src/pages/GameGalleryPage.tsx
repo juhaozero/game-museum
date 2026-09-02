@@ -1,6 +1,8 @@
 import { Link, useParams } from 'react-router-dom'
-import { motion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import { ScreenshotGrid } from '@/components/gallery/ScreenshotGrid'
+import { ExhibitEmptyState } from '@/components/ui/ExhibitEmptyState'
+import { ExhibitSkeleton } from '@/components/ui/ExhibitSkeleton'
 import { ImageWithState } from '@/components/ui/ImageWithState'
 import { useAppContext } from '@/hooks/useAppContext'
 import { useI18n } from '@/i18n/useI18n'
@@ -11,42 +13,28 @@ export function GameGalleryPage() {
   const { gameId } = useParams()
   const { manifestState, gallery } = useAppContext()
   const { t } = useI18n()
+  const reduceMotion = useReducedMotion()
 
   if (manifestState.status === 'loading') {
-    return (
-      <div
-        aria-busy="true"
-        aria-label={t('loading')}
-        className="exhibit-page mx-auto max-w-6xl space-y-6"
-      >
-        <div className="h-4 w-40 animate-pulse rounded bg-surface" />
-        <div className="exhibit-grid">
-          {Array.from({ length: 6 }, (_, i) => (
-            <div
-              key={i}
-              className={`aspect-video animate-pulse rounded-md border border-[color:var(--cabinet-edge)] bg-surface ${
-                i === 0 ? 'exhibit-lead' : ''
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-    )
+    return <ExhibitSkeleton />
   }
 
   if (manifestState.status === 'error') {
     return (
-      <p className="text-pretty text-muted">
-        {manifestState.message}. {t('runManifestHint')}{' '}
-        <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-xs">
-          npm run manifest
-        </code>
-      </p>
+      <ExhibitEmptyState
+        className="mt-10"
+        eyebrow={t('emptyEyebrowError')}
+        title={manifestState.message}
+        body={t('runManifestHint')}
+        codeHint="npm run manifest"
+      />
     )
   }
 
   const game = gallery.getGameById(gameId)
-  const shots = gameId ? gallery.getScreenshotsByGameId(gameId) : []
+  const shots = gameId
+    ? gallery.getScreenshotsByGameId(gameId).filter((item) => !item.isCover)
+    : []
   const backUrl = buildShelfUrl(gallery.selectedCategory, gallery.searchQuery)
   const favCover = game
     ? gallery.favoriteScreenshots.find((s) => s.gameId === game.id)?.url
@@ -64,20 +52,39 @@ export function GameGalleryPage() {
             {t('backToShelf')}
           </Link>
         </p>
-        <p className="text-pretty text-muted">{t('gameNotFound')}</p>
+        <ExhibitEmptyState
+          eyebrow={t('emptyEyebrowShelf')}
+          title={t('gameNotFound')}
+          action={{ to: backUrl, label: t('goToShelf') }}
+        />
       </section>
     )
+  }
+
+  const plaqueItem = {
+    hidden: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.34, ease: 'easeOut' as const },
+    },
   }
 
   return (
     <section className="exhibit-page mx-auto max-w-6xl">
       <header className="exhibit-header mb-8 md:mb-10">
-        <Link
-          to={backUrl}
-          className="mb-5 inline-flex items-center gap-1.5 text-[13px] text-muted no-underline transition-colors hover:text-accent"
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.28, ease: 'easeOut' }}
         >
-          {t('backToShelf')}
-        </Link>
+          <Link
+            to={backUrl}
+            className="mb-5 inline-flex items-center gap-1.5 text-[13px] text-muted no-underline transition-colors hover:text-accent"
+          >
+            {t('backToShelf')}
+          </Link>
+        </motion.div>
 
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:gap-8">
           {coverUrl && (
@@ -96,21 +103,46 @@ export function GameGalleryPage() {
             </motion.div>
           )}
 
-          <div className="min-w-0 flex-1">
-            <p className="type-label mb-2 inline-flex items-center gap-2 text-accent">
+          <motion.div
+            className="min-w-0 flex-1"
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: {},
+              show: {
+                transition: {
+                  staggerChildren: reduceMotion ? 0 : 0.09,
+                  delayChildren: reduceMotion ? 0 : 0.14,
+                },
+              },
+            }}
+          >
+            <motion.p
+              className="type-label mb-2 inline-flex items-center gap-2 text-accent"
+              variants={plaqueItem}
+            >
               <span
                 aria-hidden
                 className="inline-block size-1.5 rounded-[1px] bg-accent shadow-[0_0_10px_var(--shelf-glow)]"
               />
               {t('exhibitWall')}
-            </p>
-            <h1 className="type-display text-balance text-2xl text-fg sm:text-3xl">
+            </motion.p>
+            <motion.h1
+              className="type-hero text-balance text-2xl text-fg sm:text-3xl"
+              variants={plaqueItem}
+            >
               {game.name}
-            </h1>
-            <p className="type-label mt-2 tabular-nums text-muted">
-              {game.category} · {t('shotsLabel', { count: game.shotCount })}
-            </p>
-          </div>
+            </motion.h1>
+            <motion.p
+              className="type-label mt-2 tabular-nums text-muted"
+              variants={plaqueItem}
+            >
+              {game.category}
+              {shots.length > 0 && (
+                <> · {t('shotsLabel', { count: shots.length })}</>
+              )}
+            </motion.p>
+          </motion.div>
         </div>
       </header>
 

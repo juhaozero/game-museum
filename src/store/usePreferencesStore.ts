@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Locale } from '@/i18n/messages'
 import { translate } from '@/i18n/messages'
+import { publicUiEnv } from '@/utils/publicEnv'
 
 export type ThemeMode = 'light' | 'dark'
 
@@ -19,8 +20,16 @@ type PersistedSlice = {
   locale?: Locale
 }
 
+function resolveTheme(theme: ThemeMode): ThemeMode {
+  if (!publicUiEnv.enableLightMode) return 'dark'
+  return theme
+}
+
 function applyThemeClass(theme: ThemeMode) {
-  document.documentElement.classList.toggle('dark', theme === 'dark')
+  document.documentElement.classList.toggle(
+    'dark',
+    resolveTheme(theme) === 'dark',
+  )
 }
 
 function applyLocale(locale: Locale) {
@@ -35,7 +44,7 @@ function readPersisted(): { theme: ThemeMode; locale: Locale } {
     const parsed = JSON.parse(raw) as { state?: PersistedSlice }
     const theme = parsed.state?.theme === 'light' ? 'light' : 'dark'
     const locale = parsed.state?.locale === 'en' ? 'en' : 'zh'
-    return { theme, locale }
+    return { theme: resolveTheme(theme), locale }
   } catch {
     return { theme: 'dark', locale: 'zh' }
   }
@@ -53,10 +62,16 @@ export const usePreferencesStore = create<PreferencesState>()(
       theme: 'dark',
       locale: 'zh',
       setTheme: (theme) => {
-        applyThemeClass(theme)
-        set({ theme })
+        const next = resolveTheme(theme)
+        applyThemeClass(next)
+        set({ theme: next })
       },
       toggleTheme: () => {
+        if (!publicUiEnv.enableLightMode) {
+          applyThemeClass('dark')
+          set({ theme: 'dark' })
+          return
+        }
         const next = get().theme === 'dark' ? 'light' : 'dark'
         applyThemeClass(next)
         set({ theme: next })
@@ -75,7 +90,9 @@ export const usePreferencesStore = create<PreferencesState>()(
       name: 'gameshot-preferences',
       onRehydrateStorage: () => (state) => {
         if (!state) return
-        applyThemeClass(state.theme)
+        const theme = resolveTheme(state.theme)
+        if (theme !== state.theme) state.theme = theme
+        applyThemeClass(theme)
         applyLocale(state.locale)
       },
     },

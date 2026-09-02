@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { ScreenshotItem } from '@/types/manifest'
 import { ScreenshotCard } from '@/components/gallery/ScreenshotCard'
+import { ExhibitEmptyState } from '@/components/ui/ExhibitEmptyState'
 import { useI18n } from '@/i18n/useI18n'
 import { cn } from '@/utils/cn'
 
@@ -13,7 +14,7 @@ type ScreenshotGridProps = {
   variant?: 'default' | 'exhibition'
 }
 
-/** 截图网格 / 展厅展墙（exhibition = 不对称 12 列） */
+/** 截图网格 / 展厅展墙（exhibition = 不对称 12 列；大列表 content-visibility） */
 export function ScreenshotGrid({
   items,
   showGameName = true,
@@ -28,11 +29,14 @@ export function ScreenshotGrid({
 
   if (items.length === 0) {
     return (
-      <p className="text-pretty text-muted">
-        {emptyMessage ?? t('noScreenshots')}
-      </p>
+      <ExhibitEmptyState
+        eyebrow={t('emptyEyebrowShelf')}
+        title={emptyMessage ?? t('noScreenshots')}
+      />
     )
   }
+
+  const stagger = reduceMotion ? 0 : isExhibition ? 0.055 : 0.04
 
   return (
     <motion.ul
@@ -49,7 +53,8 @@ export function ScreenshotGrid({
         hidden: {},
         show: {
           transition: {
-            staggerChildren: reduceMotion ? 0 : 0.04,
+            staggerChildren: stagger,
+            delayChildren: reduceMotion ? 0 : isExhibition ? 0.2 : 0,
           },
         },
       }}
@@ -60,10 +65,18 @@ export function ScreenshotGrid({
             key={item.id}
             layout={!reduceMotion}
             className={cn(isExhibition && index === 0 && 'exhibit-lead')}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            variants={{
+              hidden: reduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: isExhibition ? 14 : 10 },
+              show: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.34, ease: 'easeOut' },
+              },
+            }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}
-            transition={{ duration: 0.28, ease: 'easeOut' }}
+            transition={{ layout: { duration: 0.28, ease: 'easeOut' } }}
           >
             <ScreenshotCard
               item={item}

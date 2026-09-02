@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ScreenshotGrid } from '@/components/gallery/ScreenshotGrid'
+import { ExhibitEmptyState } from '@/components/ui/ExhibitEmptyState'
+import { ExhibitSkeleton } from '@/components/ui/ExhibitSkeleton'
 import { useAppContext } from '@/hooks/useAppContext'
 import { useI18n } from '@/i18n/useI18n'
 import { publicUiEnv } from '@/utils/publicEnv'
@@ -12,35 +14,18 @@ export function FavoritesPage() {
   const backUrl = buildShelfUrl(gallery.selectedCategory, gallery.searchQuery)
 
   if (manifestState.status === 'loading') {
-    return (
-      <div
-        aria-busy="true"
-        className="exhibit-page mx-auto max-w-6xl space-y-6"
-        aria-label={t('loading')}
-      >
-        <div className="h-4 w-40 animate-pulse rounded bg-surface" />
-        <div className="exhibit-grid">
-          {Array.from({ length: 4 }, (_, i) => (
-            <div
-              key={i}
-              className={`aspect-video animate-pulse rounded-md border border-[color:var(--cabinet-edge)] bg-surface ${
-                i === 0 ? 'exhibit-lead' : ''
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-    )
+    return <ExhibitSkeleton count={4} />
   }
 
   if (manifestState.status === 'error') {
     return (
-      <p className="text-pretty text-muted">
-        {manifestState.message}. {t('runManifestHint')}{' '}
-        <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-xs">
-          npm run manifest
-        </code>
-      </p>
+      <ExhibitEmptyState
+        className="mt-10"
+        eyebrow={t('emptyEyebrowError')}
+        title={manifestState.message}
+        body={t('runManifestHint')}
+        codeHint="npm run manifest"
+      />
     )
   }
 
@@ -63,7 +48,7 @@ export function FavoritesPage() {
           />
           {t('navFavorites')}
         </p>
-        <h1 className="type-display text-balance text-2xl text-fg sm:text-3xl">
+        <h1 className="type-hero text-balance text-2xl text-fg sm:text-3xl">
           {t('myFavorites')}
         </h1>
         {stats.favoriteVisibleCount > 0 && (
@@ -74,19 +59,16 @@ export function FavoritesPage() {
       </header>
 
       {favoriteScreenshots.length === 0 ? (
-        <div className="text-pretty text-muted">
-          <p>{t('favoritesEmpty')}</p>
-          <p className="mt-2 text-sm">
-            <Link to="/" className="text-accent no-underline hover:underline">
-              {t('goToShelf')}
-            </Link>
-          </p>
-          {orphanCount > 0 && (
-            <p className="mt-2 text-xs">
-              {t('orphanFavorites', { count: orphanCount })}
-            </p>
-          )}
-        </div>
+        <ExhibitEmptyState
+          eyebrow={t('emptyEyebrowFavorites')}
+          title={t('favoritesEmpty')}
+          body={
+            orphanCount > 0
+              ? t('orphanFavorites', { count: orphanCount })
+              : undefined
+          }
+          action={{ to: '/', label: t('goToShelf') }}
+        />
       ) : (
         <ScreenshotGrid
           items={favoriteScreenshots}

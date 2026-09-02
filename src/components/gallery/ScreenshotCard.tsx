@@ -109,9 +109,17 @@ export function ScreenshotCard({
         isExhibition && 'exhibit-card',
         className,
       )}
-      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '0px 0px -40px 0px' }}
+      initial={
+        isExhibition || reduceMotion
+          ? false
+          : { opacity: 0, y: 16 }
+      }
+      whileInView={
+        isExhibition || reduceMotion ? undefined : { opacity: 1, y: 0 }
+      }
+      viewport={
+        isExhibition ? undefined : { once: true, margin: '0px 0px -40px 0px' }
+      }
       transition={{ duration: 0.28, ease: 'easeOut' }}
     >
       {isExhibition ? (

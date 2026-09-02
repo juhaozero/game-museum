@@ -58,28 +58,28 @@
   );
   --ambient-horizon: radial-gradient(
     ellipse 95% 50% at 50% 78%,
-    color-mix(in srgb, var(--accent) 18%, transparent) 0%,
+    color-mix(in srgb, var(--accent) 20%, transparent) 0%,
     transparent 68%
   );
   --ambient-spotlight: radial-gradient(
     ellipse 50% 42% at 14% 18%,
-    color-mix(in srgb, var(--accent) 10%, white 38%),
+    color-mix(in srgb, var(--accent) 12%, white 32%),
     transparent 72%
   );
   --ambient-floor: linear-gradient(
     180deg,
-    transparent 46%,
-    color-mix(in srgb, var(--accent) 14%, transparent) 100%
+    transparent 44%,
+    color-mix(in srgb, var(--accent) 16%, transparent) 100%
   );
   --ambient-vignette: radial-gradient(
     ellipse 120% 100% at 50% 42%,
-    transparent 44%,
-    color-mix(in srgb, #3a4a60 14%, transparent) 100%
+    transparent 42%,
+    color-mix(in srgb, #3a4a60 16%, transparent) 100%
   );
-  --ambient-scanline-opacity: 0.018;
-  --ambient-noise-opacity: 0.028;
-  --shelf-glow: color-mix(in srgb, var(--accent) 58%, #c9a227);
-  --shelf-glow-soft: color-mix(in srgb, var(--accent) 32%, transparent);
+  --ambient-scanline-opacity: 0.02;
+  --ambient-noise-opacity: 0.03;
+  --shelf-glow: color-mix(in srgb, var(--accent) 62%, #c9a227);
+  --shelf-glow-soft: color-mix(in srgb, var(--accent) 36%, transparent);
   --contact-shadow: color-mix(in srgb, #243048 14%, transparent);
   --contact-shadow-strong: color-mix(in srgb, #243048 22%, transparent);
 
@@ -233,7 +233,132 @@
       0 8px 24px var(--contact-shadow);
   }
 
-  /* 字距：中文禁止负 tracking；标签略开，避免堆字 */
+  /* —— 方案 B · 薄品牌灯箱顶栏 —— */
+  .topbar {
+    position: relative;
+    z-index: var(--z-header);
+    border-bottom: 1px solid var(--cabinet-edge);
+    background: color-mix(in srgb, var(--cabinet) 88%, transparent);
+  }
+
+  .topbar::before {
+    content: '';
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 0;
+    height: 2px;
+    border-radius: 0 0 999px 999px;
+    background: var(--shelf-glow);
+    box-shadow: 0 0 10px 1px var(--shelf-glow-soft);
+    opacity: var(--marquee-light-opacity);
+    pointer-events: none;
+    animation: lamp-breathe 4s ease-in-out infinite;
+  }
+
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.55rem 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .topbar-inner {
+      padding: 0.6rem 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .topbar-inner {
+      padding-inline: 2rem;
+    }
+  }
+
+  .topbar-mark {
+    display: inline-flex;
+    width: 1.75rem;
+    height: 1.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .topbar-nav {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 150ms ease-out;
+  }
+
+  .topbar-nav:hover {
+    color: var(--accent);
+  }
+
+  .topbar-nav--active {
+    color: var(--accent);
+  }
+
+  .topbar-nav--active::after {
+    content: '';
+    position: absolute;
+    left: 0.65rem;
+    right: 0.65rem;
+    bottom: 0.15rem;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--shelf-glow);
+    box-shadow: 0 0 8px 1px var(--shelf-glow-soft);
+  }
+
+  .topbar-tool {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2rem;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    background: transparent;
+    transition:
+      color 150ms ease-out,
+      border-color 150ms ease-out,
+      background-color 150ms ease-out;
+  }
+
+  .topbar-tool:hover {
+    color: var(--accent);
+    border-color: var(--cabinet-edge);
+    background: var(--accent-soft);
+  }
+
+  .shelf-search {
+    width: 100%;
+  }
+
+  .shelf-search-slot input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+
+  /* 字距：中文禁止负 tracking；标题收、标签开，拉开层次 */
   .type-label {
     font-family: var(--font-sans);
     font-size: 12px;
@@ -242,11 +367,78 @@
     line-height: 1.5;
   }
 
+  /* 英文标签 / badge：略宽距 */
+  .type-label-wide {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    line-height: 1.5;
+  }
+
   .type-display {
     font-family: var(--font-sans);
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     line-height: 1.35;
+  }
+
+  /* Hero 大标题：中文优先更紧，与标签拉开对比 */
+  .type-hero {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    line-height: 1.3;
+  }
+
+  /*
+   * 铜金锈蚀字效：金属渐变 + 细噪点，background-clip 到字形
+   * 浅色模式同样走 accent，避免硬编码只服务深色
+   */
+  .type-metal {
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E"),
+      linear-gradient(
+        118deg,
+        color-mix(in srgb, var(--accent) 72%, white) 0%,
+        var(--accent) 26%,
+        color-mix(in srgb, var(--accent) 52%, #4a3010) 48%,
+        color-mix(in srgb, var(--accent) 88%, white) 70%,
+        var(--accent) 100%
+      );
+    background-size: 140px 140px, 100% 100%;
+    background-blend-mode: soft-light, normal;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+    .type-metal {
+      color: var(--accent);
+      -webkit-text-fill-color: var(--accent);
+      background: none;
+    }
+  }
+
+  .hero-kicker {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    line-height: 1.4;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .hero-rule {
+    display: block;
+    width: 2.75rem;
+    height: 1px;
+    margin: 0.85rem 0 0.95rem;
+    background: color-mix(in srgb, var(--accent) 70%, transparent);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 25%, transparent);
   }
 
   .type-stat {
@@ -258,7 +450,7 @@
 
   .font-display {
     font-family: var(--font-sans);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
   }
 }
 
@@ -297,7 +489,8 @@
 .arcade-wall::before {
   content: '';
   position: absolute;
-  inset: -6% -4% -12% -3%;
+  /* 只向右/下扩展，避免叠到左侧 Hero */
+  inset: -3% -3% -10% 0;
   z-index: -1;
   border-radius: 8px;
   border: 1px solid var(--cabinet-edge);
@@ -321,6 +514,116 @@
   position: relative;
   z-index: 1;
   pointer-events: auto;
+}
+
+.arcade-grid > li,
+.exhibit-grid > li {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 280px;
+}
+
+/* 有精选 filmstrip 时压缩首页纵向节奏 */
+.arcade-stage--with-featured {
+  min-height: calc(100vh - 11rem);
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .arcade-stage--with-featured {
+    gap: 1.25rem;
+  }
+}
+
+.filmstrip--compact {
+  padding: 10px 12px 10px;
+  gap: 8px;
+}
+
+.filmstrip--compact.filmstrip--wide {
+  padding: 10px 14px;
+  gap: 8px;
+}
+
+.shelf-hero--compact {
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .shelf-hero--compact {
+    padding-top: 0;
+  }
+}
+
+.shelf-search--console {
+  padding: 1rem 1.1rem 1.1rem;
+  border: 1px solid var(--cabinet-edge);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--cabinet) 92%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--accent) 8%, transparent),
+    0 10px 28px var(--contact-shadow);
+}
+
+.shelf-search--console .shelf-search-slot input {
+  min-height: 2.75rem;
+}
+
+/* 展墙头：分类灯条 + 计数（与封面墙同构图） */
+.wall-header {
+  position: relative;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.wall-header-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.65rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: color 150ms ease-out;
+}
+
+.wall-header-tab:hover {
+  color: var(--accent);
+}
+
+.wall-header-tab--active {
+  color: var(--accent);
+}
+
+.wall-header-tab--active::after {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.1rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--shelf-glow);
+  box-shadow: 0 0 8px 1px var(--shelf-glow-soft);
+  animation: lamp-breathe 4s ease-in-out infinite;
+}
+
+
+/* 街机灯条弱呼吸（顶栏 / filmstrip / 展墙头 / 卡带底灯） */
+@keyframes lamp-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    box-shadow: 0 0 8px 1px var(--shelf-glow-soft);
+  }
+  50% {
+    opacity: 0.95;
+    box-shadow: 0 0 14px 2px var(--shelf-glow-soft);
+  }
 }
 
 @media (min-width: 640px) {
@@ -524,6 +827,7 @@
     0 4px 18px color-mix(in srgb, var(--accent) 25%, transparent);
   opacity: var(--marquee-light-opacity);
   pointer-events: none;
+  animation: lamp-breathe 4s ease-in-out infinite;
 }
 
 .filmstrip-head {
@@ -1055,6 +1359,42 @@
   }
 }
 
+/* 柜体空态展签 */
+.exhibit-empty-light {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 0;
+  height: 2px;
+  border-radius: 0 0 999px 999px;
+  background: var(--shelf-glow);
+  box-shadow: 0 0 10px 2px var(--shelf-glow-soft);
+  opacity: var(--exhibit-top-light-opacity);
+  pointer-events: none;
+}
+
+.exhibit-empty-shelf {
+  pointer-events: none;
+  margin-top: 1.5rem;
+  height: 28px;
+  border-radius: 0 0 4px 4px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--accent) 18%, transparent) 0%,
+      transparent 70%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--text) 8%, transparent) 0,
+      color-mix(in srgb, var(--text) 8%, transparent) 1px,
+      transparent 1px,
+      transparent 28px
+    );
+  mask-image: linear-gradient(180deg, black 0%, transparent 95%);
+  opacity: 0.7;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cart-cover-lift,
   .group:hover .cart-cover-lift,
@@ -1070,5 +1410,11 @@
 
   .filmstrip-track--animate {
     animation: none;
+  }
+
+  .topbar::before,
+  .filmstrip::before,
+  .wall-header-tab--active::after {
+    animation: none !important;
   }
 }

@@ -26,4 +26,14 @@ describe('publicEnv', () => {
     ).toBe(false)
     expect(getPublicUiEnv({}).showScreenshotGameName).toBe(true)
   })
+
+  it('getPublicUiEnv 读取 PUBLIC_ENABLE_LIGHT_MODE', () => {
+    expect(
+      getPublicUiEnv({ PUBLIC_ENABLE_LIGHT_MODE: 'true' }).enableLightMode,
+    ).toBe(true)
+    expect(getPublicUiEnv({}).enableLightMode).toBe(false)
+    expect(
+      getPublicUiEnv({ PUBLIC_ENABLE_LIGHT_MODE: 'off' }).enableLightMode,
+    ).toBe(false)
+  })
 })

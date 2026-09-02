@@ -7,4 +7,6 @@ interface ImportMetaEnv {
   readonly PUBLIC_SHOW_IMAGE_FILENAME?: string
   /** 多游戏列表悬停标题是否显示游戏名，默认 true */
   readonly PUBLIC_SHOW_SCREENSHOT_GAME_NAME?: string
+  /** 是否开放浅色模式切换，默认 false（深色主场） */
+  readonly PUBLIC_ENABLE_LIGHT_MODE?: string
 }

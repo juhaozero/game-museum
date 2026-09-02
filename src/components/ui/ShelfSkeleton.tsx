@@ -8,7 +8,7 @@ export function ShelfSkeleton() {
     <div
       aria-busy="true"
       aria-label={t('loading')}
-      className="flex flex-col gap-8 lg:grid lg:grid-cols-[280px_1fr] lg:gap-10"
+      className="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(22rem,0.4fr)_minmax(0,1fr)] lg:gap-12"
     >
       <div className="space-y-4">
         <div className="h-10 w-4/5 animate-pulse rounded-xl bg-surface" />

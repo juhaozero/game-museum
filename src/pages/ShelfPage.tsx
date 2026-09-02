@@ -1,16 +1,18 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { FeaturedFilmstrip } from '@/components/gallery/FeaturedFilmstrip'
 import { GameBox } from '@/components/gallery/GameBox'
-import { ShelfDock } from '@/components/layout/ShelfDock'
+import { VirtualArcadeGrid } from '@/components/gallery/VirtualArcadeGrid'
 import { ShelfHero } from '@/components/layout/ShelfHero'
+import { WallHeader } from '@/components/layout/WallHeader'
+import { ExhibitEmptyState } from '@/components/ui/ExhibitEmptyState'
 import { ShelfSkeleton } from '@/components/ui/ShelfSkeleton'
 import { MOCK_SHELF_GAMES } from '@/data/mockShelfGames'
 import { useAppContext } from '@/hooks/useAppContext'
 import { useGalleryRouting } from '@/hooks/useGalleryRouting'
 import { useI18n } from '@/i18n/useI18n'
 import { resolveFeaturedExhibits } from '@/utils/featuredShots'
+import { cn } from '@/utils/cn'
 
 type ShelfItem = {
   id: string
@@ -25,7 +27,6 @@ export function ShelfPage() {
   const { filteredGames, isFiltering, stats, allGames, categories, selectedCategory } =
     gallery
   const { navigateToCategory, clearFiltersAndNavigate } = useGalleryRouting()
-  const reduceMotion = useReducedMotion()
   const { t } = useI18n()
 
   const manifestItems =
@@ -44,18 +45,29 @@ export function ShelfPage() {
     [useMock, manifestItems],
   )
 
+  const hasFeatured =
+    !!featuredExhibits?.enabled && featuredExhibits.items.length > 0
+
   if (manifestState.status === 'loading') {
     return <ShelfSkeleton />
   }
 
   if (manifestState.status === 'error') {
     return (
-      <p className="text-pretty text-muted">
-        {manifestState.message}. {t('runManifestHint')}{' '}
-        <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-xs">
-          npm run manifest
-        </code>
-      </p>
+      <ExhibitEmptyState
+        className="mt-10"
+        eyebrow={t('emptyEyebrowError')}
+        title={manifestState.message}
+        body={
+          <>
+            {t('runManifestHint')}{' '}
+            <code className="rounded border border-[color:var(--cabinet-edge)] bg-[color:var(--bg)] px-1.5 py-0.5 font-mono text-xs text-accent">
+              npm run manifest
+            </code>
+          </>
+        }
+        codeHint="npm run manifest"
+      />
     )
   }
 
@@ -78,128 +90,98 @@ export function ShelfPage() {
 
   return (
     <>
-      {featuredExhibits?.enabled && featuredExhibits.items.length > 0 && (
+      {hasFeatured && (
         <FeaturedFilmstrip
           items={featuredExhibits.items}
           lightboxPool={allShots.length > 0 ? allShots : manifestItems}
           title={featuredExhibits.labels?.title}
           hint={featuredExhibits.labels?.hint}
           variant="wide"
-          className="mb-6 lg:mb-8"
+          className="filmstrip--compact mb-4 lg:mb-5"
         />
       )}
 
-      <div className="arcade-stage grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(200px,260px)_minmax(0,1fr)] lg:gap-6 xl:gap-10">
+      <div
+        className={cn(
+          'arcade-stage grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(22rem,0.4fr)_minmax(0,1fr)] lg:gap-12 xl:grid-cols-[minmax(24rem,0.38fr)_minmax(0,1fr)] xl:gap-14',
+          hasFeatured && 'arcade-stage--with-featured',
+        )}
+      >
         <ShelfHero
           gameCount={useMock ? MOCK_SHELF_GAMES.length : stats.gameCount}
           shotCount={useMock ? 0 : stats.shotCount}
           categoryCount={useMock ? 0 : stats.categoryCount}
           gameIds={poolIds}
+          compact={hasFeatured}
         />
 
         <div className="arcade-viewport">
-        {!useMock && isFiltering && filteredGames.length === 0 ? (
-          <div className="mx-auto max-w-xl py-16 text-center text-pretty text-muted">
-            <p>
-              {gallery.debouncedSearch.trim()
-                ? t('noMatchSearch', { query: gallery.debouncedSearch })
-                : t('noGamesInCategory')}
-            </p>
-          </div>
-        ) : (
-          <>
-            {!useMock && (
-              <p className="type-label mb-4 inline-flex items-center gap-2 text-accent">
-                <span
-                  aria-hidden
-                  className="inline-block size-1.5 rounded-[1px] bg-accent"
-                />
-                {t('exhibitWall')}
-              </p>
-            )}
-            <div className="arcade-wall">
-              <motion.ul
-                className="arcade-grid"
-                initial="hidden"
-                animate="show"
-                variants={{
-                  hidden: {},
-                  show: {
-                    transition: {
-                      staggerChildren: reduceMotion ? 0 : 0.035,
-                    },
-                  },
-                }}
-              >
-                <AnimatePresence mode="popLayout">
-                  {items.map((game) => {
+          {!useMock && (
+            <WallHeader
+              categories={categories}
+              selectedCategory={selectedCategory}
+              shown={filteredGames.length}
+              total={allGames.length}
+              isFiltering={isFiltering}
+              onSelectCategory={navigateToCategory}
+              onClear={clearFiltersAndNavigate}
+            />
+          )}
+
+          {!useMock && isFiltering && filteredGames.length === 0 ? (
+            <ExhibitEmptyState
+              className="mt-2"
+              eyebrow={t('emptyEyebrowShelf')}
+              title={
+                gallery.debouncedSearch.trim()
+                  ? t('noMatchSearch', { query: gallery.debouncedSearch })
+                  : t('noGamesInCategory')
+              }
+              body={t('emptyShelfHint')}
+              action={
+                isFiltering
+                  ? {
+                      onClick: clearFiltersAndNavigate,
+                      label: t('clearFilters'),
+                    }
+                  : undefined
+              }
+            />
+          ) : (
+            <>
+              <div className="arcade-wall">
+                <VirtualArcadeGrid
+                  items={items}
+                  animationKey={`${selectedCategory ?? 'all'}|${gallery.debouncedSearch}`}
+                  getKey={(game) => game.id}
+                  renderItem={(game) => {
                     const box = (
                       <GameBox
                         gameId={game.id}
                         title={game.name}
-                        shotCount={game.shotCount}
                         coverUrl={game.coverUrl}
                         sharedTransition={!useMock}
                         cart
                       />
                     )
-
-                    return (
-                      <motion.li
-                        key={game.id}
-                        layout={!reduceMotion}
-                        className="relative z-[1]"
-                        variants={{
-                          hidden: reduceMotion
-                            ? { opacity: 0 }
-                            : { opacity: 0, y: 18 },
-                          show: {
-                            opacity: 1,
-                            y: 0,
-                            transition: { duration: 0.34, ease: 'easeOut' },
-                          },
-                        }}
-                        exit={{
-                          opacity: 0,
-                          transition: { duration: 0.15 },
-                        }}
-                        transition={{
-                          layout: { duration: 0.3, ease: 'easeOut' },
-                        }}
+                    return game.href ? (
+                      <Link
+                        to={game.href}
+                        className="relative z-[1] block no-underline outline-offset-4"
                       >
-                        {game.href ? (
-                          <Link
-                            to={game.href}
-                            className="relative z-[1] block no-underline outline-offset-4"
-                          >
-                            {box}
-                          </Link>
-                        ) : (
-                          box
-                        )}
-                      </motion.li>
+                        {box}
+                      </Link>
+                    ) : (
+                      box
                     )
-                  })}
-                </AnimatePresence>
-              </motion.ul>
-            </div>
-            <div className="arcade-floor" aria-hidden />
-          </>
-        )}
+                  }}
+                />
+              </div>
+              <div className="arcade-floor" aria-hidden />
+            </>
+          )}
+        </div>
       </div>
-      </div>
-
-      {!useMock && (
-        <ShelfDock
-          shown={filteredGames.length}
-          total={allGames.length}
-          categories={categories}
-          selectedCategory={selectedCategory}
-          isFiltering={isFiltering}
-          onSelectCategory={navigateToCategory}
-          onClear={clearFiltersAndNavigate}
-        />
-      )}
     </>
   )
 }

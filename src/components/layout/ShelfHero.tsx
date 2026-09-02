@@ -1,23 +1,50 @@
 import type { ReactNode } from 'react'
+import { useEffect, useState } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 import { useI18n } from '@/i18n/useI18n'
+import { cn } from '@/utils/cn'
+
+const HERO_SESSION_KEY = 'gameshot-hero-entered'
 
 type ShelfHeroProps = {
   gameCount: number
   shotCount: number
   categoryCount: number
   gameIds: string[]
+  compact?: boolean
 }
 
-/** Arcade Archive · 左侧叙事 Hero（可读中文标题 + HUD 标签） */
+function readHeroEntered(): boolean {
+  try {
+    return sessionStorage.getItem(HERO_SESSION_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+/** Arcade Archive · 左侧宽叙事栏 */
 export function ShelfHero({
   gameCount,
   shotCount,
   categoryCount,
   gameIds,
+  compact = false,
 }: ShelfHeroProps) {
   const { t } = useI18n()
   const navigate = useNavigate()
+  const reduceMotion = useReducedMotion()
+  const [alreadyEntered] = useState(readHeroEntered)
+  const runEntrance = !alreadyEntered && !reduceMotion
+
+  useEffect(() => {
+    if (alreadyEntered || reduceMotion) return
+    try {
+      sessionStorage.setItem(HERO_SESSION_KEY, '1')
+    } catch {
+      /* ignore */
+    }
+  }, [alreadyEntered, reduceMotion])
 
   const goRandom = () => {
     if (gameIds.length === 0) return
@@ -25,26 +52,53 @@ export function ShelfHero({
     navigate(`/game/${id}`)
   }
 
+  const containerVariants = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: runEntrance ? 0.09 : 0,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: runEntrance ? { opacity: 0, y: 10 } : { opacity: 1, y: 0 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.34, ease: 'easeOut' as const },
+    },
+  }
+
   return (
-    <aside className="relative z-0 flex h-full flex-col gap-8 lg:max-w-[260px] lg:pt-6 lg:pr-2">
-      <div className="rounded-md border border-[color:var(--cabinet-edge)] bg-[color:var(--cabinet)] p-4 lg:border-0 lg:bg-transparent lg:p-0">
-        <p className="type-label mb-3 inline-flex items-center gap-2 text-accent">
-          <span
-            aria-hidden
-            className="inline-block size-1.5 rounded-[1px] bg-accent"
-          />
-          {t('heroBadge')}
-        </p>
-        <h1 className="type-display text-balance text-3xl text-fg sm:text-4xl lg:text-[2.35rem]">
+    <motion.aside
+      className={cn(
+        'shelf-hero relative z-[2] flex w-full min-w-0 flex-col',
+        compact ? 'shelf-hero--compact gap-6' : 'gap-8 lg:pt-1',
+      )}
+      initial={runEntrance ? 'hidden' : false}
+      animate="show"
+      variants={containerVariants}
+    >
+      <motion.div className="max-w-xl" variants={itemVariants}>
+        <h1 className="type-hero type-metal text-balance text-[2rem] leading-[1.25] sm:text-[2.35rem] lg:text-[2.55rem] xl:text-[2.75rem]">
           {t('heroTitle')}
         </h1>
-        <p className="mt-3 text-pretty text-[14px] leading-relaxed text-muted">
+        <p className="hero-kicker mt-4">{t('heroKicker')}</p>
+        <span className="hero-rule" aria-hidden />
+        <p className="max-w-md text-pretty text-[14px] leading-relaxed text-muted sm:text-[15px]">
           {t('heroBody')}
         </p>
-      </div>
+      </motion.div>
 
-      <ul className="flex flex-col gap-[18px] p-0">
-        <Stat icon={<GamepadIcon />} label={t('statGames')} value={gameCount} />
+      <motion.ul
+        className={cn(
+          'grid list-none gap-5 p-0',
+          categoryCount > 1 ? 'grid-cols-3' : 'grid-cols-2 max-w-sm',
+        )}
+        variants={itemVariants}
+      >
+        <Stat icon={<CabinetIcon />} label={t('statGames')} value={gameCount} />
         <Stat icon={<ShotIcon />} label={t('statShots')} value={shotCount} />
         {categoryCount > 1 && (
           <Stat
@@ -53,18 +107,21 @@ export function ShelfHero({
             value={categoryCount}
           />
         )}
-      </ul>
+      </motion.ul>
 
-      <button
+      <motion.button
         type="button"
         onClick={goRandom}
         disabled={gameIds.length === 0}
-        className="mt-auto inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-accent bg-transparent px-4 text-[14px] font-semibold text-accent transition-colors hover:bg-accent hover:text-[var(--bg)] disabled:cursor-not-allowed disabled:opacity-40"
+        className="inline-flex h-11 w-fit min-w-[10.5rem] items-center justify-center gap-2 rounded-md border border-accent bg-transparent px-5 text-[14px] font-semibold text-accent transition-colors hover:bg-accent hover:text-[var(--bg)] disabled:cursor-not-allowed disabled:opacity-40"
+        variants={itemVariants}
       >
-        <ShuffleIcon />
         {t('randomCover')}
-      </button>
-    </aside>
+        <span aria-hidden className="text-base leading-none">
+          →
+        </span>
+      </motion.button>
+    </motion.aside>
   )
 }
 
@@ -78,33 +135,42 @@ function Stat({
   value: number
 }) {
   return (
-    <li className="flex list-none items-center gap-3">
-      <span className="text-accent">{icon}</span>
-      <span className="flex flex-col">
-        <span className="type-stat text-2xl leading-none text-fg">
-          {value.toLocaleString()}
-        </span>
-        <span className="mt-1.5 text-[13px] leading-relaxed text-muted">
-          {label}
-        </span>
+    <li className="flex list-none flex-col gap-2">
+      <span className="text-accent opacity-85">{icon}</span>
+      <span className="type-stat type-metal text-[1.65rem] leading-none tabular-nums sm:text-2xl">
+        {value.toLocaleString()}
       </span>
+      <span className="text-[12px] leading-relaxed text-muted">{label}</span>
     </li>
   )
 }
 
-function GamepadIcon() {
+function CabinetIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M6.5 9.5h11a3.5 3.5 0 0 1 3.4 4.3l-.7 2.8A3 3 0 0 1 17.3 19H6.7a3 3 0 0 1-2.9-2.4l-.7-2.8A3.5 3.5 0 0 1 6.5 9.5Z"
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect
+        x="6"
+        y="2.5"
+        width="12"
+        height="19"
+        rx="1.5"
         stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
+        strokeWidth="1.5"
       />
-      <path
-        d="M8.5 14h3M10 12.5v3M15.5 13h.01M17.5 15h.01"
+      <rect
+        x="8"
+        y="5"
+        width="8"
+        height="6"
+        rx="0.5"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.5"
+      />
+      <circle cx="12" cy="15.5" r="1.2" fill="currentColor" />
+      <path
+        d="M9.5 19h5"
+        stroke="currentColor"
+        strokeWidth="1.5"
         strokeLinecap="round"
       />
     </svg>
@@ -113,7 +179,7 @@ function GamepadIcon() {
 
 function ShotIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
       <rect
         x="3"
         y="5"
@@ -121,13 +187,13 @@ function ShotIcon() {
         height="14"
         rx="2"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.5"
       />
-      <circle cx="9" cy="11" r="2" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="9" cy="11" r="2" stroke="currentColor" strokeWidth="1.5" />
       <path
         d="m13 15 2.2-2.5a1 1 0 0 1 1.5 0L19 15"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -137,28 +203,14 @@ function ShotIcon() {
 
 function TagIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M20.6 13.4 12.7 21.3a1 1 0 0 1-1.4 0l-8.6-8.6a2 2 0 0 1-.6-1.4V4a1 1 0 0 1 1-1h7.3a2 2 0 0 1 1.4.6l8.6 8.6a1 1 0 0 1 0 1.4Z"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.5"
         strokeLinejoin="round"
       />
       <circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" />
-    </svg>
-  )
-}
-
-function ShuffleIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M16 3h5v5M21 3l-7 7M3 16l5-5M16 21h5v-5M21 21l-6.5-6.5M3 8l5 5"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
     </svg>
   )
 }

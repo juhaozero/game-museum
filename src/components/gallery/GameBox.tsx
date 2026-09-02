@@ -6,7 +6,6 @@ import { cn } from '@/utils/cn'
 type GameBoxProps = {
   gameId: string
   title: string
-  shotCount: number
   coverUrl?: string
   className?: string
   sharedTransition?: boolean
@@ -20,7 +19,6 @@ type GameBoxProps = {
 export function GameBox({
   gameId,
   title,
-  shotCount,
   coverUrl,
   className,
   sharedTransition = true,
@@ -75,9 +73,6 @@ export function GameBox({
             <h2 className="line-clamp-2 text-balance text-[12px] font-medium leading-snug text-white sm:text-[13px]">
               {title}
             </h2>
-            <p className="type-label mt-0.5 tabular-nums text-white/75">
-              {shotCount} shots
-            </p>
           </div>
         </div>
         {cart ? (

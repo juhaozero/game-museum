@@ -1,34 +1,54 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-02T01:50:14.122Z",
+  "generatedAt": "2026-09-02T06:11:38.299Z",
   "cosBaseUrl": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com",
   "cosPathPrefix": "Screenshots",
   "layout": "game-first",
-  "itemCount": 1,
-  "gameCount": 1,
+  "itemCount": 3,
+  "gameCount": 2,
   "featured": {
     "enabled": true,
     "mode": "manual",
     "count": 8,
     "labels": {
-      "title": "精选展品",
-      "hint": "点开展品"
+      "title": "精选图片",
+      "hint": "点开查看"
     },
     "items": [
       {
-        "id": "23dfad4f4bda2bc2",
-        "gameId": "e2df7b2c9bffdec8",
-        "gameName": "testgame",
-        "category": "未分类",
-        "fileName": "resized.png",
-        "relativePath": "testgame/resized.png",
-        "url": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com/Screenshots/testgame/resized.png",
-        "isCover": true,
-        "caption": "测试展品"
+        "id": "1595f2a77fa67a3d",
+        "gameId": "f60ea7b32dc72640",
+        "gameName": "艾尔登法环",
+        "category": "动作RPG",
+        "fileName": "01.jpg",
+        "relativePath": "艾尔登法环/01.jpg",
+        "url": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com/Screenshots/%E8%89%BE%E5%B0%94%E7%99%BB%E6%B3%95%E7%8E%AF/01.jpg",
+        "isCover": false,
+        "caption": "艾尔登法环"
       }
     ]
   },
   "items": [
+    {
+      "id": "1595f2a77fa67a3d",
+      "gameId": "f60ea7b32dc72640",
+      "gameName": "艾尔登法环",
+      "category": "动作RPG",
+      "fileName": "01.jpg",
+      "relativePath": "艾尔登法环/01.jpg",
+      "url": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com/Screenshots/%E8%89%BE%E5%B0%94%E7%99%BB%E6%B3%95%E7%8E%AF/01.jpg",
+      "isCover": false
+    },
+    {
+      "id": "37db64224a260caf",
+      "gameId": "f60ea7b32dc72640",
+      "gameName": "艾尔登法环",
+      "category": "动作RPG",
+      "fileName": "cover.jpg",
+      "relativePath": "艾尔登法环/cover.jpg",
+      "url": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com/Screenshots/%E8%89%BE%E5%B0%94%E7%99%BB%E6%B3%95%E7%8E%AF/cover.jpg",
+      "isCover": true
+    },
     {
       "id": "23dfad4f4bda2bc2",
       "gameId": "e2df7b2c9bffdec8",

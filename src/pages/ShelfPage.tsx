@@ -89,7 +89,7 @@ export function ShelfPage() {
         />
       )}
 
-      <div className="cinema-stage grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(200px,260px)_minmax(0,1fr)] lg:gap-6 xl:gap-10">
+      <div className="arcade-stage grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(200px,260px)_minmax(0,1fr)] lg:gap-6 xl:gap-10">
         <ShelfHero
           gameCount={useMock ? MOCK_SHELF_GAMES.length : stats.gameCount}
           shotCount={useMock ? 0 : stats.shotCount}
@@ -97,7 +97,7 @@ export function ShelfPage() {
           gameIds={poolIds}
         />
 
-        <div className="cinema-viewport">
+        <div className="arcade-viewport">
         {!useMock && isFiltering && filteredGames.length === 0 ? (
           <div className="mx-auto max-w-xl py-16 text-center text-pretty text-muted">
             <p>
@@ -117,9 +117,9 @@ export function ShelfPage() {
                 {t('exhibitWall')}
               </p>
             )}
-            <div className="cinema-wall">
+            <div className="arcade-wall">
               <motion.ul
-                className="cinema-grid"
+                className="arcade-grid"
                 initial="hidden"
                 animate="show"
                 variants={{
@@ -140,7 +140,7 @@ export function ShelfPage() {
                         shotCount={game.shotCount}
                         coverUrl={game.coverUrl}
                         sharedTransition={!useMock}
-                        cinema
+                        cart
                       />
                     )
 
@@ -183,7 +183,7 @@ export function ShelfPage() {
                 </AnimatePresence>
               </motion.ul>
             </div>
-            <div className="cinema-floor" aria-hidden />
+            <div className="arcade-floor" aria-hidden />
           </>
         )}
       </div>

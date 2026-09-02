@@ -8,7 +8,7 @@ import { useGalleryStore } from '@/store/useGalleryStore'
 import { useLightboxStore } from '@/store/useLightboxStore'
 import { publicUiEnv } from '@/utils/publicEnv'
 
-/** Level 3 · Lightbox：共享元素放大、键盘切换、右侧信息面板 */
+/** Level 3 · Lightbox：共享元素放大、键盘切换、侧栏/底部展签 */
 export function Lightbox() {
   const isOpen = useLightboxStore((s) => s.isOpen)
   const items = useLightboxStore((s) => s.items)
@@ -30,7 +30,6 @@ export function Lightbox() {
   )
   const toggleFavorite = useGalleryStore((s) => s.toggleFavorite)
 
-  // 路由切换时关闭，避免遮罩/滚动锁残留
   useEffect(() => {
     if (prevRouteKeyRef.current === routeKey) return
     prevRouteKeyRef.current = routeKey
@@ -82,17 +81,17 @@ export function Lightbox() {
           <div className="lightbox-spotlight" aria-hidden />
 
           <div
-            className="relative z-[1] flex items-center justify-between gap-3 px-4 py-3 text-white/80"
+            className="lightbox-toolbar relative z-[1] flex items-center justify-between gap-3 px-4 py-3"
             onClick={(e) => e.stopPropagation()}
           >
             <p id={titleId} className="min-w-0 truncate text-sm">
               <span className="type-label text-accent">
                 {t('lightboxExhibit')}
               </span>
-              <span className="mx-2 text-white/35">·</span>
-              {item.gameName}
-              <span className="mx-2 text-white/40">·</span>
-              <span className="type-label tabular-nums text-white/55">
+              <span className="lightbox-toolbar-sep mx-2">·</span>
+              <span className="text-[var(--lightbox-fg)]">{item.gameName}</span>
+              <span className="lightbox-toolbar-sep mx-2">·</span>
+              <span className="lightbox-toolbar-count type-label tabular-nums">
                 {index + 1} / {items.length}
               </span>
             </p>
@@ -101,14 +100,14 @@ export function Lightbox() {
                 active={isFavorite}
                 onToggle={() => toggleFavorite(item.id)}
                 visibility="always"
-                className="bg-white/10 text-star"
+                className="bg-[var(--lightbox-control-bg)] text-star"
               />
               <button
                 ref={closeRef}
                 type="button"
                 onClick={close}
                 aria-label={t('close')}
-                className="rounded px-2.5 py-1.5 text-sm text-white/70 hover:text-white"
+                className="lightbox-close rounded px-2.5 py-1.5 text-sm"
               >
                 {t('close')}
               </button>
@@ -116,10 +115,10 @@ export function Lightbox() {
           </div>
 
           <div
-            className="relative z-[1] flex min-h-0 flex-1"
+            className="relative z-[1] flex min-h-0 flex-1 flex-col lg:flex-row"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative flex min-w-0 flex-1 items-center justify-center px-2 md:px-6">
+            <div className="relative flex min-h-0 min-w-0 flex-1 items-center justify-center px-2 md:px-6">
               <button
                 type="button"
                 onClick={prev}
@@ -160,7 +159,7 @@ export function Lightbox() {
                         <img
                           src={item.url}
                           alt={item.fileName}
-                          className="max-h-[calc(100dvh-8rem)] max-w-full object-contain"
+                          className="max-h-[calc(100dvh-11rem)] max-w-full object-contain lg:max-h-[calc(100dvh-8rem)]"
                           draggable={false}
                         />
                       </TransformComponent>
@@ -180,7 +179,7 @@ export function Lightbox() {
             </div>
 
             <motion.aside
-              className="lightbox-plaque hidden w-64 shrink-0 p-5 text-sm text-white/80 lg:block"
+              className="lightbox-plaque lightbox-plaque--rail"
               initial={
                 reduceMotion ? { opacity: 0 } : { opacity: 0, x: 16 }
               }
@@ -191,26 +190,92 @@ export function Lightbox() {
                 ease: 'easeOut',
               }}
             >
-              <p className="type-label text-accent">
-                {t('lightboxExhibit')}
-              </p>
-              <p className="mt-4 text-xs text-white/45">{t('game')}</p>
-              <p className="mt-1 text-pretty text-white">{item.gameName}</p>
-              <p className="mt-4 text-xs text-white/45">{t('category')}</p>
-              <p className="mt-1 text-white/90">{item.category}</p>
-              {publicUiEnv.showImageFileName && (
-                <>
-                  <p className="mt-4 text-xs text-white/45">{t('file')}</p>
-                  <p className="type-label mt-1 break-all text-white/70">
-                    {item.fileName}
-                  </p>
-                </>
-              )}
-              <p className="mt-6 text-xs text-white/40">{t('lightboxHints')}</p>
+              <PlaqueBody
+                gameName={item.gameName}
+                category={item.category}
+                fileName={item.fileName}
+                hints
+              />
             </motion.aside>
+          </div>
+
+          <div
+            className="relative z-[1] lg:hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="lightbox-nav-mobile md:hidden">
+              <button
+                type="button"
+                onClick={prev}
+                aria-label={t('prevShot')}
+                className="lightbox-nav-btn"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                onClick={next}
+                aria-label={t('nextShot')}
+                className="lightbox-nav-btn"
+              >
+                ›
+              </button>
+            </div>
+            <aside className="lightbox-plaque lightbox-plaque--dock">
+              <div className="lightbox-dock-row">
+                <p className="type-label text-accent">{t('lightboxExhibit')}</p>
+                <p className="type-label tabular-nums text-[var(--lightbox-dim)]">
+                  {index + 1} / {items.length}
+                </p>
+              </div>
+              <p className="lightbox-plaque-value mt-1 truncate text-sm">
+                {item.gameName}
+              </p>
+              <div className="lightbox-dock-meta">
+                <span>{item.category}</span>
+                {publicUiEnv.showImageFileName && (
+                  <span className="truncate">{item.fileName}</span>
+                )}
+              </div>
+            </aside>
           </div>
         </motion.div>
       )}
     </AnimatePresence>
+  )
+}
+
+function PlaqueBody({
+  gameName,
+  category,
+  fileName,
+  hints = false,
+}: {
+  gameName: string
+  category: string
+  fileName: string
+  hints?: boolean
+}) {
+  const { t } = useI18n()
+
+  return (
+    <>
+      <p className="type-label text-accent">{t('lightboxExhibit')}</p>
+      <p className="lightbox-plaque-label mt-4 text-xs">{t('game')}</p>
+      <p className="lightbox-plaque-value mt-1 text-pretty">{gameName}</p>
+      <p className="lightbox-plaque-label mt-4 text-xs">{t('category')}</p>
+      <p className="lightbox-plaque-value mt-1 opacity-90">{category}</p>
+      {publicUiEnv.showImageFileName && (
+        <>
+          <p className="lightbox-plaque-label mt-4 text-xs">{t('file')}</p>
+          <p className="lightbox-plaque-file type-label mt-1 break-all">
+            {fileName}
+          </p>
+        </>
+      )}
+      {hints && (
+        <p className="lightbox-plaque-hint mt-6 text-xs">{t('lightboxHints')}</p>
+      )}
+    </>
   )
 }

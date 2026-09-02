@@ -20,11 +20,13 @@ export function GameGalleryPage() {
         className="exhibit-page mx-auto max-w-6xl space-y-6"
       >
         <div className="h-4 w-40 animate-pulse rounded bg-surface" />
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+        <div className="exhibit-grid">
           {Array.from({ length: 6 }, (_, i) => (
             <div
               key={i}
-              className="aspect-video animate-pulse rounded bg-surface"
+              className={`aspect-video animate-pulse rounded-md border border-[color:var(--cabinet-edge)] bg-surface ${
+                i === 0 ? 'exhibit-lead' : ''
+              }`}
             />
           ))}
         </div>
@@ -81,7 +83,7 @@ export function GameGalleryPage() {
           {coverUrl && (
             <motion.div
               layoutId={`cover-${game.id}`}
-              className="exhibit-entry-cover cinema-screen shrink-0 overflow-hidden"
+              className="exhibit-entry-cover cart-cover shrink-0 overflow-hidden"
               transition={{ duration: 0.22, ease: 'easeOut' }}
             >
               <div className="aspect-[2/3] w-[120px] sm:w-[140px]">
@@ -98,7 +100,7 @@ export function GameGalleryPage() {
             <p className="type-label mb-2 inline-flex items-center gap-2 text-accent">
               <span
                 aria-hidden
-                className="inline-block size-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--shelf-glow)]"
+                className="inline-block size-1.5 rounded-[1px] bg-accent shadow-[0_0_10px_var(--shelf-glow)]"
               />
               {t('exhibitWall')}
             </p>

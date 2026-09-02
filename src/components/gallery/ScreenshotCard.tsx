@@ -47,21 +47,8 @@ export function ScreenshotCard({
   const plaqueIndex = exhibitIndex ?? index + 1
   const plaqueTotal = exhibitTotal ?? items.length
 
-  return (
-    <motion.figure
-      layout={!reduceMotion}
-      className={cn(
-        'group relative overflow-hidden',
-        isExhibition
-          ? 'exhibit-frame hud-frame bg-box-inner'
-          : 'rounded border border-hairline bg-surface',
-        className,
-      )}
-      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '0px 0px -40px 0px' }}
-      transition={{ duration: 0.28, ease: 'easeOut' }}
-    >
+  const cardBody = (
+    <>
       {isExhibition && (
         <span className="exhibit-index" aria-hidden>
           {t('exhibitIndex', {
@@ -110,6 +97,32 @@ export function ScreenshotCard({
           </figcaption>
         )
       )}
+    </>
+  )
+
+  return (
+    <motion.figure
+      layout={!reduceMotion}
+      className={cn(
+        'group relative',
+        !isExhibition && 'overflow-hidden rounded border border-hairline bg-surface',
+        isExhibition && 'exhibit-card',
+        className,
+      )}
+      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '0px 0px -40px 0px' }}
+      transition={{ duration: 0.28, ease: 'easeOut' }}
+    >
+      {isExhibition ? (
+        <div className="exhibit-frame exhibit-frame--wall overflow-hidden bg-box-inner">
+          {cardBody}
+        </div>
+      ) : (
+        cardBody
+      )}
+
+      {isExhibition && <span className="exhibit-shelf-glow" aria-hidden />}
     </motion.figure>
   )
 }

@@ -11,7 +11,7 @@ type GameBoxProps = {
   className?: string
   sharedTransition?: boolean
   /** 街机卡带封面样式 */
-  cinema?: boolean
+  cart?: boolean
 }
 
 /**
@@ -24,9 +24,9 @@ export function GameBox({
   coverUrl,
   className,
   sharedTransition = true,
-  cinema = false,
+  cart = false,
 }: GameBoxProps) {
-  const tilt = useCoverTilt(cinema ? 8 : 6)
+  const tilt = useCoverTilt(cart ? 8 : 6)
 
   return (
     <motion.article
@@ -39,14 +39,14 @@ export function GameBox({
       <div
         className={cn(
           'relative',
-          cinema ? 'cinema-screen-lift' : 'cover-lift',
+          cart ? 'cart-cover-lift' : 'cover-lift',
         )}
       >
         <div
           className={cn(
             'relative overflow-hidden bg-surface',
-            cinema
-              ? 'cinema-screen'
+            cart
+              ? 'cart-cover'
               : 'rounded-md border border-[color:var(--cabinet-edge)] shadow-[0_8px_22px_var(--contact-shadow)]',
           )}
         >
@@ -80,7 +80,7 @@ export function GameBox({
             </p>
           </div>
         </div>
-        {cinema ? (
+        {cart ? (
           <span className="cart-shelf-glow" aria-hidden />
         ) : (
           <span className="cover-shelf-glow" aria-hidden />

@@ -8,7 +8,7 @@ type CategoryChipsProps = {
   onSelect: (category: string | null) => void
 }
 
-/** 浮层圆角 Chip，呼应图3顶栏 */
+/** 柜体分类 Chip（方角 + cabinet-edge） */
 export function CategoryChips({
   categories,
   selectedCategory,
@@ -21,7 +21,7 @@ export function CategoryChips({
   return (
     <div className="relative z-header px-3 pt-2 sm:px-4 md:px-5">
       <div
-        className="flex gap-2 overflow-x-auto rounded-full border border-hairline bg-bg-elevated/40 px-2 py-1.5 backdrop-blur-md [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-2 overflow-x-auto rounded-md border border-[color:var(--cabinet-edge)] bg-[color:var(--cabinet)] px-2 py-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         role="tablist"
         aria-label={t('categories')}
       >
@@ -62,7 +62,7 @@ function Chip({
       aria-selected={active}
       onClick={onClick}
       className={cn(
-        'shrink-0 rounded-full border px-3 py-1 text-xs transition-colors',
+        'shrink-0 rounded border border-[color:var(--cabinet-edge)] px-3 py-1 text-xs transition-colors',
         active
           ? 'border-accent bg-accent-soft text-accent shadow-[0_0_12px_var(--shelf-glow-soft)]'
           : 'border-transparent text-muted hover:border-hairline hover:text-fg',

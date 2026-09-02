@@ -13,7 +13,7 @@ type ScreenshotGridProps = {
   variant?: 'default' | 'exhibition'
 }
 
-/** 截图网格 / 展厅展墙 */
+/** 截图网格 / 展厅展墙（exhibition = 不对称 12 列） */
 export function ScreenshotGrid({
   items,
   showGameName = true,
@@ -37,10 +37,10 @@ export function ScreenshotGrid({
   return (
     <motion.ul
       className={cn(
-        'grid list-none gap-5 p-0 md:gap-6',
+        'list-none p-0',
         isExhibition
-          ? 'exhibit-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-          : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+          ? 'exhibit-grid'
+          : 'grid grid-cols-1 gap-5 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4',
         className,
       )}
       initial="hidden"
@@ -59,6 +59,7 @@ export function ScreenshotGrid({
           <motion.li
             key={item.id}
             layout={!reduceMotion}
+            className={cn(isExhibition && index === 0 && 'exhibit-lead')}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}

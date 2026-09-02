@@ -17,9 +17,9 @@ export function ShelfSkeleton() {
       </div>
       <ul className="grid list-none grid-cols-2 gap-4 p-0 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4">
         {Array.from({ length: 8 }, (_, i) => (
-          <li key={i}>
-            <div className="aspect-[2/3] animate-pulse rounded-2xl bg-surface" />
-            <div className="mx-auto mt-2 h-1 w-1/2 rounded-full bg-accent-soft" />
+          <li key={i} className="relative">
+            <div className="cart-cover aspect-[2/3] animate-pulse bg-surface opacity-60" />
+            <span className="cart-shelf-glow opacity-30" aria-hidden />
           </li>
         ))}
       </ul>

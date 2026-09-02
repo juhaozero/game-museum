@@ -47,41 +47,61 @@
   --motif: rgba(143, 100, 32, 0.06);
   --glass: rgba(245, 248, 252, 0.92);
   --glass-border: rgba(21, 25, 34, 0.1);
-  --cabinet: #eef2f8;
-  --cabinet-edge: color-mix(in srgb, #151922 12%, transparent);
+  --cabinet: #e4eaf2;
+  --cabinet-edge: color-mix(in srgb, #151922 16%, transparent);
 
   --ambient-base: radial-gradient(
     ellipse 110% 95% at 50% 36%,
     #f5f8fc 0%,
-    #e8edf4 55%,
-    #d9e1ec 100%
+    #e8edf4 52%,
+    #d4dce8 100%
   );
   --ambient-horizon: radial-gradient(
-    ellipse 95% 48% at 50% 78%,
-    color-mix(in srgb, var(--accent) 12%, transparent) 0%,
+    ellipse 95% 50% at 50% 78%,
+    color-mix(in srgb, var(--accent) 18%, transparent) 0%,
     transparent 68%
   );
   --ambient-spotlight: radial-gradient(
     ellipse 50% 42% at 14% 18%,
-    color-mix(in srgb, white 55%, transparent),
+    color-mix(in srgb, var(--accent) 10%, white 38%),
     transparent 72%
   );
   --ambient-floor: linear-gradient(
     180deg,
-    transparent 50%,
-    color-mix(in srgb, var(--accent) 8%, transparent) 100%
+    transparent 46%,
+    color-mix(in srgb, var(--accent) 14%, transparent) 100%
   );
   --ambient-vignette: radial-gradient(
     ellipse 120% 100% at 50% 42%,
-    transparent 48%,
-    color-mix(in srgb, #3a4a60 10%, transparent) 100%
+    transparent 44%,
+    color-mix(in srgb, #3a4a60 14%, transparent) 100%
   );
-  --ambient-scanline-opacity: 0.012;
-  --ambient-noise-opacity: 0.022;
-  --shelf-glow: color-mix(in srgb, var(--accent) 45%, white);
-  --shelf-glow-soft: color-mix(in srgb, var(--accent) 22%, transparent);
-  --contact-shadow: color-mix(in srgb, #243048 12%, transparent);
-  --contact-shadow-strong: color-mix(in srgb, #243048 20%, transparent);
+  --ambient-scanline-opacity: 0.018;
+  --ambient-noise-opacity: 0.028;
+  --shelf-glow: color-mix(in srgb, var(--accent) 58%, #c9a227);
+  --shelf-glow-soft: color-mix(in srgb, var(--accent) 32%, transparent);
+  --contact-shadow: color-mix(in srgb, #243048 14%, transparent);
+  --contact-shadow-strong: color-mix(in srgb, #243048 22%, transparent);
+
+  /* 浅色 · 灯条 / 地光可见度（亮底需更高 contrast） */
+  --marquee-light-opacity: 0.88;
+  --cart-bar-opacity: 0.85;
+  --cart-glow-opacity: 0.82;
+  --exhibit-top-light-opacity: 0.82;
+  --exhibit-page-glow: 18%;
+  --exhibit-wall-bar-opacity: 0.68;
+  --exhibit-shelf-glow-opacity: 0.58;
+  --arcade-floor-opacity: 0.78;
+  --arcade-wall-glow: 20%;
+
+  /* Lightbox：始终暗场观展，token 化避免硬编码 white */
+  --lightbox-overlay: color-mix(in srgb, #0b0e14 86%, var(--bg) 14%);
+  --lightbox-fg: #eceae4;
+  --lightbox-muted: rgba(236, 234, 228, 0.55);
+  --lightbox-dim: rgba(236, 234, 228, 0.4);
+  --lightbox-faint: rgba(236, 234, 228, 0.32);
+  --lightbox-plaque-bg: color-mix(in srgb, #0b0e14 78%, transparent);
+  --lightbox-control-bg: color-mix(in srgb, #141925 72%, transparent);
 }
 
 /* Arcade Archive · 深色馆藏（主推）：深靛柜体 + 街机指示铜 */
@@ -135,6 +155,24 @@
   --shelf-glow-soft: color-mix(in srgb, var(--accent) 40%, transparent);
   --contact-shadow: color-mix(in srgb, black 48%, transparent);
   --contact-shadow-strong: color-mix(in srgb, black 65%, transparent);
+
+  --marquee-light-opacity: 0.85;
+  --cart-bar-opacity: 0.75;
+  --cart-glow-opacity: 0.7;
+  --exhibit-top-light-opacity: 0.7;
+  --exhibit-page-glow: 14%;
+  --exhibit-wall-bar-opacity: 0.55;
+  --exhibit-shelf-glow-opacity: 0.45;
+  --arcade-floor-opacity: 0.85;
+  --arcade-wall-glow: 16%;
+
+  --lightbox-overlay: color-mix(in srgb, black 88%, var(--bg) 12%);
+  --lightbox-fg: #eceae4;
+  --lightbox-muted: rgba(236, 234, 228, 0.55);
+  --lightbox-dim: rgba(236, 234, 228, 0.4);
+  --lightbox-faint: rgba(236, 234, 228, 0.32);
+  --lightbox-plaque-bg: color-mix(in srgb, var(--bg) 80%, transparent);
+  --lightbox-control-bg: color-mix(in srgb, var(--bg) 75%, transparent);
 }
 
 @layer base {
@@ -186,13 +224,6 @@
     z-index: var(--z-lightbox);
   }
 
-  .glass-panel {
-    background: var(--glass);
-    border: 1px solid var(--cabinet-edge);
-    border-radius: 6px;
-    box-shadow: inset 0 -1px 0 color-mix(in srgb, black 8%, transparent);
-  }
-
   .arcade-panel {
     background: var(--cabinet);
     border: 1px solid var(--cabinet-edge);
@@ -207,14 +238,14 @@
     font-family: var(--font-sans);
     font-size: 12px;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.1em;
     line-height: 1.5;
   }
 
   .type-display {
     font-family: var(--font-sans);
     font-weight: 600;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     line-height: 1.35;
   }
 
@@ -244,31 +275,26 @@
   mask-image: radial-gradient(ellipse 85% 70% at 50% 45%, black, transparent 78%);
 }
 
-/* 兼容旧类名：不再显示 HUD 角标 */
-.hud-frame {
-  position: relative;
-}
-
 /* —— Arcade shelf wall（无 3D 透视） —— */
-.cinema-stage {
+.arcade-stage {
   position: relative;
   isolation: isolate;
   min-height: calc(100vh - 7.5rem);
 }
 
-.cinema-viewport {
+.arcade-viewport {
   position: relative;
   z-index: 1;
   min-width: 0;
 }
 
-.cinema-wall {
+.arcade-wall {
   position: relative;
   z-index: 1;
   pointer-events: auto;
 }
 
-.cinema-wall::before {
+.arcade-wall::before {
   content: '';
   position: absolute;
   inset: -6% -4% -12% -3%;
@@ -278,14 +304,14 @@
   background:
     radial-gradient(
       ellipse 75% 55% at 50% 100%,
-      color-mix(in srgb, var(--accent) 16%, transparent),
+      color-mix(in srgb, var(--accent) var(--arcade-wall-glow), transparent),
       transparent 68%
     ),
     color-mix(in srgb, var(--bg-elevated) 45%, transparent);
   pointer-events: none;
 }
 
-.cinema-grid {
+.arcade-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px 10px;
@@ -298,33 +324,33 @@
 }
 
 @media (min-width: 640px) {
-  .cinema-grid {
+  .arcade-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px 12px;
   }
 }
 
 @media (min-width: 1024px) {
-  .cinema-grid {
+  .arcade-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 14px;
   }
 }
 
 @media (min-width: 1280px) {
-  .cinema-grid {
+  .arcade-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 16px 14px;
   }
 }
 
 @media (min-width: 1536px) {
-  .cinema-grid {
+  .arcade-grid {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 
-.cinema-floor {
+.arcade-floor {
   pointer-events: none;
   position: relative;
   z-index: 0;
@@ -345,11 +371,11 @@
       transparent 40px
     );
   mask-image: linear-gradient(180deg, black 0%, transparent 90%);
-  opacity: 0.85;
+  opacity: var(--arcade-floor-opacity);
 }
 
 /* 卡带封面：左侧脊线 + 底部灯条（记忆锚点） */
-.cinema-screen {
+.cart-cover {
   position: relative;
   overflow: hidden;
   border-radius: 6px;
@@ -361,7 +387,7 @@
     0 10px 26px var(--contact-shadow);
 }
 
-.cinema-screen::before {
+.cart-cover::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -378,7 +404,7 @@
 }
 
 /* 底部灯条 */
-.cinema-screen::after {
+.cart-cover::after {
   content: '';
   position: absolute;
   left: 10%;
@@ -392,12 +418,12 @@
   box-shadow:
     0 0 10px 2px var(--shelf-glow-soft),
     0 0 22px 4px color-mix(in srgb, var(--accent) 28%, transparent);
-  opacity: 0.75;
+  opacity: var(--cart-bar-opacity);
   transition: opacity 180ms ease-out;
 }
 
-.group:hover .cinema-screen::after,
-.group:focus-within .cinema-screen::after {
+.group:hover .cart-cover::after,
+.group:focus-within .cart-cover::after {
   opacity: 1;
 }
 
@@ -415,7 +441,7 @@
     transparent 72%
   );
   filter: blur(5px);
-  opacity: 0.7;
+  opacity: var(--cart-glow-opacity);
   pointer-events: none;
   transition: opacity 180ms ease-out;
 }
@@ -424,13 +450,13 @@
   opacity: 1;
 }
 
-.cinema-screen-lift {
+.cart-cover-lift {
   transition:
     transform 180ms ease-out,
     filter 180ms ease-out;
 }
 
-.group:hover .cinema-screen-lift {
+.group:hover .cart-cover-lift {
   transform: translateY(-6px);
   filter: drop-shadow(0 16px 24px var(--contact-shadow-strong));
 }
@@ -496,7 +522,7 @@
   box-shadow:
     0 0 12px 2px var(--shelf-glow-soft),
     0 4px 18px color-mix(in srgb, var(--accent) 25%, transparent);
-  opacity: 0.85;
+  opacity: var(--marquee-light-opacity);
   pointer-events: none;
 }
 
@@ -623,9 +649,10 @@
   animation-duration: 42s;
 }
 
-/* —— Lightbox 展厅聚光 —— */
+/* —— Lightbox 展厅聚光（深色观展室，token 化） —— */
 .lightbox-overlay {
-  background: color-mix(in srgb, black 88%, var(--bg) 12%);
+  background: var(--lightbox-overlay);
+  color: var(--lightbox-fg);
 }
 
 .lightbox-vignette,
@@ -651,18 +678,54 @@
   );
 }
 
+.lightbox-toolbar {
+  color: var(--lightbox-muted);
+}
+
+.lightbox-toolbar-sep {
+  color: var(--lightbox-faint);
+}
+
+.lightbox-toolbar-count {
+  color: var(--lightbox-dim);
+}
+
+.lightbox-close {
+  color: var(--lightbox-muted);
+  transition: color 150ms ease-out;
+}
+
+.lightbox-close:hover {
+  color: var(--lightbox-fg);
+}
+
 .lightbox-nav-btn {
   border-radius: 6px;
   border: 1px solid var(--cabinet-edge);
-  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  background: var(--lightbox-control-bg);
   padding: 0.75rem 0.65rem;
-  color: var(--text-muted);
+  color: var(--lightbox-muted);
   transition: color 150ms ease-out, border-color 150ms ease-out;
 }
 
 .lightbox-nav-btn:hover {
   color: var(--accent);
   border-color: var(--accent);
+}
+
+.lightbox-nav-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0 0.5rem;
+}
+
+.lightbox-nav-mobile .lightbox-nav-btn {
+  min-width: 3rem;
+  padding: 0.55rem 0.9rem;
+  font-size: 1.15rem;
+  line-height: 1;
 }
 
 .lightbox-frame {
@@ -672,8 +735,72 @@
 
 .lightbox-plaque {
   border-left: 2px solid var(--accent);
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  background: var(--lightbox-plaque-bg);
   border-radius: 0;
+  color: var(--lightbox-muted);
+}
+
+.lightbox-plaque-label {
+  color: var(--lightbox-dim);
+}
+
+.lightbox-plaque-value {
+  color: var(--lightbox-fg);
+}
+
+.lightbox-plaque-hint {
+  color: var(--lightbox-faint);
+}
+
+.lightbox-plaque-file {
+  color: var(--lightbox-muted);
+}
+
+/* 桌面侧栏展签 */
+.lightbox-plaque--rail {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .lightbox-plaque--rail {
+    display: block;
+    width: 16rem;
+    flex-shrink: 0;
+    padding: 1.25rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* 移动端底部展签条 */
+.lightbox-plaque--dock {
+  display: block;
+  margin: 0 0.75rem 0.5rem;
+  padding: 0.75rem 1rem;
+  border-left: none;
+  border-top: 2px solid var(--accent);
+  border-radius: 0 0 6px 6px;
+}
+
+@media (min-width: 1024px) {
+  .lightbox-plaque--dock {
+    display: none;
+  }
+}
+
+.lightbox-plaque--dock .lightbox-dock-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.lightbox-plaque--dock .lightbox-dock-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--lightbox-dim);
 }
 
 .exhibit-page {
@@ -688,15 +815,36 @@
   height: 280px;
   background: radial-gradient(
     ellipse 55% 80% at 18% 0%,
-    color-mix(in srgb, var(--accent) 10%, transparent) 0%,
+    color-mix(in srgb, var(--accent) var(--exhibit-page-glow), transparent) 0%,
     transparent 70%
   );
+}
+
+/* 展墙页顶灯条（呼应 filmstrip marquee） */
+.exhibit-page::after {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 0;
+  height: 2px;
+  border-radius: 0 0 999px 999px;
+  background: var(--shelf-glow);
+  box-shadow:
+    0 0 10px 2px var(--shelf-glow-soft),
+    0 4px 16px color-mix(in srgb, var(--accent) 18%, transparent);
+  opacity: var(--exhibit-top-light-opacity);
 }
 
 .exhibit-page--highlights::before {
   background: radial-gradient(
     ellipse 60% 85% at 22% 0%,
-    color-mix(in srgb, var(--accent) 14%, var(--star) 4%) 0%,
+    color-mix(
+      in srgb,
+      var(--accent) calc(var(--exhibit-page-glow) + 4%),
+      var(--star) 4%
+    ) 0%,
     transparent 72%
   );
 }
@@ -724,6 +872,60 @@
 .exhibit-frame:hover {
   transform: translateY(-3px);
   border-color: color-mix(in srgb, var(--accent) 40%, var(--cabinet-edge));
+}
+
+/* 展墙卡片：弱化版卡带脊线 + 底灯（Level 1→2 视觉桥梁） */
+.exhibit-frame--wall {
+  position: relative;
+  overflow: hidden;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 42%, var(--cabinet-edge));
+}
+
+.exhibit-frame--wall::after {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 0;
+  height: 2px;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: 999px 999px 0 0;
+  background: var(--shelf-glow-soft);
+  box-shadow: 0 0 8px 1px color-mix(in srgb, var(--accent) 22%, transparent);
+  opacity: var(--exhibit-wall-bar-opacity);
+  transition: opacity 180ms ease-out;
+}
+
+.group:hover .exhibit-frame--wall::after,
+.group:focus-within .exhibit-frame--wall::after {
+  opacity: 0.88;
+}
+
+.exhibit-card {
+  position: relative;
+}
+
+.exhibit-shelf-glow {
+  position: absolute;
+  left: 16%;
+  right: 12%;
+  bottom: -4px;
+  height: 8px;
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at center,
+    var(--shelf-glow-soft),
+    transparent 72%
+  );
+  filter: blur(4px);
+  opacity: var(--exhibit-shelf-glow-opacity);
+  pointer-events: none;
+  transition: opacity 180ms ease-out;
+}
+
+.group:hover .exhibit-shelf-glow {
+  opacity: 0.72;
 }
 
 .exhibit-index {
@@ -799,15 +1001,66 @@
   background: color-mix(in srgb, var(--surface) 70%, transparent);
 }
 
+/* Level 2 展墙：12 列不对称构图（首图放大） */
 .exhibit-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
   padding-top: 0.5rem;
+  list-style: none;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .exhibit-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1.25rem 1rem;
+  }
+
+  .exhibit-grid > li {
+    grid-column: span 6;
+  }
+
+  .exhibit-grid > li:first-child {
+    grid-column: span 12;
+  }
+}
+
+@media (min-width: 1024px) {
+  .exhibit-grid {
+    gap: 1.5rem 1.15rem;
+  }
+
+  .exhibit-grid > li:first-child {
+    grid-column: span 8;
+  }
+
+  .exhibit-grid > li:nth-child(2) {
+    grid-column: span 4;
+  }
+
+  .exhibit-grid > li:nth-child(n + 3) {
+    grid-column: span 4;
+  }
+}
+
+.exhibit-grid > li.exhibit-lead .aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+@media (min-width: 1024px) {
+  .exhibit-grid > li.exhibit-lead .aspect-video {
+    aspect-ratio: 16 / 10;
+    min-height: 240px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cinema-screen-lift,
-  .group:hover .cinema-screen-lift,
+  .cart-cover-lift,
+  .group:hover .cart-cover-lift,
   .cover-shelf-glow,
   .cart-shelf-glow,
+  .exhibit-shelf-glow,
   .cover-lift,
   .group:hover .cover-lift {
     transition: none;

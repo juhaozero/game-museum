@@ -1,6 +1,6 @@
 # GameShot Museum — UI 设计稿（实现同步）
 
-> **版本**：v3.1 · Arcade Archive（街机馆藏）  
+> **版本**：v3.3 · Arcade Archive（街机馆藏）  
 > 气质：**深色馆藏为主** · 浅色为冷 slate 日间展厅 · 深靛柜体 · 街机指示铜 · 卡带脊线 + 底部灯条 · marquee 顶灯。  
 > 方向预览：[`museum-redesign-preview.html`](./museum-redesign-preview.html)（方向 C）
 
@@ -51,12 +51,14 @@
 ### 3.2 色彩（深色为主 · 浅色日间展厅）
 
 ```css
-.dark { /* 主推 · 夜场馆藏 */
+.dark {
+  /* 主推 · 夜场馆藏 */
   --bg: #0b0e14;
   --accent: #d4a24a;
   --cabinet: #141925;
 }
-:root { /* 浅色 · 冷 slate 日间展厅（非米黄反色） */
+:root {
+  /* 浅色 · 冷 slate 日间展厅（非米黄反色） */
   --bg: #e8edf4;
   --accent: #8f6420; /* 深铜，压住黄感 */
   --cabinet: #eef2f8;
@@ -64,24 +66,38 @@
 }
 ```
 
-默认主题：`dark`。浅色用冷灰蓝柜体托铜指示，避免米黄 + 琥珀的「脏黄」组合。
+默认主题：**`dark`（深色主场）**；`index.html` 预挂 `class="dark"` + 阻塞脚本，避免首屏浅色闪烁。浅色仅为日间对照，用冷灰蓝柜体托铜指示，避免米黄 + 琥珀的「脏黄」组合。
+
+**浅色策略（v3.2 · P3）**：仍为「日间展厅对照」，非深色等价；但通过 **更高灯条/地光 token** 保留街机馆识别度：
+
+```css
+:root {
+  --marquee-light-opacity: 0.88;
+  --cart-bar-opacity: 0.85;
+  --ambient-horizon: /* accent 18% */;
+  --ambient-floor: /* accent 14% */;
+  --shelf-glow: /* accent 58% 混金 */;
+}
+```
+
+深色沿用较低 opacity（亮底需更高 contrast 补偿）。
 
 ### 3.3 字体
 
-| 用途 | 字体 | 说明 |
-| --- | --- | --- |
-| 全文（中文优先） | `Noto Sans SC` + `IBM Plex Sans` | 字面宽、不挤 |
-| 字距 | 标题 `0.08em` · 标签 `0.14em` | **禁止负 letter-spacing** |
-| **不做** | Oxanium / Sora / 负 tracking | 中文会显窄、堆字 |
+| 用途             | 字体                             | 说明                      |
+| ---------------- | -------------------------------- | ------------------------- |
+| 全文（中文优先） | `Noto Sans SC` + `IBM Plex Sans` | 字面宽、不挤              |
+| 字距             | 标题 `0.08em` · 标签 `0.10em`    | **禁止负 letter-spacing** |
+| **不做**         | Oxanium / Sora / 负 tracking     | 中文会显窄、堆字          |
 
 ### 3.4 形状与锚点
 
-| 元素 | 规格 |
-| --- | --- |
-| 顶栏 / Dock / filmstrip | `1px` 半透明边 + `6px` 圆角 |
-| 卡带封面 | `1px` 外框 + **左脊 `3px` accent 混边** |
-| 底部灯条 | 封面内 `::after` + 外置 `.cart-shelf-glow` |
-| marquee | `.filmstrip::before` 顶灯 + glow |
+| 元素                    | 规格                                       |
+| ----------------------- | ------------------------------------------ |
+| 顶栏 / Dock / filmstrip | `1px` 半透明边 + `6px` 圆角                |
+| 卡带封面                | `1px` 外框 + **左脊 `3px` accent 混边**    |
+| 底部灯条                | 封面内 `::after` + 外置 `.cart-shelf-glow` |
+| marquee                 | `.filmstrip::before` 顶灯 + glow           |
 
 ### 3.5 氛围背景
 
@@ -109,7 +125,7 @@ z-10 主内容
 ### 4.2 ShelfHero
 
 - 标题：Noto/Plex Semibold + `letter-spacing: 0.08em`
-- Badge / 统计：同族字体，标签 `0.14em`
+- Badge / 统计：同族字体，标签 `0.10em`
 - CTA：`1px` accent 边，hover 实心反色
 
 ### 4.3 GameBox（卡带）
@@ -124,20 +140,37 @@ z-10 主内容
 - marquee 外框 + **顶灯条**
 - 标签 / plaque：同族宽体 + 正字距 + accent
 
-### 4.5 ShelfDock
+### 4.5 ScreenshotCard（展墙）
+
+- `exhibit-frame--wall`：弱化左脊线（2px）+ 底灯条
+- 外置 `.exhibit-shelf-glow` 柔光
+- 展墙页 `.exhibit-page::after` 顶灯条（呼应 filmstrip）
+- **构图**：`.exhibit-grid` 12 列不对称；首图 `exhibit-lead`（lg: 8 列），次图 4 列，其余 4 列
+
+### 4.6 CategoryChips
+
+- 方角 `6px` + `cabinet-edge`，非胶囊 pill
+
+### 4.7 ShelfDock
 
 - `arcade-panel`；计数用 `.type-label`
+
+### 4.8 Lightbox
+
+- 始终暗场观展；颜色走 `--lightbox-*` token（非硬编码 white）
+- `lg+`：右侧 `lightbox-plaque--rail`
+- `<lg`：底部 `lightbox-plaque--dock` + 移动端左右切换按钮
 
 ---
 
 ## 5. 动效
 
-| 场景 | 参数 |
-| --- | --- |
-| 封面入场 | stagger ~35ms，y 18→0 |
-| 封面 hover | translateY(-6px) + 灯条 opacity |
-| filmstrip | 横向 loop，hover pause |
-| reduced-motion | 关闭位移与滚动 |
+| 场景           | 参数                            |
+| -------------- | ------------------------------- |
+| 封面入场       | stagger ~35ms，y 18→0           |
+| 封面 hover     | translateY(-6px) + 灯条 opacity |
+| filmstrip      | 横向 loop，hover pause          |
+| reduced-motion | 关闭位移与滚动                  |
 
 ---
 
@@ -148,7 +181,9 @@ AmbientBackground.tsx   # base + horizon + vignette + scanlines
 layout/TopBar.tsx
 layout/ShelfHero.tsx
 layout/ShelfDock.tsx
-gallery/GameBox.tsx     # cinema-screen + cart-shelf-glow
+gallery/GameBox.tsx     # cart-cover + cart-shelf-glow
+gallery/ScreenshotCard.tsx  # exhibit-frame--wall + exhibit-shelf-glow
+layout/CategoryChips.tsx
 gallery/FeaturedFilmstrip.tsx
 index.css               # Arcade Archive tokens + 锚点样式
 docs/ui.md              # 本文件
@@ -164,5 +199,10 @@ docs/ui.md              # 本文件
 - [x] filmstrip marquee 顶灯
 - [x] Noto Sans SC + 正字距（解决中文堆窄）
 - [x] 浅色日间展厅（冷 slate，非米黄反色）
-- [x] 文档与实现同步（v3.1）
+- [x] 展墙卡片脊线 + 底灯（Level 1→2 视觉桥梁）
+- [x] cinema/HUD 类名清理 → arcade/cart
+- [x] CategoryChips / FavoriteStar 方角化
+- [x] 浅色日间展厅灯条 / 地光可见度（P3 token）
+- [x] Lightbox `--lightbox-*` token + 移动端底部展签
+- [x] 展墙 12 列不对称构图（首图放大）
 - [ ] 虚拟列表（大数据量）

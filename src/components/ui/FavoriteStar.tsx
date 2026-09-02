@@ -31,7 +31,7 @@ export function FavoriteStar({
         onToggle()
       }}
       className={cn(
-        'inline-flex size-8 items-center justify-center rounded-full bg-bg-elevated/90 text-star shadow-sm backdrop-blur-sm transition-opacity duration-200',
+        'inline-flex size-8 items-center justify-center rounded border border-[color:var(--cabinet-edge)] bg-bg-elevated/90 text-star shadow-sm transition-opacity duration-200',
         visibility === 'hover' &&
           !active &&
           'opacity-0 group-hover:opacity-100 focus-visible:opacity-100',

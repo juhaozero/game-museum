@@ -1,4 +1,4 @@
-/** Arcade Archive：深色馆藏底 + 地光 + 暗角 + CRT scanline */
+/** Arcade Archive：深色馆藏 / 浅色日间展厅 · 地光 + 暗角 + CRT scanline */
 export default function AmbientBackground() {
   return (
     <>

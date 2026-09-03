@@ -5,26 +5,29 @@ import type {
   GameSummary,
   ScreenshotItem,
 } from '@/types/manifest'
+import { matchLocalizedName } from '@/utils/localized'
 
-function normalizeQuery(query: string | undefined): string {
-  return (query ?? '').trim().toLowerCase()
+/** 游戏名模糊匹配（文件夹名 + 各语言标题） */
+export function matchGameName(
+  name: string,
+  query: string | undefined,
+  title?: GameSummary['title'],
+): boolean {
+  return matchLocalizedName(name, title, query)
 }
 
-/** 游戏名模糊匹配 */
-export function matchGameName(name: string, query: string | undefined): boolean {
-  const q = normalizeQuery(query)
+/** 截图条目模糊匹配（游戏名 / 分类 / 展签 / 文件名） */
+export function matchScreenshot(
+  item: ScreenshotItem,
+  query: string | undefined,
+): boolean {
+  const q = (query ?? '').trim().toLowerCase()
   if (!q) return true
-  return name.toLowerCase().includes(q)
-}
-
-/** 截图条目模糊匹配（游戏名 + 文件名） */
-export function matchScreenshot(item: ScreenshotItem, query: string | undefined): boolean {
-  const q = normalizeQuery(query)
-  if (!q) return true
-  return (
-    item.gameName.toLowerCase().includes(q) ||
-    item.fileName.toLowerCase().includes(q)
-  )
+  if (matchLocalizedName(item.gameName, item.gameTitle, query)) return true
+  if (matchLocalizedName(item.category, item.categoryTitle, query)) return true
+  if (matchLocalizedName('', item.caption, query)) return true
+  if (matchLocalizedName('', item.gameBlurb, query)) return true
+  return item.fileName.toLowerCase().includes(q)
 }
 
 /** 将 manifest 条目聚合为盒墙用的游戏摘要 */
@@ -37,14 +40,31 @@ export function aggregateGames(items: ScreenshotItem[]): GameSummary[] {
       map.set(item.gameId, {
         id: item.gameId,
         name: item.gameName,
+        title: item.gameTitle,
         category: item.category,
+        categoryTitle: item.categoryTitle,
         shotCount: 1,
+        // 先占位；若后续遇到 isCover 再覆盖（避免排序导致封面漂移）
         coverUrl: item.url,
+        blurb: item.gameBlurb,
+        year: item.gameYear,
       })
       continue
     }
 
     existing.shotCount += 1
+    if (item.gameTitle && !existing.title) {
+      existing.title = item.gameTitle
+    }
+    if (item.categoryTitle && !existing.categoryTitle) {
+      existing.categoryTitle = item.categoryTitle
+    }
+    if (item.gameBlurb && !existing.blurb) {
+      existing.blurb = item.gameBlurb
+    }
+    if (item.gameYear && !existing.year) {
+      existing.year = item.gameYear
+    }
     if (item.isCover) {
       existing.coverUrl = item.url
     }
@@ -64,6 +84,7 @@ export function aggregateCategories(games: GameSummary[]): CategorySummary[] {
     if (!existing) {
       map.set(game.category, {
         name: game.category,
+        title: game.categoryTitle,
         gameCount: 1,
         shotCount: game.shotCount,
       })
@@ -72,6 +93,9 @@ export function aggregateCategories(games: GameSummary[]): CategorySummary[] {
 
     existing.gameCount += 1
     existing.shotCount += game.shotCount
+    if (game.categoryTitle && !existing.title) {
+      existing.title = game.categoryTitle
+    }
   }
 
   return [...map.values()].sort((a, b) =>
@@ -88,7 +112,10 @@ export function filterGames(
 
   return games.filter((game) => {
     if (category && game.category !== category) return false
-    return matchGameName(game.name, searchQuery)
+    return (
+      matchGameName(game.name, searchQuery, game.title) ||
+      matchLocalizedName(game.category, game.categoryTitle, searchQuery)
+    )
   })
 }
 

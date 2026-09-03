@@ -4,6 +4,8 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/utils/cn'
 
 const VIRTUAL_THRESHOLD = 36
+/** 每 N 张偶发跨列宽格（仅非虚拟 CSS grid） */
+const WIDE_EVERY = 7
 
 function columnCountForWidth(width: number) {
   if (width >= 1536) return 6
@@ -13,9 +15,20 @@ function columnCountForWidth(width: number) {
   return 2
 }
 
-/** 预估单行高度：封面 2:3 + gap + 灯带余量 */
+/** 预估单行高度：封面 2:3 + gap + 灯带余量 + 微错落 */
 function estimateRowHeight(columnWidth: number) {
-  return Math.round(columnWidth * 1.5 + 22)
+  return Math.round(columnWidth * 1.5 + 32)
+}
+
+function cellRhythmClass(index: number, enableWide: boolean) {
+  const wide = enableWide && index > 0 && index % WIDE_EVERY === 3
+  const nudge =
+    index % 3 === 1
+      ? 'arcade-cell--nudge-a'
+      : index % 5 === 3
+        ? 'arcade-cell--nudge-b'
+        : undefined
+  return cn(wide && 'arcade-cell--wide', nudge)
 }
 
 type VirtualArcadeGridProps<T> = {
@@ -28,7 +41,7 @@ type VirtualArcadeGridProps<T> = {
 }
 
 /**
- * 封面墙网格：少量直出 CSS grid；≥36 用行级虚拟列表（窗口滚动）。
+ * 封面墙网格：少量直出 CSS grid（含偶发宽格）；≥36 用行级虚拟列表（窗口滚动）。
  */
 export function VirtualArcadeGrid<T>({
   items,
@@ -86,13 +99,14 @@ export function VirtualArcadeGrid<T>({
   if (!useVirtual) {
     const staggerIn = reduceMotion ? 0 : 0.055
     const staggerOut = reduceMotion ? 0 : 0.025
+    const enableWide = cols >= 3
 
     return (
       <div ref={listRef}>
         <AnimatePresence mode="wait">
           <motion.ul
             key={animationKey}
-            className={cn('arcade-grid', className)}
+            className={cn('arcade-grid arcade-grid--mason', className)}
             initial="hidden"
             animate="show"
             exit="exit"
@@ -109,10 +123,10 @@ export function VirtualArcadeGrid<T>({
               },
             }}
           >
-            {items.map((item) => (
+            {items.map((item, index) => (
               <motion.li
                 key={getKey(item)}
-                className="relative z-[1]"
+                className={cn('relative z-[1]', cellRhythmClass(index, enableWide))}
                 variants={{
                   hidden: reduceMotion
                     ? { opacity: 0 }
@@ -162,11 +176,27 @@ export function VirtualArcadeGrid<T>({
                 }px)`,
               }}
             >
-              {rowItems.map((item) => (
-                <li key={getKey(item)} className="relative z-[1]">
-                  {renderItem(item)}
-                </li>
-              ))}
+              {rowItems.map((item, colIndex) => {
+                const globalIndex = start + colIndex
+                return (
+                  <motion.li
+                    key={getKey(item)}
+                    className={cn(
+                      'relative z-[1]',
+                      cellRhythmClass(globalIndex, false),
+                    )}
+                    initial={reduceMotion ? false : { opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{
+                      duration: 0.28,
+                      ease: 'easeOut',
+                      delay: reduceMotion ? 0 : Math.min(colIndex * 0.03, 0.12),
+                    }}
+                  >
+                    {renderItem(item)}
+                  </motion.li>
+                )
+              })}
             </ul>
           )
         })}

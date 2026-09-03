@@ -58,17 +58,14 @@ export function ExhibitEmptyState({
       {action && (
         <p className="mt-5">
           {'to' in action ? (
-            <Link
-              to={action.to}
-              className="inline-flex items-center rounded-md border border-accent px-3.5 py-2 text-sm font-medium text-accent no-underline transition-colors hover:bg-accent hover:text-[var(--bg)]"
-            >
+            <Link to={action.to} className="cabinet-cta cabinet-cta--sm">
               {action.label}
             </Link>
           ) : (
             <button
               type="button"
               onClick={action.onClick}
-              className="inline-flex items-center rounded-md border border-accent px-3.5 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-[var(--bg)]"
+              className="cabinet-cta cabinet-cta--sm"
             >
               {action.label}
             </button>

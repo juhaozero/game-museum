@@ -72,8 +72,13 @@ const messages = {
     game: '游戏',
     category: '分类',
     file: '文件',
+    plaqueCaption: '展签',
+    plaqueBlurb: '简介',
+    plaqueYear: '年代',
     lightboxHints: '← → 切换 · Esc 关闭 · 滚轮缩放',
     lightboxExhibit: '展品',
+    imageLoadFailed: '加载失败',
+    retry: '重试',
   },
   en: {
     siteTitle: 'GameShot Museum',
@@ -144,8 +149,13 @@ const messages = {
     game: 'Game',
     category: 'Category',
     file: 'File',
+    plaqueCaption: 'Plaque',
+    plaqueBlurb: 'Note',
+    plaqueYear: 'Year',
     lightboxHints: '← → browse · Esc close · scroll to zoom',
     lightboxExhibit: 'Exhibit',
+    imageLoadFailed: 'Failed to load',
+    retry: 'Retry',
   },
 } as const satisfies Record<Locale, Record<string, string>>
 

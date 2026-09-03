@@ -156,14 +156,15 @@ export function resolveFeatured(rawConfig, items) {
     } else {
       resolvedItems = pickFeaturedManual(config, items, warnings).map(
         ({ item, caption: inlineCaption }) => {
-          const caption = inlineCaption ?? captionForItem(config, item)
+          const caption =
+            item.caption ?? inlineCaption ?? captionForItem(config, item)
           return caption ? { ...item, caption } : { ...item }
         },
       )
     }
   } else {
     resolvedItems = pickFeaturedAuto(config, items).map((item) => {
-      const caption = captionForItem(config, item)
+      const caption = item.caption ?? captionForItem(config, item)
       return caption ? { ...item, caption } : { ...item }
     })
   }

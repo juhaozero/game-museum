@@ -114,8 +114,9 @@ pnpm run dev
 ```json
 // Screenshots/…/某游戏/meta.json
 {
-  "category": "RPG",
-  "cover": "poster.webp"
+  "category": { "zh": "RPG", "en": "RPG" },
+  "cover": "poster.webp",
+  "name": { "zh": "某游戏", "en": "Some Game" }
 }
 ```
 
@@ -123,9 +124,15 @@ pnpm run dev
 
 ## 目录与 manifest
 
-**游戏名 = 文件夹名**（界面标题直接用它）。改名后需重跑 `pnpm run manifest`。
+**游戏名默认 = 文件夹名**（检索始终能搜到文件夹名）。展示译名写在 `meta.json` 的 `name` 里：
 
-| `layout`             | 结构                            | 游戏名来源         |
+```json
+{ "name": { "zh": "塞尔达传说", "en": "The Legend of Zelda" } }
+```
+
+改文件夹名或 `name` 后需重跑 `pnpm run manifest`。
+
+| `layout`             | 结构                            | 游戏身份（文件夹） |
 | -------------------- | ------------------------------- | ------------------ |
 | `game-first`（常见） | `Screenshots/游戏名/*.jpg`      | 一级文件夹名       |
 | `category-first`     | `Screenshots/分类/游戏名/*.jpg` | 分类下的子文件夹名 |

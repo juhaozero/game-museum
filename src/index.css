@@ -3,9 +3,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* 中文优先：Noto Sans SC 字面宽、不挤；拉丁用 Plex */
+  /* 双轨：拉丁柜体字 Archivo；中文可读 Noto；正文拉丁 Plex */
   --font-sans: 'Noto Sans SC', 'IBM Plex Sans', 'PingFang SC', 'Microsoft YaHei', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Noto Sans SC', 'IBM Plex Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-display: 'Archivo', 'Noto Sans SC', 'IBM Plex Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --font-mono: 'IBM Plex Sans', 'Noto Sans SC', ui-monospace, monospace;
 
   --color-bg: var(--bg);
@@ -48,7 +48,7 @@
   --glass: rgba(245, 248, 252, 0.92);
   --glass-border: rgba(21, 25, 34, 0.1);
   --cabinet: #e4eaf2;
-  --cabinet-edge: color-mix(in srgb, #151922 16%, transparent);
+  --cabinet-edge: color-mix(in srgb, #151922 20%, transparent);
 
   --ambient-base: radial-gradient(
     ellipse 110% 95% at 50% 36%,
@@ -76,23 +76,33 @@
     transparent 42%,
     color-mix(in srgb, #3a4a60 16%, transparent) 100%
   );
-  --ambient-scanline-opacity: 0.02;
-  --ambient-noise-opacity: 0.03;
-  --shelf-glow: color-mix(in srgb, var(--accent) 62%, #c9a227);
-  --shelf-glow-soft: color-mix(in srgb, var(--accent) 36%, transparent);
+  --ambient-scanline-opacity: 0.008;
+  --ambient-noise-opacity: 0.025;
+  --shelf-glow: color-mix(in srgb, var(--accent) 78%, #a67c1a);
+  --shelf-glow-soft: color-mix(in srgb, var(--accent) 48%, transparent);
   --contact-shadow: color-mix(in srgb, #243048 14%, transparent);
   --contact-shadow-strong: color-mix(in srgb, #243048 22%, transparent);
+  --cart-spine-mix: 78%;
+  --cart-inset-mix: 18%;
 
-  /* 浅色 · 灯条 / 地光可见度（亮底需更高 contrast） */
-  --marquee-light-opacity: 0.88;
-  --cart-bar-opacity: 0.85;
-  --cart-glow-opacity: 0.82;
-  --exhibit-top-light-opacity: 0.82;
+  /*
+   * 灯条三层（P0）：Ambient 唯一呼吸 · Structure 静态弱光 · Interactive 静默→hover 满亮
+   * 浅色（P1）：抬高脊线 / 灯条 contrast，减 scanline，避免「普通浅色后台」
+   */
+  --lamp-ambient-opacity: 0.95;
+  --lamp-structure-opacity: 0.68;
+  --lamp-interactive-rest: 0.55;
+  --lamp-interactive-glow-rest: 0.48;
+  --marquee-light-opacity: var(--lamp-ambient-opacity);
+  --cart-bar-opacity: var(--lamp-interactive-rest);
+  --cart-glow-opacity: var(--lamp-interactive-glow-rest);
+  --exhibit-top-light-opacity: var(--lamp-structure-opacity);
   --exhibit-page-glow: 18%;
-  --exhibit-wall-bar-opacity: 0.68;
-  --exhibit-shelf-glow-opacity: 0.58;
-  --arcade-floor-opacity: 0.78;
-  --arcade-wall-glow: 20%;
+  --exhibit-wall-bar-opacity: 0.48;
+  --exhibit-shelf-glow-opacity: 0.4;
+  --exhibit-empty-light-opacity: 0.36;
+  --arcade-floor-opacity: 0.82;
+  --arcade-wall-glow: 22%;
 
   /* Lightbox：始终暗场观展，token 化避免硬编码 white */
   --lightbox-overlay: color-mix(in srgb, #0b0e14 86%, var(--bg) 14%);
@@ -155,16 +165,23 @@
   --shelf-glow-soft: color-mix(in srgb, var(--accent) 40%, transparent);
   --contact-shadow: color-mix(in srgb, black 48%, transparent);
   --contact-shadow-strong: color-mix(in srgb, black 65%, transparent);
+  --cart-spine-mix: 55%;
+  --cart-inset-mix: 10%;
 
-  --marquee-light-opacity: 0.85;
-  --cart-bar-opacity: 0.75;
-  --cart-glow-opacity: 0.7;
-  --exhibit-top-light-opacity: 0.7;
-  --exhibit-page-glow: 14%;
-  --exhibit-wall-bar-opacity: 0.55;
-  --exhibit-shelf-glow-opacity: 0.45;
-  --arcade-floor-opacity: 0.85;
-  --arcade-wall-glow: 16%;
+  --lamp-ambient-opacity: 0.85;
+  --lamp-structure-opacity: 0.45;
+  --lamp-interactive-rest: 0.36;
+  --lamp-interactive-glow-rest: 0.28;
+  --marquee-light-opacity: var(--lamp-ambient-opacity);
+  --cart-bar-opacity: var(--lamp-interactive-rest);
+  --cart-glow-opacity: var(--lamp-interactive-glow-rest);
+  --exhibit-top-light-opacity: var(--lamp-structure-opacity);
+  --exhibit-page-glow: 11%;
+  --exhibit-wall-bar-opacity: 0.28;
+  --exhibit-shelf-glow-opacity: 0.22;
+  --exhibit-empty-light-opacity: 0.24;
+  --arcade-floor-opacity: 0.78;
+  --arcade-wall-glow: 12%;
 
   --lightbox-overlay: color-mix(in srgb, black 88%, var(--bg) 12%);
   --lightbox-fg: #eceae4;
@@ -241,6 +258,7 @@
     background: color-mix(in srgb, var(--cabinet) 88%, transparent);
   }
 
+  /* Ambient · 全站唯一持续呼吸灯 */
   .topbar::before {
     content: '';
     position: absolute;
@@ -251,9 +269,44 @@
     border-radius: 0 0 999px 999px;
     background: var(--shelf-glow);
     box-shadow: 0 0 10px 1px var(--shelf-glow-soft);
-    opacity: var(--marquee-light-opacity);
+    opacity: var(--lamp-ambient-opacity);
     pointer-events: none;
     animation: lamp-breathe 4s ease-in-out infinite;
+  }
+
+  .topbar-brand {
+    display: none;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  @media (min-width: 420px) {
+    .topbar-brand {
+      display: flex;
+    }
+  }
+
+  .topbar-brand-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+  }
+
+  @media (min-width: 640px) {
+    .topbar-brand-title {
+      font-size: 15px;
+    }
+  }
+
+  .topbar-brand-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    line-height: 1.3;
+    color: var(--text-muted);
   }
 
   .topbar-inner {
@@ -285,7 +338,7 @@
     border-radius: 4px;
     background: var(--accent);
     color: var(--bg);
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -350,6 +403,193 @@
     background: var(--accent-soft);
   }
 
+  /* P2 · 顶栏搜索：柜体 console inset */
+  .topbar-search {
+    position: relative;
+    display: none;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .topbar-search {
+      display: block;
+      width: 11rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .topbar-search {
+      width: 14rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .topbar-search {
+      width: 16rem;
+    }
+  }
+
+  .topbar-search-icon {
+    pointer-events: none;
+    position: absolute;
+    left: 0.65rem;
+    top: 50%;
+    z-index: 1;
+    transform: translateY(-50%);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+  }
+
+  .topbar-search-input {
+    width: 100%;
+    min-height: 2rem;
+    padding: 0.35rem 0.55rem 0.35rem 1.75rem;
+    border: 1px solid var(--cabinet-edge);
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--text);
+    background: color-mix(in srgb, var(--bg) 72%, var(--cabinet));
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--accent) 10%, transparent),
+      inset 0 -1px 0 color-mix(in srgb, black 8%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--accent) 4%, transparent);
+    outline: none;
+    transition:
+      border-color 150ms ease-out,
+      box-shadow 150ms ease-out,
+      background-color 150ms ease-out;
+  }
+
+  .topbar-search-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .topbar-search-input:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--cabinet-edge));
+  }
+
+  .topbar-search-input:focus {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--bg) 55%, var(--cabinet));
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--accent) 16%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent),
+      0 0 0 2px var(--accent-soft);
+  }
+
+  .topbar-search-input:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  .topbar-search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+
+  .topbar-search-clear {
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 0;
+    border-radius: 3px;
+    padding: 0.2rem 0.4rem;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .topbar-search-clear:hover {
+    color: var(--accent);
+  }
+
+  .topbar-search--filtering .topbar-search-input {
+    padding-right: 2.5rem;
+  }
+
+  /* 移动菜单内搜索：同 console inset */
+  .menu-search-input {
+    width: 100%;
+    min-height: 2.35rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--cabinet-edge);
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--text);
+    background: color-mix(in srgb, var(--bg) 72%, var(--cabinet));
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--accent) 10%, transparent),
+      inset 0 -1px 0 color-mix(in srgb, black 8%, transparent);
+    outline: none;
+  }
+
+  .menu-search-input:focus {
+    border-color: var(--accent);
+  }
+
+  .menu-search-input:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  /* P2 · 柜体 CTA：边框 + 内侧铜光，hover 满填 */
+  .cabinet-cta {
+    display: inline-flex;
+    height: 2.75rem;
+    min-width: 10.5rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0 1.25rem;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--cabinet) 88%, transparent);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--accent) 22%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent),
+      0 0 16px color-mix(in srgb, var(--accent) 12%, transparent);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      color 160ms ease-out,
+      background-color 160ms ease-out,
+      border-color 160ms ease-out,
+      box-shadow 160ms ease-out;
+  }
+
+  .cabinet-cta:hover:not(:disabled) {
+    color: var(--bg);
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 22%, transparent),
+      0 0 20px color-mix(in srgb, var(--accent) 28%, transparent);
+  }
+
+  .cabinet-cta:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  .cabinet-cta--sm {
+    height: 2.35rem;
+    min-width: 0;
+    padding: 0 0.9rem;
+    font-size: 13px;
+  }
+
   .shelf-search {
     width: 100%;
   }
@@ -367,9 +607,9 @@
     line-height: 1.5;
   }
 
-  /* 英文标签 / badge：略宽距 */
+  /* 英文标签 / badge：柜体拉丁字 + 略宽距 */
   .type-label-wide {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.14em;
@@ -377,15 +617,15 @@
   }
 
   .type-display {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: 0.06em;
     line-height: 1.35;
   }
 
-  /* Hero 大标题：中文优先更紧，与标签拉开对比 */
+  /* Hero 大标题：display 轨；中文回落到 Noto */
   .type-hero {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: 0.03em;
     line-height: 1.3;
@@ -423,7 +663,7 @@
   }
 
   .hero-kicker {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.18em;
@@ -442,14 +682,14 @@
   }
 
   .type-stat {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     font-variant-numeric: tabular-nums;
     font-weight: 700;
     letter-spacing: 0.04em;
   }
 
   .font-display {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     letter-spacing: 0.05em;
   }
 }
@@ -514,12 +754,31 @@
   position: relative;
   z-index: 1;
   pointer-events: auto;
+  align-items: start;
 }
 
 .arcade-grid > li,
 .exhibit-grid > li {
   content-visibility: auto;
   contain-intrinsic-size: auto 280px;
+}
+
+/*
+ * P1 封面墙节奏：JS 打 class（padding 微错落，不抢 motion transform）
+ * 偶发宽格仅 .arcade-grid--mason（非虚拟直出）
+ */
+.arcade-grid > li.arcade-cell--nudge-a {
+  padding-top: 10px;
+}
+
+.arcade-grid > li.arcade-cell--nudge-b {
+  padding-top: 6px;
+}
+
+@media (min-width: 640px) {
+  .arcade-grid--mason > li.arcade-cell--wide {
+    grid-column: span 2;
+  }
 }
 
 /* 有精选 filmstrip 时压缩首页纵向节奏 */
@@ -609,11 +868,10 @@
   border-radius: 999px;
   background: var(--shelf-glow);
   box-shadow: 0 0 8px 1px var(--shelf-glow-soft);
-  animation: lamp-breathe 4s ease-in-out infinite;
 }
 
 
-/* 街机灯条弱呼吸（顶栏 / filmstrip / 展墙头 / 卡带底灯） */
+/* 街机灯条弱呼吸（仅顶栏环境层） */
 @keyframes lamp-breathe {
   0%,
   100% {
@@ -668,8 +926,8 @@
     ),
     repeating-linear-gradient(
       90deg,
-      color-mix(in srgb, var(--fg) 6%, transparent) 0,
-      color-mix(in srgb, var(--fg) 6%, transparent) 1px,
+      color-mix(in srgb, var(--text) 6%, transparent) 0,
+      color-mix(in srgb, var(--text) 6%, transparent) 1px,
       transparent 1px,
       transparent 40px
     );
@@ -683,10 +941,11 @@
   overflow: hidden;
   border-radius: 6px;
   border: 1px solid var(--cabinet-edge);
-  border-left: 3px solid color-mix(in srgb, var(--accent) 55%, var(--cabinet-edge));
+  border-left: 3px solid
+    color-mix(in srgb, var(--accent) var(--cart-spine-mix), var(--cabinet-edge));
   background: var(--box-inner);
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) var(--cart-inset-mix), transparent),
     0 10px 26px var(--contact-shadow);
 }
 
@@ -706,7 +965,7 @@
   );
 }
 
-/* 底部灯条 */
+/* Interactive · 底灯静默，hover/focus 满亮 */
 .cart-cover::after {
   content: '';
   position: absolute;
@@ -719,9 +978,9 @@
   border-radius: 999px 999px 0 0;
   background: var(--shelf-glow);
   box-shadow:
-    0 0 10px 2px var(--shelf-glow-soft),
-    0 0 22px 4px color-mix(in srgb, var(--accent) 28%, transparent);
-  opacity: var(--cart-bar-opacity);
+    0 0 8px 1px var(--shelf-glow-soft),
+    0 0 16px 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  opacity: var(--lamp-interactive-rest);
   transition: opacity 180ms ease-out;
 }
 
@@ -730,7 +989,7 @@
   opacity: 1;
 }
 
-/* 外置货架柔光（卡带下方） */
+/* 外置货架柔光（卡带下方）— 交互层，静默至悬停 */
 .cart-shelf-glow {
   position: absolute;
   left: 14%;
@@ -744,13 +1003,13 @@
     transparent 72%
   );
   filter: blur(5px);
-  opacity: var(--cart-glow-opacity);
+  opacity: var(--lamp-interactive-glow-rest);
   pointer-events: none;
   transition: opacity 180ms ease-out;
 }
 
 .group:hover .cart-shelf-glow {
-  opacity: 1;
+  opacity: 0.95;
 }
 
 .cart-cover-lift {
@@ -764,7 +1023,7 @@
   filter: drop-shadow(0 16px 24px var(--contact-shadow-strong));
 }
 
-/* 旧货架灯带（非 arcade 场景可复用） */
+/* 旧货架灯带（非 arcade 场景可复用）— 同交互层静默 */
 .cover-shelf-glow {
   position: absolute;
   left: 12%;
@@ -778,13 +1037,13 @@
     transparent 70%
   );
   filter: blur(6px);
-  opacity: 0.85;
+  opacity: var(--lamp-interactive-glow-rest);
   transition: opacity 200ms ease-out;
   pointer-events: none;
 }
 
 .group:hover .cover-shelf-glow {
-  opacity: 1;
+  opacity: 0.95;
 }
 
 .cover-lift {
@@ -812,22 +1071,19 @@
   overflow: hidden;
 }
 
-/* marquee 顶灯条 */
+/* Structure · filmstrip 静态顶灯（弱于 Ambient，不呼吸） */
 .filmstrip::before {
   content: '';
   position: absolute;
-  left: 12%;
-  right: 12%;
+  left: 14%;
+  right: 14%;
   top: 0;
-  height: 3px;
+  height: 2px;
   border-radius: 0 0 999px 999px;
   background: var(--shelf-glow);
-  box-shadow:
-    0 0 12px 2px var(--shelf-glow-soft),
-    0 4px 18px color-mix(in srgb, var(--accent) 25%, transparent);
-  opacity: var(--marquee-light-opacity);
+  box-shadow: 0 0 8px 1px var(--shelf-glow-soft);
+  opacity: var(--lamp-structure-opacity);
   pointer-events: none;
-  animation: lamp-breathe 4s ease-in-out infinite;
 }
 
 .filmstrip-head {
@@ -838,7 +1094,7 @@
 }
 
 .filmstrip-label {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -957,6 +1213,32 @@
 .lightbox-overlay {
   background: var(--lightbox-overlay);
   color: var(--lightbox-fg);
+}
+
+/* P2 · 开柜短暗场：vignette 先压后松，像推柜门 */
+.lightbox-settle {
+  animation: lightbox-settle-in 0.42s ease-out both;
+}
+
+@keyframes lightbox-settle-in {
+  0% {
+    opacity: 0.35;
+    transform: scale(1.04);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox-settle {
+    animation: none;
+  }
 }
 
 .lightbox-vignette,
@@ -1124,21 +1406,19 @@
   );
 }
 
-/* 展墙页顶灯条（呼应 filmstrip marquee） */
+/* Structure · 展墙页顶灯条（静态弱光，呼应 filmstrip） */
 .exhibit-page::after {
   content: '';
   pointer-events: none;
   position: absolute;
-  left: 6%;
-  right: 6%;
+  left: 10%;
+  right: 10%;
   top: 0;
   height: 2px;
   border-radius: 0 0 999px 999px;
   background: var(--shelf-glow);
-  box-shadow:
-    0 0 10px 2px var(--shelf-glow-soft),
-    0 4px 16px color-mix(in srgb, var(--accent) 18%, transparent);
-  opacity: var(--exhibit-top-light-opacity);
+  box-shadow: 0 0 8px 1px var(--shelf-glow-soft);
+  opacity: var(--lamp-structure-opacity);
 }
 
 .exhibit-page--highlights::before {
@@ -1182,7 +1462,12 @@
 .exhibit-frame--wall {
   position: relative;
   overflow: hidden;
-  border-left: 2px solid color-mix(in srgb, var(--accent) 42%, var(--cabinet-edge));
+  border-left: 2px solid
+    color-mix(
+      in srgb,
+      var(--accent) calc(var(--cart-spine-mix) - 12%),
+      var(--cabinet-edge)
+    );
 }
 
 .exhibit-frame--wall::after {
@@ -1196,14 +1481,14 @@
   pointer-events: none;
   border-radius: 999px 999px 0 0;
   background: var(--shelf-glow-soft);
-  box-shadow: 0 0 8px 1px color-mix(in srgb, var(--accent) 22%, transparent);
+  box-shadow: 0 0 6px 1px color-mix(in srgb, var(--accent) 16%, transparent);
   opacity: var(--exhibit-wall-bar-opacity);
   transition: opacity 180ms ease-out;
 }
 
 .group:hover .exhibit-frame--wall::after,
 .group:focus-within .exhibit-frame--wall::after {
-  opacity: 0.88;
+  opacity: 0.82;
 }
 
 .exhibit-card {
@@ -1229,7 +1514,7 @@
 }
 
 .group:hover .exhibit-shelf-glow {
-  opacity: 0.72;
+  opacity: 0.65;
 }
 
 .exhibit-index {
@@ -1359,17 +1644,17 @@
   }
 }
 
-/* 柜体空态展签 */
+/* 柜体空态 · 极弱结构灯，避免与 Ambient 同相位抢戏 */
 .exhibit-empty-light {
   position: absolute;
-  left: 14%;
-  right: 14%;
+  left: 18%;
+  right: 18%;
   top: 0;
-  height: 2px;
+  height: 1px;
   border-radius: 0 0 999px 999px;
   background: var(--shelf-glow);
-  box-shadow: 0 0 10px 2px var(--shelf-glow-soft);
-  opacity: var(--exhibit-top-light-opacity);
+  box-shadow: 0 0 6px 0 var(--shelf-glow-soft);
+  opacity: var(--exhibit-empty-light-opacity);
   pointer-events: none;
 }
 
@@ -1412,9 +1697,7 @@
     animation: none;
   }
 
-  .topbar::before,
-  .filmstrip::before,
-  .wall-header-tab--active::after {
+  .topbar::before {
     animation: none !important;
   }
 }

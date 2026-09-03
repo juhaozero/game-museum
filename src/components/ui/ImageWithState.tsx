@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useI18n } from '@/i18n/useI18n'
 import { cn } from '@/utils/cn'
 
 type ImageWithStateProps = {
@@ -20,6 +21,7 @@ export function ImageWithState({
   fallbackGlyph,
   onLoadSuccess,
 }: ImageWithStateProps) {
+  const { t } = useI18n()
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading')
   const [retryKey, setRetryKey] = useState(0)
   const [loadedSrc, setLoadedSrc] = useState(src)
@@ -41,7 +43,7 @@ export function ImageWithState({
         {fallbackGlyph ? (
           <span className="text-3xl font-medium text-muted/80">{fallbackGlyph}</span>
         ) : (
-          <span className="text-xs">加载失败</span>
+          <span className="text-xs">{t('imageLoadFailed')}</span>
         )}
         <button
           type="button"
@@ -53,7 +55,7 @@ export function ImageWithState({
           }}
           className="rounded border border-hairline px-2 py-0.5 text-xs text-muted hover:text-fg"
         >
-          重试
+          {t('retry')}
         </button>
       </div>
     )

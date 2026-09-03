@@ -7,12 +7,17 @@ import { ImageWithState } from '@/components/ui/ImageWithState'
 import { useAppContext } from '@/hooks/useAppContext'
 import { useI18n } from '@/i18n/useI18n'
 import { publicUiEnv } from '@/utils/publicEnv'
+import {
+  displayGameName,
+  displayCategoryName,
+  pickLocalized,
+} from '@/utils/localized'
 import { buildShelfUrl } from '@/utils/routes'
 
 export function GameGalleryPage() {
   const { gameId } = useParams()
   const { manifestState, gallery } = useAppContext()
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const reduceMotion = useReducedMotion()
 
   if (manifestState.status === 'loading') {
@@ -36,10 +41,7 @@ export function GameGalleryPage() {
     ? gallery.getScreenshotsByGameId(gameId).filter((item) => !item.isCover)
     : []
   const backUrl = buildShelfUrl(gallery.selectedCategory, gallery.searchQuery)
-  const favCover = game
-    ? gallery.favoriteScreenshots.find((s) => s.gameId === game.id)?.url
-    : undefined
-  const coverUrl = favCover ?? game?.coverUrl
+  const coverUrl = game?.coverUrl || undefined
 
   if (!game) {
     return (
@@ -69,6 +71,13 @@ export function GameGalleryPage() {
       transition: { duration: 0.34, ease: 'easeOut' as const },
     },
   }
+  const shownName = displayGameName(game.name, game.title, locale)
+  const shownCategory = displayCategoryName(
+    game.category,
+    game.categoryTitle,
+    locale,
+  )
+  const shownBlurb = pickLocalized(game.blurb, locale)
 
   return (
     <section className="exhibit-page mx-auto max-w-6xl">
@@ -97,7 +106,7 @@ export function GameGalleryPage() {
                 <ImageWithState
                   src={coverUrl}
                   alt=""
-                  fallbackGlyph={game.name.slice(0, 1)}
+                  fallbackGlyph={shownName.slice(0, 1)}
                 />
               </div>
             </motion.div>
@@ -131,17 +140,26 @@ export function GameGalleryPage() {
               className="type-hero text-balance text-2xl text-fg sm:text-3xl"
               variants={plaqueItem}
             >
-              {game.name}
+              {shownName}
             </motion.h1>
             <motion.p
               className="type-label mt-2 tabular-nums text-muted"
               variants={plaqueItem}
             >
-              {game.category}
+              {shownCategory}
+              {game.year && <> · {game.year}</>}
               {shots.length > 0 && (
                 <> · {t('shotsLabel', { count: shots.length })}</>
               )}
             </motion.p>
+            {shownBlurb && (
+              <motion.p
+                className="mt-3 max-w-xl text-pretty text-[14px] leading-relaxed text-muted"
+                variants={plaqueItem}
+              >
+                {shownBlurb}
+              </motion.p>
+            )}
           </motion.div>
         </div>
       </header>

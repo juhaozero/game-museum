@@ -65,10 +65,14 @@ export function TopBar({
           <span aria-hidden className="topbar-mark">
             GM
           </span>
-          <span className="hidden min-[420px]:flex flex-col gap-0.5">
-            <span className="type-display text-[14px] leading-snug text-fg sm:text-[15px]">
-              {t('brandLine1')}
-              <span className="text-accent">{t('brandLine2')}</span>
+          <span className="topbar-brand">
+            <span className="topbar-brand-title type-metal">
+              {locale === 'zh'
+                ? `${t('brandLine1')}${t('brandLine2')}`
+                : `${t('brandLine1')} ${t('brandLine2')}`}
+            </span>
+            <span className="topbar-brand-tag hidden sm:block">
+              {t('brandTagline')}
             </span>
           </span>
         </Link>
@@ -83,12 +87,14 @@ export function TopBar({
         </nav>
 
         <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
-          <label className="topbar-search relative hidden min-w-0 sm:block sm:w-44 md:w-56 lg:w-64">
+          <label
+            className={cn(
+              'topbar-search',
+              isFiltering && searchEnabled && 'topbar-search--filtering',
+            )}
+          >
             <span className="sr-only">{t('searchGames')}</span>
-            <span
-              aria-hidden
-              className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[13px] text-muted"
-            >
+            <span aria-hidden className="topbar-search-icon">
               ⌕
             </span>
             <input
@@ -97,17 +103,13 @@ export function TopBar({
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('searchPlaceholder')}
               disabled={!searchEnabled}
-              className={cn(
-                'w-full rounded border border-[color:var(--cabinet-edge)] bg-[color:var(--bg)] py-1.5 pl-7 pr-2 text-[13px] text-fg outline-none placeholder:text-muted focus:border-accent',
-                isFiltering && searchEnabled && 'pr-10',
-                !searchEnabled && 'cursor-not-allowed opacity-45',
-              )}
+              className="topbar-search-input"
             />
             {isFiltering && searchEnabled && (
               <button
                 type="button"
                 onClick={handleClear}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded px-1.5 py-0.5 type-label text-[10px] text-muted hover:text-accent"
+                className="topbar-search-clear"
               >
                 {t('clear')}
               </button>
@@ -178,10 +180,7 @@ export function TopBar({
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={t('searchPlaceholder')}
                     disabled={!searchEnabled}
-                    className={cn(
-                      'w-full rounded border border-[color:var(--cabinet-edge)] bg-[color:var(--bg)] px-2.5 py-2 text-[13px] text-fg outline-none placeholder:text-muted focus:border-accent',
-                      !searchEnabled && 'cursor-not-allowed opacity-45',
-                    )}
+                    className="menu-search-input"
                   />
                 </label>
                 <button

@@ -74,26 +74,47 @@ export function ShelfHero({
     <motion.aside
       className={cn(
         'shelf-hero relative z-[2] flex w-full min-w-0 flex-col',
-        compact ? 'shelf-hero--compact gap-6' : 'gap-8 lg:pt-1',
+        compact ? 'shelf-hero--compact gap-4 sm:gap-6' : 'gap-5 sm:gap-8 lg:pt-1',
       )}
       initial={runEntrance ? 'hidden' : false}
       animate="show"
       variants={containerVariants}
     >
       <motion.div className="max-w-xl" variants={itemVariants}>
-        <h1 className="type-hero type-metal text-balance text-[2rem] leading-[1.25] sm:text-[2.35rem] lg:text-[2.55rem] xl:text-[2.75rem]">
+        <h1 className="type-hero type-metal text-balance text-[1.6rem] leading-[1.25] sm:text-[2.1rem] lg:text-[2.25rem] xl:text-[2.45rem]">
           {t('heroTitle')}
         </h1>
-        <p className="hero-kicker mt-4">{t('heroKicker')}</p>
-        <span className="hero-rule" aria-hidden />
-        <p className="max-w-md text-pretty text-[14px] leading-relaxed text-muted sm:text-[15px]">
+        <p className="hero-kicker mt-3 sm:mt-4">{t('heroKicker')}</p>
+        <span className="hero-rule hidden lg:block" aria-hidden />
+        <p className="mt-3 hidden max-w-md text-pretty text-[14px] leading-relaxed text-muted lg:mt-0 lg:block lg:text-[15px]">
           {t('heroBody')}
         </p>
       </motion.div>
 
+      <motion.p
+        className="type-label flex flex-wrap gap-x-3 gap-y-1 tabular-nums text-muted lg:hidden"
+        variants={itemVariants}
+      >
+        <span>
+          {gameCount.toLocaleString()} {t('statGames')}
+        </span>
+        <span aria-hidden>·</span>
+        <span>
+          {shotCount.toLocaleString()} {t('statShots')}
+        </span>
+        {categoryCount > 1 && (
+          <>
+            <span aria-hidden>·</span>
+            <span>
+              {categoryCount.toLocaleString()} {t('statCategories')}
+            </span>
+          </>
+        )}
+      </motion.p>
+
       <motion.ul
         className={cn(
-          'grid list-none gap-5 p-0',
+          'hidden list-none gap-5 p-0 lg:grid',
           categoryCount > 1 ? 'grid-cols-3' : 'grid-cols-2 max-w-sm',
         )}
         variants={itemVariants}
@@ -113,7 +134,7 @@ export function ShelfHero({
         type="button"
         onClick={goRandom}
         disabled={gameIds.length === 0}
-        className="inline-flex h-11 w-fit min-w-[10.5rem] items-center justify-center gap-2 rounded-md border border-accent bg-transparent px-5 text-[14px] font-semibold text-accent transition-colors hover:bg-accent hover:text-[var(--bg)] disabled:cursor-not-allowed disabled:opacity-40"
+        className="cabinet-cta"
         variants={itemVariants}
       >
         {t('randomCover')}

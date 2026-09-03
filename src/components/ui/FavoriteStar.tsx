@@ -31,10 +31,10 @@ export function FavoriteStar({
         onToggle()
       }}
       className={cn(
-        'inline-flex size-8 items-center justify-center rounded border border-[color:var(--cabinet-edge)] bg-bg-elevated/90 text-star shadow-sm transition-opacity duration-200',
+        'favorite-star inline-flex size-8 items-center justify-center rounded border border-[color:var(--cabinet-edge)] bg-bg-elevated/90 text-star shadow-sm transition-opacity duration-200',
         visibility === 'hover' &&
           !active &&
-          'opacity-0 group-hover:opacity-100 focus-visible:opacity-100',
+          'opacity-70 [@media(hover:hover)_and_(pointer:fine)]:opacity-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100 focus-visible:opacity-100',
         visibility === 'hover' && active && 'opacity-100',
         className,
       )}

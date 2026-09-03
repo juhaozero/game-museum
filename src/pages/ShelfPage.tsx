@@ -13,6 +13,7 @@ import { useGalleryRouting } from '@/hooks/useGalleryRouting'
 import { useI18n } from '@/i18n/useI18n'
 import { resolveFeaturedExhibits } from '@/utils/featuredShots'
 import { cn } from '@/utils/cn'
+import { displayGameName } from '@/utils/localized'
 
 type ShelfItem = {
   id: string
@@ -27,7 +28,7 @@ export function ShelfPage() {
   const { filteredGames, isFiltering, stats, allGames, categories, selectedCategory } =
     gallery
   const { navigateToCategory, clearFiltersAndNavigate } = useGalleryRouting()
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
 
   const manifestItems =
     manifestState.status === 'ready' ? manifestState.data.items : []
@@ -74,14 +75,11 @@ export function ShelfPage() {
   const items: ShelfItem[] = useMock
     ? MOCK_SHELF_GAMES.map((g) => ({ ...g }))
     : filteredGames.map((game) => {
-        const favCover = gallery.favoriteScreenshots.find(
-          (s) => s.gameId === game.id,
-        )?.url
         return {
           id: game.id,
-          name: game.name,
+          name: displayGameName(game.name, game.title, locale),
           shotCount: game.shotCount,
-          coverUrl: (favCover ?? game.coverUrl) || undefined,
+          coverUrl: game.coverUrl || undefined,
           href: `/game/${game.id}`,
         }
       })

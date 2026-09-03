@@ -43,15 +43,28 @@ Screenshots/
 
 ```json
 {
-  "category": "RPG",
-  "cover": "boss-fight.jpg"
+  "category": { "zh": "RPG", "en": "RPG" },
+  "cover": "boss-fight.jpg",
+  "name": { "zh": "塞尔达传说", "en": "The Legend of Zelda" },
+  "year": "2017",
+  "blurb": {
+    "zh": "海拉鲁大地上按下的暂停键。",
+    "en": "Pauses pressed across Hyrule."
+  },
+  "captions": {
+    "001.jpg": { "zh": "神庙前夜", "en": "Night before the shrine" }
+  }
 }
 ```
 
 | 字段 | 说明 |
 |------|------|
-| `category` | 覆盖该游戏分类 |
+| `category` | 覆盖该游戏分类。字符串则中英共用；`{ zh, en }` 按界面语言切换。**规范键优先 `zh`**（筛选 / URL / `gameId`），各语言均可被搜索 |
 | `cover` | **封面文件名**（必须是同目录下已有图片） |
+| `name` | 展示/检索译名。字符串则中英共用；`{ zh, en }` 按界面语言切换。**文件夹名始终可被搜索** |
+| `year` | 可选年代（字符串或数字），展墙头 / Lightbox 展签展示 |
+| `blurb` / `note` | 可选柜旁简介（`note` 为 `blurb` 别名），中英结构同 `name` |
+| `captions` | 可选单图展签，键为**文件名**；值同展策文案（字符串或 `{ zh, en }`）。写入每条截图的 `caption`，展墙 / Lightbox / 搜索可用 |
 
 ### 封面选取优先级
 
@@ -59,7 +72,7 @@ Screenshots/
 2. 配置 `coverFileNames` 约定名（默认 `cover.jpg` / `cover.png` 等）  
 3. 该游戏目录内文件名排序后的第一张  
 
-命中后，manifest 对应条目会带 `"isCover": true`，盒墙用其 URL 作封面。
+命中后，manifest 对应条目会带 `"isCover": true`，盒墙用其 URL 作封面。**星标不会改写货架封面**（封面只跟 `isCover`）。
 
 示例目录：
 
@@ -143,6 +156,8 @@ MANIFEST_CONFIG=./my-config.js npm run manifest
 |------|------|
 | 字符串 | 中英界面共用该文案（兼容旧配置） |
 | `{ zh, en }` | 按顶栏语言切换；某语言缺省则回退前端 i18n（标题/提示）或游戏名（展签） |
+
+生成时会把 `featured.captions` / `picks[].caption` **写回**对应 `items[].caption`（若该条尚无 meta 展签），以便展墙与 Lightbox 与 filmstrip 同源。
 
 ```js
 featured: {

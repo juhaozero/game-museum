@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-02T08:51:23.571Z",
+  "generatedAt": "2026-09-03T07:21:24.604Z",
   "cosBaseUrl": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com",
   "cosPathPrefix": "Screenshots",
   "layout": "game-first",
@@ -25,15 +25,28 @@
         "id": "1595f2a77fa67a3d",
         "gameId": "f60ea7b32dc72640",
         "gameName": "艾尔登法环",
+        "gameTitle": {
+          "zh": "艾尔登法环",
+          "en": "Elden Ring"
+        },
         "category": "动作RPG",
+        "categoryTitle": {
+          "zh": "动作RPG",
+          "en": "Action RPG"
+        },
         "fileName": "01.jpg",
         "relativePath": "艾尔登法环/01.jpg",
         "url": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com/Screenshots/%E8%89%BE%E5%B0%94%E7%99%BB%E6%B3%95%E7%8E%AF/01.jpg",
         "isCover": false,
         "caption": {
-          "zh": "艾尔登法环",
-          "en": "Elden Ring"
-        }
+          "zh": "交界地黄昏",
+          "en": "Limgrave dusk"
+        },
+        "gameBlurb": {
+          "zh": "交界地里按暂停的那些黄昏。",
+          "en": "Twilights paused in the Lands Between."
+        },
+        "gameYear": "2022"
       }
     ]
   },
@@ -42,21 +55,51 @@
       "id": "1595f2a77fa67a3d",
       "gameId": "f60ea7b32dc72640",
       "gameName": "艾尔登法环",
+      "gameTitle": {
+        "zh": "艾尔登法环",
+        "en": "Elden Ring"
+      },
       "category": "动作RPG",
+      "categoryTitle": {
+        "zh": "动作RPG",
+        "en": "Action RPG"
+      },
       "fileName": "01.jpg",
       "relativePath": "艾尔登法环/01.jpg",
       "url": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com/Screenshots/%E8%89%BE%E5%B0%94%E7%99%BB%E6%B3%95%E7%8E%AF/01.jpg",
-      "isCover": false
+      "isCover": false,
+      "caption": {
+        "zh": "交界地黄昏",
+        "en": "Limgrave dusk"
+      },
+      "gameBlurb": {
+        "zh": "交界地里按暂停的那些黄昏。",
+        "en": "Twilights paused in the Lands Between."
+      },
+      "gameYear": "2022"
     },
     {
       "id": "37db64224a260caf",
       "gameId": "f60ea7b32dc72640",
       "gameName": "艾尔登法环",
+      "gameTitle": {
+        "zh": "艾尔登法环",
+        "en": "Elden Ring"
+      },
       "category": "动作RPG",
+      "categoryTitle": {
+        "zh": "动作RPG",
+        "en": "Action RPG"
+      },
       "fileName": "cover.jpg",
       "relativePath": "艾尔登法环/cover.jpg",
       "url": "https://image-1316890155.cos.ap-guangzhou.myqcloud.com/Screenshots/%E8%89%BE%E5%B0%94%E7%99%BB%E6%B3%95%E7%8E%AF/cover.jpg",
-      "isCover": true
+      "isCover": true,
+      "gameBlurb": {
+        "zh": "交界地里按暂停的那些黄昏。",
+        "en": "Twilights paused in the Lands Between."
+      },
+      "gameYear": "2022"
     },
     {
       "id": "23dfad4f4bda2bc2",

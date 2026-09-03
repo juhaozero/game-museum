@@ -7,6 +7,11 @@ import { useI18n } from '@/i18n/useI18n'
 import { useGalleryStore } from '@/store/useGalleryStore'
 import { useLightboxStore } from '@/store/useLightboxStore'
 import { publicUiEnv } from '@/utils/publicEnv'
+import {
+  displayGameName,
+  displayCategoryName,
+  pickLocalized,
+} from '@/utils/localized'
 
 /** Level 3 · Lightbox：共享元素放大、键盘切换、侧栏/底部展签 */
 export function Lightbox() {
@@ -17,7 +22,7 @@ export function Lightbox() {
   const next = useLightboxStore((s) => s.next)
   const prev = useLightboxStore((s) => s.prev)
   const reduceMotion = useReducedMotion()
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const titleId = useId()
   const closeRef = useRef<HTMLButtonElement>(null)
   const location = useLocation()
@@ -25,6 +30,14 @@ export function Lightbox() {
   const prevRouteKeyRef = useRef(routeKey)
 
   const item = items[index]
+  const shownGameName = item
+    ? displayGameName(item.gameName, item.gameTitle, locale)
+    : ''
+  const shownCategory = item
+    ? displayCategoryName(item.category, item.categoryTitle, locale)
+    : ''
+  const shownCaption = item ? pickLocalized(item.caption, locale) : undefined
+  const shownBlurb = item ? pickLocalized(item.gameBlurb, locale) : undefined
   const isFavorite = useGalleryStore((s) =>
     item ? s.isFavorite(item.id) : false,
   )
@@ -74,10 +87,20 @@ export function Lightbox() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: reduceMotion ? 0.15 : 0.2 }}
+          transition={{
+            duration: reduceMotion ? 0.12 : 0.28,
+            ease: [0.22, 1, 0.36, 1],
+          }}
           onClick={close}
         >
-          <div className="lightbox-vignette" aria-hidden />
+          <div
+            className={
+              reduceMotion
+                ? 'lightbox-vignette'
+                : 'lightbox-vignette lightbox-settle'
+            }
+            aria-hidden
+          />
           <div className="lightbox-spotlight" aria-hidden />
 
           <div
@@ -89,7 +112,9 @@ export function Lightbox() {
                 {t('lightboxExhibit')}
               </span>
               <span className="lightbox-toolbar-sep mx-2">·</span>
-              <span className="text-[var(--lightbox-fg)]">{item.gameName}</span>
+              <span className="text-[var(--lightbox-fg)]">
+                {shownCaption || shownGameName}
+              </span>
               <span className="lightbox-toolbar-sep mx-2">·</span>
               <span className="lightbox-toolbar-count type-label tabular-nums">
                 {index + 1} / {items.length}
@@ -144,7 +169,10 @@ export function Lightbox() {
                   <motion.div
                     layoutId={`shot-${item.id}`}
                     className="lightbox-frame exhibit-frame max-h-full max-w-full overflow-hidden"
-                    transition={{ duration: 0.22, ease: 'easeOut' }}
+                    transition={{
+                      duration: reduceMotion ? 0.15 : 0.3,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
                   >
                     <TransformWrapper
                       initialScale={1}
@@ -158,7 +186,7 @@ export function Lightbox() {
                       >
                         <img
                           src={item.url}
-                          alt={item.fileName}
+                          alt={shownCaption || item.fileName}
                           className="max-h-[calc(100dvh-11rem)] max-w-full object-contain lg:max-h-[calc(100dvh-8rem)]"
                           draggable={false}
                         />
@@ -185,15 +213,18 @@ export function Lightbox() {
               }
               animate={{ opacity: 1, x: 0 }}
               transition={{
-                duration: 0.24,
-                delay: reduceMotion ? 0 : 0.06,
-                ease: 'easeOut',
+                duration: 0.28,
+                delay: reduceMotion ? 0 : 0.12,
+                ease: [0.22, 1, 0.36, 1],
               }}
             >
               <PlaqueBody
-                gameName={item.gameName}
-                category={item.category}
+                gameName={shownGameName}
+                category={shownCategory}
                 fileName={item.fileName}
+                caption={shownCaption}
+                blurb={shownBlurb}
+                year={item.gameYear}
                 hints
               />
             </motion.aside>
@@ -228,11 +259,19 @@ export function Lightbox() {
                   {index + 1} / {items.length}
                 </p>
               </div>
-              <p className="lightbox-plaque-value mt-1 truncate text-sm">
-                {item.gameName}
+              {shownCaption && (
+                <p className="lightbox-plaque-value mt-1 truncate text-sm">
+                  {shownCaption}
+                </p>
+              )}
+              <p
+                className={`truncate text-sm ${shownCaption ? 'mt-0.5 text-[var(--lightbox-dim)]' : 'lightbox-plaque-value mt-1'}`}
+              >
+                {shownGameName}
               </p>
               <div className="lightbox-dock-meta">
-                <span>{item.category}</span>
+                <span>{shownCategory}</span>
+                {item.gameYear && <span>{item.gameYear}</span>}
                 {publicUiEnv.showImageFileName && (
                   <span className="truncate">{item.fileName}</span>
                 )}
@@ -249,11 +288,17 @@ function PlaqueBody({
   gameName,
   category,
   fileName,
+  caption,
+  blurb,
+  year,
   hints = false,
 }: {
   gameName: string
   category: string
   fileName: string
+  caption?: string
+  blurb?: string
+  year?: string
   hints?: boolean
 }) {
   const { t } = useI18n()
@@ -261,10 +306,38 @@ function PlaqueBody({
   return (
     <>
       <p className="type-label text-accent">{t('lightboxExhibit')}</p>
+      {caption && (
+        <>
+          <p className="lightbox-plaque-label mt-4 text-xs">
+            {t('plaqueCaption')}
+          </p>
+          <p className="lightbox-plaque-value mt-1 text-pretty text-base">
+            {caption}
+          </p>
+        </>
+      )}
       <p className="lightbox-plaque-label mt-4 text-xs">{t('game')}</p>
       <p className="lightbox-plaque-value mt-1 text-pretty">{gameName}</p>
       <p className="lightbox-plaque-label mt-4 text-xs">{t('category')}</p>
       <p className="lightbox-plaque-value mt-1 opacity-90">{category}</p>
+      {year && (
+        <>
+          <p className="lightbox-plaque-label mt-4 text-xs">
+            {t('plaqueYear')}
+          </p>
+          <p className="lightbox-plaque-value mt-1 tabular-nums">{year}</p>
+        </>
+      )}
+      {blurb && (
+        <>
+          <p className="lightbox-plaque-label mt-4 text-xs">
+            {t('plaqueBlurb')}
+          </p>
+          <p className="lightbox-plaque-value mt-1 text-pretty text-sm opacity-90">
+            {blurb}
+          </p>
+        </>
+      )}
       {publicUiEnv.showImageFileName && (
         <>
           <p className="lightbox-plaque-label mt-4 text-xs">{t('file')}</p>

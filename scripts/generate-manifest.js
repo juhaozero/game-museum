@@ -10,7 +10,7 @@ import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { resolveFeatured } from './resolve-featured.js'
+import { resolveFeatured, sanitizeLocalizedText } from './resolve-featured.js'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 
@@ -107,6 +107,64 @@ function resolveCoverFileName(fileNames, meta, coverFileNames) {
   return sorted[0] ?? null
 }
 
+/**
+ * meta.captions: { "01.jpg": "文案" | { zh, en } }
+ * 键按文件名（大小写不敏感）
+ */
+function resolveCaptionMap(metaCaptions) {
+  const map = new Map()
+  if (!metaCaptions || typeof metaCaptions !== 'object' || Array.isArray(metaCaptions)) {
+    return map
+  }
+  for (const [key, value] of Object.entries(metaCaptions)) {
+    const caption = sanitizeLocalizedText(value)
+    if (!caption) continue
+    const base = path.basename(String(key)).toLowerCase()
+    if (base) map.set(base, caption)
+  }
+  return map
+}
+
+function resolveGameBlurb(meta) {
+  return sanitizeLocalizedText(meta.blurb ?? meta.note)
+}
+
+function resolveGameYear(meta) {
+  if (typeof meta.year === 'number' && Number.isFinite(meta.year)) {
+    return String(meta.year)
+  }
+  if (typeof meta.year === 'string' && meta.year.trim()) {
+    return meta.year.trim()
+  }
+  return undefined
+}
+
+/**
+ * 解析分类：字符串或 { zh, en }
+ * 规范名优先 zh → en → 回退；用于筛选 / URL / gameId
+ */
+function resolveCategoryFields(meta, gameName, folderCategory, config) {
+  const raw =
+    meta.category ??
+    config.gameCategories?.[gameName] ??
+    folderCategory ??
+    config.defaultCategory
+
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    const categoryTitle = sanitizeLocalizedText(raw)
+    const canonical =
+      (typeof raw.zh === 'string' && raw.zh.trim()) ||
+      (typeof raw.en === 'string' && raw.en.trim()) ||
+      config.defaultCategory
+    return {
+      category: String(canonical),
+      ...(categoryTitle ? { categoryTitle } : {}),
+    }
+  }
+
+  return { category: String(raw ?? config.defaultCategory) }
+}
+
 function collectFromGameDir({
   category,
   gameName,
@@ -115,8 +173,12 @@ function collectFromGameDir({
   config,
 }) {
   const meta = readGameMeta(gameDir)
-  const resolvedCategory =
-    meta.category ?? config.gameCategories[gameName] ?? category ?? config.defaultCategory
+  const { category: resolvedCategory, categoryTitle } = resolveCategoryFields(
+    meta,
+    gameName,
+    category,
+    config,
+  )
 
   const entries = listFiles(gameDir)
   const imageNames = entries
@@ -128,6 +190,10 @@ function collectFromGameDir({
     meta,
     config.coverFileNames,
   )
+  const gameTitle = sanitizeLocalizedText(meta.name ?? meta.title)
+  const gameBlurb = resolveGameBlurb(meta)
+  const gameYear = resolveGameYear(meta)
+  const captionMap = resolveCaptionMap(meta.captions)
 
   const items = []
 
@@ -141,16 +207,22 @@ function collectFromGameDir({
 
     const gameId = stableId(['game', resolvedCategory, gameName])
     const id = stableId(['shot', relativePath])
+    const caption = captionMap.get(fileName.toLowerCase())
 
     items.push({
       id,
       gameId,
       gameName,
+      ...(gameTitle ? { gameTitle } : {}),
       category: resolvedCategory,
+      ...(categoryTitle ? { categoryTitle } : {}),
       fileName,
       relativePath,
       url,
       isCover: fileName === coverFileName,
+      ...(caption ? { caption } : {}),
+      ...(gameBlurb ? { gameBlurb } : {}),
+      ...(gameYear ? { gameYear } : {}),
     })
   }
 
@@ -216,17 +288,40 @@ function buildManifest(config, items) {
   const { featured, warnings } = resolveFeatured(config.featured, items)
   for (const message of warnings) console.warn(message)
 
-  const gameIds = new Set(items.map((item) => item.gameId))
+  // 把 featured 展签写回主列表，展墙 / Lightbox 与 filmstrip 同源
+  const captionById = new Map()
+  for (const entry of featured?.items ?? []) {
+    if (entry.caption) captionById.set(entry.id, entry.caption)
+  }
+  const featuredCaptions =
+    config.featured?.captions && typeof config.featured.captions === 'object'
+      ? config.featured.captions
+      : {}
+
+  const mergedItems = items.map((item) => {
+    if (item.caption) return item
+    const fromFeaturedItem = captionById.get(item.id)
+    if (fromFeaturedItem) return { ...item, caption: fromFeaturedItem }
+    const fromPath = sanitizeLocalizedText(
+      featuredCaptions[item.relativePath] ??
+        featuredCaptions[item.relativePath.replace(/\\/g, '/')],
+    )
+    return fromPath ? { ...item, caption: fromPath } : item
+  })
+
+  const gameIds = new Set(mergedItems.map((item) => item.gameId))
   return {
     version: 1,
     generatedAt: new Date().toISOString(),
     cosBaseUrl: config.cosBaseUrl,
     cosPathPrefix: config.cosPathPrefix,
     layout: config.layout,
-    itemCount: items.length,
+    itemCount: mergedItems.length,
     gameCount: gameIds.size,
     featured,
-    items: items.sort((a, b) => a.relativePath.localeCompare(b.relativePath, 'zh-CN')),
+    items: mergedItems.sort((a, b) =>
+      a.relativePath.localeCompare(b.relativePath, 'zh-CN'),
+    ),
   }
 }
 

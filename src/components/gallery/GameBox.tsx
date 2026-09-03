@@ -105,7 +105,7 @@ function CoverMedia({
       src={coverUrl}
       alt=""
       fallbackGlyph={title.slice(0, 1)}
-      imgClassName="transition-transform duration-200 ease-out group-hover:scale-[1.06]"
+      imgClassName="transition-opacity duration-200"
     />
   )
 }

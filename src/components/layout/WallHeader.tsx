@@ -1,6 +1,7 @@
 import type { CategorySummary } from '@/types/manifest'
 import { useI18n } from '@/i18n/useI18n'
 import { cn } from '@/utils/cn'
+import { displayCategoryName } from '@/utils/localized'
 
 type WallHeaderProps = {
   categories: CategorySummary[]
@@ -22,7 +23,7 @@ export function WallHeader({
   onSelectCategory,
   onClear,
 }: WallHeaderProps) {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const showFilter = categories.length > 1
 
   return (
@@ -50,7 +51,7 @@ export function WallHeader({
               <WallTab
                 key={cat.name}
                 active={selectedCategory === cat.name}
-                label={cat.name}
+                label={displayCategoryName(cat.name, cat.title, locale)}
                 count={cat.gameCount}
                 onClick={() => onSelectCategory(cat.name)}
               />

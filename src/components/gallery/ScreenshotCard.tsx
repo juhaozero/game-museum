@@ -6,6 +6,7 @@ import { useI18n } from '@/i18n/useI18n'
 import { useGalleryStore } from '@/store/useGalleryStore'
 import { useLightboxStore } from '@/store/useLightboxStore'
 import { cn } from '@/utils/cn'
+import { displayGameName, pickLocalized } from '@/utils/localized'
 
 type ScreenshotCardProps = {
   item: ScreenshotItem
@@ -31,21 +32,25 @@ export function ScreenshotCard({
   exhibitIndex,
   exhibitTotal,
 }: ScreenshotCardProps) {
-  const caption = showGameName
+  const { t, locale } = useI18n()
+  const shownGameName = displayGameName(item.gameName, item.gameTitle, locale)
+  const exhibitCaption = pickLocalized(item.caption, locale)
+  const metaLine = showGameName
     ? showFileName
-      ? `${item.gameName} · ${item.fileName}`
-      : item.gameName
+      ? `${shownGameName} · ${item.fileName}`
+      : shownGameName
     : showFileName
       ? item.fileName
       : null
+  const caption = exhibitCaption || metaLine
   const isFavorite = useGalleryStore((s) => s.isFavorite(item.id))
   const toggleFavorite = useGalleryStore((s) => s.toggleFavorite)
   const openAt = useLightboxStore((s) => s.openAt)
   const reduceMotion = useReducedMotion()
-  const { t } = useI18n()
   const isExhibition = variant === 'exhibition'
   const plaqueIndex = exhibitIndex ?? index + 1
   const plaqueTotal = exhibitTotal ?? items.length
+  const viewLabel = exhibitCaption || item.fileName
 
   const cardBody = (
     <>
@@ -62,7 +67,7 @@ export function ScreenshotCard({
         type="button"
         onClick={() => openAt(items, index)}
         className="relative block w-full cursor-zoom-in overflow-hidden text-left"
-        aria-label={t('viewShot', { name: item.fileName })}
+        aria-label={t('viewShot', { name: viewLabel })}
       >
         <motion.div
           layoutId={`shot-${item.id}`}
@@ -71,10 +76,19 @@ export function ScreenshotCard({
         >
           <ImageWithState
             src={item.url}
-            alt={item.fileName}
-            imgClassName="transition-transform duration-200 ease-out group-hover:scale-[1.03]"
+            alt={viewLabel}
+            imgClassName="transition-opacity duration-200"
           />
         </motion.div>
+
+        {isExhibition && exhibitCaption && (
+          <span className="exhibit-plaque exhibit-plaque--stacked" aria-hidden>
+            <span className="exhibit-plaque-title">{exhibitCaption}</span>
+            {showGameName && (
+              <span className="exhibit-plaque-sub">{shownGameName}</span>
+            )}
+          </span>
+        )}
       </button>
 
       <div className="pointer-events-none absolute right-2 top-2 z-[1]">
@@ -87,9 +101,11 @@ export function ScreenshotCard({
       </div>
 
       {isExhibition ? (
-        <figcaption className="exhibit-caption truncate px-3 py-2 text-[11px] text-muted">
-          {item.fileName}
-        </figcaption>
+        !exhibitCaption && caption ? (
+          <figcaption className="exhibit-caption truncate px-3 py-2 text-[11px] text-muted">
+            {caption}
+          </figcaption>
+        ) : null
       ) : (
         caption && (
           <figcaption className="truncate px-2 py-1.5 text-xs text-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100">
@@ -105,14 +121,13 @@ export function ScreenshotCard({
       layout={!reduceMotion}
       className={cn(
         'group relative',
-        !isExhibition && 'overflow-hidden rounded border border-hairline bg-surface',
+        !isExhibition &&
+          'overflow-hidden rounded border border-hairline bg-surface',
         isExhibition && 'exhibit-card',
         className,
       )}
       initial={
-        isExhibition || reduceMotion
-          ? false
-          : { opacity: 0, y: 16 }
+        isExhibition || reduceMotion ? false : { opacity: 0, y: 16 }
       }
       whileInView={
         isExhibition || reduceMotion ? undefined : { opacity: 1, y: 0 }

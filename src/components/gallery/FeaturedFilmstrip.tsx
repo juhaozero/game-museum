@@ -5,7 +5,7 @@ import { ImageWithState } from '@/components/ui/ImageWithState'
 import { useI18n } from '@/i18n/useI18n'
 import { useLightboxStore } from '@/store/useLightboxStore'
 import { cn } from '@/utils/cn'
-import { pickLocalized } from '@/utils/localized'
+import { pickLocalized, displayGameName } from '@/utils/localized'
 
 type FeaturedFilmstripProps = {
   items: FeaturedExhibitItem[]
@@ -76,10 +76,15 @@ export function FeaturedFilmstrip({
             const indexInPool = pool.findIndex((s) => s.id === item.id)
             const openIndex = indexInPool >= 0 ? indexInPool : 0
             const plaqueCaption = pickLocalized(item.caption, locale)
-            const plaqueTitle = plaqueCaption || item.gameName
+            const shownGameName = displayGameName(
+              item.gameName,
+              item.gameTitle,
+              locale,
+            )
+            const plaqueTitle = plaqueCaption || shownGameName
             const plaqueSub =
-              plaqueCaption && plaqueCaption !== item.gameName
-                ? item.gameName
+              plaqueCaption && plaqueCaption !== shownGameName
+                ? shownGameName
                 : null
 
             return (
@@ -89,7 +94,7 @@ export function FeaturedFilmstrip({
                   className="group filmstrip-shot exhibit-frame"
                   onClick={() => openAt(pool, openIndex)}
                   aria-label={t('viewShot', {
-                    name: plaqueCaption || item.gameName,
+                    name: plaqueCaption || shownGameName,
                   })}
                 >
                   <span
@@ -115,8 +120,8 @@ export function FeaturedFilmstrip({
                     <ImageWithState
                       src={item.url}
                       alt=""
-                      fallbackGlyph={item.gameName.slice(0, 1)}
-                      imgClassName="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.04]"
+                      fallbackGlyph={shownGameName.slice(0, 1)}
+                      imgClassName="h-full w-full object-cover"
                     />
                   </div>
                 </button>

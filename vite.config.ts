@@ -2,7 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { loadEnv } from 'vite'
+import { loadEnv, type Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 import { getBasePathFromEnv } from './src/utils/routeSuffix.ts'
 
@@ -17,8 +17,32 @@ const env = {
 const basePath = getBasePathFromEnv(env)
 const base = basePath || '/'
 
+function resolveSiteCanonical(
+  envMap: Record<string, string | undefined>,
+  routeBase: string,
+): string {
+  const origin = (envMap.PUBLIC_SITE_URL ?? '').trim().replace(/\/+$/, '')
+  if (!origin) return routeBase || '/'
+  return routeBase ? `${origin}${routeBase}` : origin
+}
+
+const siteCanonical = resolveSiteCanonical(env, basePath)
+
 if (process.env.NODE_ENV !== 'test') {
   console.info(`[vite] base = ${base === '/' ? '(root)' : base}`)
+  console.info(`[vite] site canonical = ${siteCanonical}`)
+}
+
+function htmlEnvPlaceholders(): Plugin {
+  return {
+    name: 'html-env-placeholders',
+    transformIndexHtml(html) {
+      const lightFlag = env.PUBLIC_ENABLE_LIGHT_MODE ?? ''
+      return html
+        .replaceAll('%SITE_CANONICAL%', siteCanonical)
+        .replaceAll('%PUBLIC_ENABLE_LIGHT_MODE%', lightFlag)
+    },
+  }
 }
 
 export default defineConfig({
@@ -27,7 +51,7 @@ export default defineConfig({
     outDir: 'museum',
   },
   envPrefix: ['PUBLIC_', 'NEXT_PUBLIC_'],
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), htmlEnvPlaceholders()],
   resolve: {
     alias: {
       '@': path.resolve(rootDir, './src'),

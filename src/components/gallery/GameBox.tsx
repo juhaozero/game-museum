@@ -85,6 +85,12 @@ export function GameBox({
   )
 }
 
+/**
+ * 封面媒体：默认首字占位，支持图片
+ * @param title 
+ * @param coverUrl 
+ * @returns 
+ */
 function CoverMedia({
   title,
   coverUrl,

@@ -167,8 +167,8 @@ Screenshots/
 
 | 变量                               | 默认                    | 说明                           |
 | ---------------------------------- | ----------------------- | ------------------------------ |
-| `PUBLIC_SITE_URL`                  | `http://localhost:5173` | 站点 Origin（预留）            |
-| `PUBLIC_ROUTE_SUFFIX`              | 空                      | 子路径，如 `/museum`           |
+| `PUBLIC_SITE_URL`                  | `http://localhost:5173` | 站点 Origin（canonical / OG；生产改真实域名） |
+| `PUBLIC_ROUTE_SUFFIX`              | 空                      | 子路径，如 `/museum`（会拼进 canonical） |
 | `PUBLIC_SHOW_IMAGE_FILENAME`       | `false`                 | 悬停 / Lightbox 是否显示文件名 |
 | `PUBLIC_SHOW_SCREENSHOT_GAME_NAME` | `true`                  | 收藏等多游戏列表是否显示游戏名 |
 | `PUBLIC_ENABLE_LIGHT_MODE`         | `false`                 | 是否开放浅色模式切换（关闭则强制深色） |

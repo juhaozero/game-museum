@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="8*þZi†">
+  <title>GameShot Museum</title>
+  <defs>
+    <linearGradient id="gm-spine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8c878"/>
+      <stop offset="28%" stop-color="#d4a24a"/>
+      <stop offset="55%" stop-color="#8f6420"/>
+      <stop offset="78%" stop-color="#d4a24a"/>
+      <stop offset="100%" stop-color="#c9a227"/>
+    </linearGradient>
+    <linearGradient id="gm-cabinet" x1="0.2" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#1a2130"/>
+      <stop offset="100%" stop-color="#10151f"/>
+    </linearGradient>
+    <radialGradient id="gm-glow" cx="50%" cy="100%" r="55%">
+      <stop offset="0%" stop-color="#d4a24a" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#d4a24a" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="gm-soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.2" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- •ñr†Ï -->
+  <rect width="128" height="128" rx="24" fill="#0b0e14"/>
+  <ellipse cx="64" cy="108" rx="42" ry="14" fill="url(#gm-glow)"/>
+
+  <!-- a&ÜS -->
+  <rect x="22" y="16" width="84" height="96" rx="10" fill="url(#gm-cabinet)" stroke="#2a3344" stroke-width="2"/>
+
+  <!-- æ§
+¿°Æ¹	 -->
+  <path fill="url(#gm-spine)" d="M22 26c0-5.523 4.477-10 10-10h6v96h-6c-5.523 0-10-4.477-10-10V26Z"/>
+  <rect x="26.5" y="36" width="4" height="56" rx="2" fill="#0b0e14" opacity="0.28"/>
+  <rect x="27.2" y="42" width="1.2" height="8" rx="0.6" fill="#f0d090" opacity="0.7"/>
+  <rect x="27.2" y="58" width="1.2" height="8" rx="0.6" fill="#f0d090" opacity="0.45"/>
+  <rect x="27.2" y="74" width="1.2" height="8" rx="0.6" fill="#f0d090" opacity="0.7"/>
+
+  <!-- UF / *þ— -->
+  <rect x="46" y="34" width="48" height="38" rx="5" fill="#07090e" stroke="#d4a24a" stroke-opacity="0.45" stroke-width="2"/>
+  <rect x="50" y="38" width="40" height="30" rx="3" fill="#0b0e14"/>
+
+  <!-- ‚\.Hero«öô	‚\	 -->
+  <g filter="url(#gm-soft)">
+    <rect x="60" y="46" width="7" height="18" rx="1.5" fill="#d4a24a"/>
+    <rect x="73" y="46" width="7" height="18" rx="1.5" fill="#d4a24a"/>
+  </g>
+
+  <!-- marquee •oa -->
+  <rect x="48" y="90" width="44" height="6" rx="3" fill="#d4a24a"/>
+  <rect x="52" y="88.5" width="36" height="3" rx="1.5" fill="#f0d090" opacity="0.65"/>
+</svg>

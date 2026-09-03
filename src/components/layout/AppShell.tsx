@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom'
+import { DocumentMeta } from '@/components/DocumentMeta'
 import { TopBar } from '@/components/layout/TopBar'
 import { Lightbox } from '@/components/lightbox'
 import { useGalleryFilters } from '@/hooks/useGalleryFilters'
@@ -17,6 +18,7 @@ export function AppShell() {
 
   return (
     <div className="relative flex min-h-full flex-col text-fg transition-colors duration-200">
+      <DocumentMeta gallery={gallery} manifestState={manifestState} />
       <TopBar
         filteredCount={gallery.stats.filteredGameCount}
         isFiltering={gallery.isFiltering}

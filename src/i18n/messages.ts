@@ -8,6 +8,11 @@ const messages = {
     brandLine1: '游戏截图',
     brandLine2: '博物馆',
     brandTagline: '玩家馆藏 · 截图收藏室',
+    metaDescription:
+      '一座私人游戏截图博物馆。封面即展签，每一张定格都是当时按下的暂停键。',
+    metaDescriptionFavorites: '星标截图的高光陈列 — 游戏截图博物馆。',
+    metaDescriptionGame: '{name} 的截图展墙 — 游戏截图博物馆。',
+    metaDescriptionCategory: '{category} 主题展 — 游戏截图博物馆。',
     navGallery: '收藏室',
     navFavorites: '高光展',
     heroTitle: '游戏，被时间按下暂停。',
@@ -85,6 +90,12 @@ const messages = {
     brandLine1: 'GameShot',
     brandLine2: 'Museum',
     brandTagline: 'Player archive · screenshot collection',
+    metaDescription:
+      'A private game screenshot museum. Each cover is a plaque; every frame is a pause I pressed.',
+    metaDescriptionFavorites:
+      'Starred highlights — GameShot Museum.',
+    metaDescriptionGame: '{name} exhibition wall — GameShot Museum.',
+    metaDescriptionCategory: '{category} gallery — GameShot Museum.',
     navGallery: 'Collection',
     navFavorites: 'Highlights',
     heroTitle: 'Games, paused by time.',

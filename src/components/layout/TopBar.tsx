@@ -63,7 +63,51 @@ export function TopBar({
           aria-label={t('siteTitle')}
         >
           <span aria-hidden className="topbar-mark">
-            GM
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 32 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="4"
+                y="3"
+                width="24"
+                height="26"
+                rx="3"
+                fill="currentColor"
+                opacity="0.2"
+              />
+              <path
+                fill="currentColor"
+                d="M4 6c0-1.657 1.343-3 3-3h1.5v26H7c-1.657 0-3-1.343-3-3V6Z"
+              />
+              <rect
+                x="14.5"
+                y="10"
+                width="2.2"
+                height="7"
+                rx="0.5"
+                fill="currentColor"
+              />
+              <rect
+                x="19.3"
+                y="10"
+                width="2.2"
+                height="7"
+                rx="0.5"
+                fill="currentColor"
+              />
+              <rect
+                x="12"
+                y="23"
+                width="12"
+                height="2"
+                rx="1"
+                fill="currentColor"
+              />
+            </svg>
           </span>
           <span className="topbar-brand">
             <span className="topbar-brand-title type-metal">

@@ -28,6 +28,8 @@ export function TopBar({
   const homeUrl = buildShelfUrl(selectedCategory, searchQuery)
   const location = useLocation()
   const searchEnabled = isShelfPath(location.pathname)
+  const shelfNavActive = isShelfPath(location.pathname)
+  const favoritesNavActive = location.pathname.startsWith('/favorites')
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -45,21 +47,25 @@ export function TopBar({
     const onPointer = (e: MouseEvent) => {
       if (!menuRef.current?.contains(e.target as Node)) setMenuOpen(false)
     }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
     document.addEventListener('mousedown', onPointer)
-    return () => document.removeEventListener('mousedown', onPointer)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onPointer)
+      document.removeEventListener('keydown', onKey)
+    }
   }, [menuOpen])
-
-  const navClass = ({ isActive }: { isActive: boolean }) =>
-    cn('topbar-nav', isActive && 'topbar-nav--active')
 
   const toolClass = 'topbar-tool'
 
   return (
-    <header className="topbar relative z-header">
+    <header className="topbar z-header">
       <div className="topbar-inner">
         <Link
           to={homeUrl}
-          className="flex shrink-0 items-center gap-2.5 no-underline"
+          className="flex min-w-0 shrink-0 items-center gap-2.5 no-underline"
           aria-label={t('siteTitle')}
         >
           <span aria-hidden className="topbar-mark">
@@ -70,47 +76,60 @@ export function TopBar({
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
+              {/* 壳体描边 */}
               <rect
-                x="4"
-                y="3"
-                width="24"
-                height="26"
-                rx="3"
-                fill="currentColor"
-                opacity="0.2"
+                x="3"
+                y="8"
+                width="26"
+                height="13"
+                rx="2.5"
+                stroke="currentColor"
+                strokeWidth="1.75"
               />
-              <path
+              {/* 标签底板 */}
+              <rect
+                x="6"
+                y="10.5"
+                width="16.5"
+                height="8"
+                rx="1.25"
                 fill="currentColor"
-                d="M4 6c0-1.657 1.343-3 3-3h1.5v26H7c-1.657 0-3-1.343-3-3V6Z"
+                opacity="0.22"
+              />
+              {/* 暂停：主识别 */}
+              <rect
+                x="10"
+                y="12.25"
+                width="2.75"
+                height="4.5"
+                rx="0.55"
+                fill="currentColor"
               />
               <rect
-                x="14.5"
-                y="10"
-                width="2.2"
-                height="7"
-                rx="0.5"
+                x="15.25"
+                y="12.25"
+                width="2.75"
+                height="4.5"
+                rx="0.55"
                 fill="currentColor"
               />
-              <rect
-                x="19.3"
-                y="10"
-                width="2.2"
-                height="7"
-                rx="0.5"
-                fill="currentColor"
-              />
-              <rect
-                x="12"
-                y="23"
-                width="12"
-                height="2"
-                rx="1"
-                fill="currentColor"
-              />
+              {/* 右侧触点 */}
+              <rect x="24" y="11.5" width="2.5" height="1.4" rx="0.35" fill="currentColor" />
+              <rect x="24" y="13.8" width="2.5" height="1.4" rx="0.35" fill="currentColor" />
+              <rect x="24" y="16.1" width="2.5" height="1.4" rx="0.35" fill="currentColor" />
+              {/* 底部插针 */}
+              <rect x="7" y="22.5" width="2.4" height="3.2" rx="0.45" fill="currentColor" />
+              <rect x="11.2" y="22.5" width="2.4" height="3.2" rx="0.45" fill="currentColor" />
+              <rect x="15.4" y="22.5" width="2.4" height="3.2" rx="0.45" fill="currentColor" />
+              <rect x="19.6" y="22.5" width="2.4" height="3.2" rx="0.45" fill="currentColor" />
+              <rect x="23.8" y="22.5" width="2.4" height="3.2" rx="0.45" fill="currentColor" />
             </svg>
           </span>
           <span className="topbar-brand">
-            <span className="topbar-brand-title type-metal">
+            <span className="topbar-brand-title topbar-brand-title--short type-metal">
+              {t('brandShort')}
+            </span>
+            <span className="topbar-brand-title topbar-brand-title--full type-metal">
               {locale === 'zh'
                 ? `${t('brandLine1')}${t('brandLine2')}`
                 : `${t('brandLine1')} ${t('brandLine2')}`}
@@ -122,43 +141,57 @@ export function TopBar({
         </Link>
 
         <nav className="ml-4 hidden items-center gap-1 md:flex md:ml-8">
-          <NavLink to="/" end className={navClass}>
+          <NavLink
+            to="/"
+            end
+            className={() =>
+              cn('topbar-nav', shelfNavActive && 'topbar-nav--active')
+            }
+            aria-current={shelfNavActive ? 'page' : undefined}
+          >
             {t('navGallery')}
           </NavLink>
-          <NavLink to="/favorites" className={navClass}>
+          <NavLink
+            to="/favorites"
+            className={() =>
+              cn('topbar-nav', favoritesNavActive && 'topbar-nav--active')
+            }
+            aria-current={favoritesNavActive ? 'page' : undefined}
+          >
             {t('navFavorites')}
           </NavLink>
         </nav>
 
         <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
-          <label
-            className={cn(
-              'topbar-search',
-              isFiltering && searchEnabled && 'topbar-search--filtering',
-            )}
-          >
-            <span className="sr-only">{t('searchGames')}</span>
-            <span aria-hidden className="topbar-search-icon">
-              ⌕
-            </span>
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('searchPlaceholder')}
-              disabled={!searchEnabled}
-              className="topbar-search-input"
-            />
-            {isFiltering && searchEnabled && (
-              <button
-                type="button"
-                onClick={handleClear}
-                className="topbar-search-clear"
-              >
-                {t('clear')}
-              </button>
-            )}
-          </label>
+          {searchEnabled && (
+            <label
+              className={cn(
+                'topbar-search',
+                isFiltering && 'topbar-search--filtering',
+              )}
+            >
+              <span className="sr-only">{t('searchGames')}</span>
+              <span aria-hidden className="topbar-search-icon">
+                ⌕
+              </span>
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t('searchPlaceholder')}
+                className="topbar-search-input"
+              />
+              {isFiltering && (
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className="topbar-search-clear"
+                >
+                  {t('clear')}
+                </button>
+              )}
+            </label>
+          )}
 
           {isFiltering && searchEnabled && filteredCount !== undefined && (
             <span className="type-label hidden shrink-0 tabular-nums text-muted xl:inline">
@@ -204,29 +237,36 @@ export function TopBar({
                 <NavLink
                   to="/"
                   end
-                  className={navClass}
+                  className={() =>
+                    cn('topbar-nav', shelfNavActive && 'topbar-nav--active')
+                  }
+                  aria-current={shelfNavActive ? 'page' : undefined}
                   onClick={() => setMenuOpen(false)}
                 >
                   {t('navGallery')}
                 </NavLink>
                 <NavLink
                   to="/favorites"
-                  className={navClass}
+                  className={() =>
+                    cn('topbar-nav', favoritesNavActive && 'topbar-nav--active')
+                  }
+                  aria-current={favoritesNavActive ? 'page' : undefined}
                   onClick={() => setMenuOpen(false)}
                 >
                   {t('navFavorites')}
                 </NavLink>
-                <label className="relative block sm:hidden">
-                  <span className="sr-only">{t('searchGames')}</span>
-                  <input
-                    type="search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={t('searchPlaceholder')}
-                    disabled={!searchEnabled}
-                    className="menu-search-input"
-                  />
-                </label>
+                {searchEnabled && (
+                  <label className="relative block sm:hidden">
+                    <span className="sr-only">{t('searchGames')}</span>
+                    <input
+                      type="search"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={t('searchPlaceholder')}
+                      className="menu-search-input"
+                    />
+                  </label>
+                )}
                 <button
                   type="button"
                   onClick={toggleLocale}

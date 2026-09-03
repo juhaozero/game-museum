@@ -65,8 +65,9 @@ export function GameBox({
           <div
             className={cn(
               'pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-2.5 pb-2.5 pt-10 transition-opacity duration-200',
+              /* 触控常显；精细指针悬停/聚焦再满亮（对齐 FavoriteStar） */
               coverUrl
-                ? 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'
+                ? 'opacity-90 [@media(hover:hover)_and_(pointer:fine)]:opacity-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100 group-focus-within:opacity-100'
                 : 'opacity-100',
             )}
           >

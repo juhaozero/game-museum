@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { useLocation } from 'react-router-dom'
 import { FavoriteStar } from '@/components/ui/FavoriteStar'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { useI18n } from '@/i18n/useI18n'
 import { useGalleryStore } from '@/store/useGalleryStore'
 import { useLightboxStore } from '@/store/useLightboxStore'
@@ -24,6 +25,7 @@ export function Lightbox() {
   const reduceMotion = useReducedMotion()
   const { t, locale } = useI18n()
   const titleId = useId()
+  const dialogRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const location = useLocation()
   const routeKey = `${location.pathname}${location.search}`
@@ -42,6 +44,8 @@ export function Lightbox() {
     item ? s.isFavorite(item.id) : false,
   )
   const toggleFavorite = useGalleryStore((s) => s.toggleFavorite)
+
+  useFocusTrap(isOpen && !!item, dialogRef, closeRef)
 
   useEffect(() => {
     if (prevRouteKeyRef.current === routeKey) return
@@ -68,7 +72,6 @@ export function Lightbox() {
     document.addEventListener('keydown', onKey)
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    closeRef.current?.focus()
 
     return () => {
       document.removeEventListener('keydown', onKey)
@@ -80,6 +83,7 @@ export function Lightbox() {
     <AnimatePresence>
       {isOpen && item && (
         <motion.div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}

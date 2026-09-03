@@ -33,16 +33,17 @@ export function FeaturedFilmstrip({
   const reduceMotion = useReducedMotion()
   const pool = lightboxPool ?? items
 
-  const trackItems = useMemo(() => {
-    if (items.length <= 1) return items
-    return [...items, ...items]
-  }, [items])
+  const isWide = variant === 'wide'
+  const scrollThreshold = isWide ? 2 : 3
+  const canScroll =
+    items.length >= scrollThreshold && !reduceMotion
+  const trackItems = useMemo(
+    () => (canScroll ? [...items, ...items] : items),
+    [canScroll, items],
+  )
 
   if (items.length === 0) return null
 
-  const isWide = variant === 'wide'
-  const scrollThreshold = isWide ? 2 : 3
-  const canScroll = items.length >= scrollThreshold && !reduceMotion
   const stripTitle = pickLocalized(title, locale) || t('featuredTitle')
   const stripHint = pickLocalized(hint, locale) || t('featuredHint')
 
@@ -73,6 +74,7 @@ export function FeaturedFilmstrip({
           )}
         >
           {trackItems.map((item, i) => {
+            const isClone = canScroll && i >= items.length
             const indexInPool = pool.findIndex((s) => s.id === item.id)
             const openIndex = indexInPool >= 0 ? indexInPool : 0
             const plaqueCaption = pickLocalized(item.caption, locale)
@@ -88,14 +90,23 @@ export function FeaturedFilmstrip({
                 : null
 
             return (
-              <li key={`${item.id}-${i}`} className="filmstrip-item">
+              <li
+                key={`${item.id}-${i}`}
+                className="filmstrip-item"
+                aria-hidden={isClone || undefined}
+              >
                 <button
                   type="button"
                   className="group filmstrip-shot exhibit-frame"
                   onClick={() => openAt(pool, openIndex)}
-                  aria-label={t('viewShot', {
-                    name: plaqueCaption || shownGameName,
-                  })}
+                  tabIndex={isClone ? -1 : undefined}
+                  aria-label={
+                    isClone
+                      ? undefined
+                      : t('viewShot', {
+                          name: plaqueCaption || shownGameName,
+                        })
+                  }
                 >
                   <span
                     className={cn(

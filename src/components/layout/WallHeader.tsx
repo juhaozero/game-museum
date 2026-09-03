@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import type { CategorySummary } from '@/types/manifest'
 import { useI18n } from '@/i18n/useI18n'
 import { cn } from '@/utils/cn'
@@ -25,6 +26,31 @@ export function WallHeader({
 }: WallHeaderProps) {
   const { t, locale } = useI18n()
   const showFilter = categories.length > 1
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  const [edge, setEdge] = useState({ start: false, end: false })
+
+  useEffect(() => {
+    if (!showFilter) return
+    const el = scrollerRef.current
+    if (!el) return
+
+    const update = () => {
+      const max = el.scrollWidth - el.clientWidth
+      setEdge({
+        start: el.scrollLeft > 4,
+        end: max > 4 && el.scrollLeft < max - 4,
+      })
+    }
+
+    update()
+    el.addEventListener('scroll', update, { passive: true })
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => {
+      el.removeEventListener('scroll', update)
+      ro.disconnect()
+    }
+  }, [showFilter, categories.length, selectedCategory])
 
   return (
     <div className="wall-header mb-4 lg:mb-5">
@@ -38,25 +64,38 @@ export function WallHeader({
         </p>
 
         {showFilter && (
-          <nav
-            className="flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            aria-label={t('categories')}
+          <div
+            className={cn(
+              'wall-header-tabs min-w-0 flex-1',
+              edge.start && 'wall-header-tabs--overflow-start',
+              edge.end && 'wall-header-tabs--overflow-end',
+            )}
           >
-            <WallTab
-              active={selectedCategory === null}
-              label={t('allCategories')}
-              onClick={() => onSelectCategory(null)}
-            />
-            {categories.map((cat) => (
-              <WallTab
-                key={cat.name}
-                active={selectedCategory === cat.name}
-                label={displayCategoryName(cat.name, cat.title, locale)}
-                count={cat.gameCount}
-                onClick={() => onSelectCategory(cat.name)}
-              />
-            ))}
-          </nav>
+            <div
+              ref={scrollerRef}
+              className="wall-header-tabs-scroller flex items-center gap-0.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              <nav
+                className="flex items-center gap-0.5"
+                aria-label={t('categories')}
+              >
+                <WallTab
+                  active={selectedCategory === null}
+                  label={t('allCategories')}
+                  onClick={() => onSelectCategory(null)}
+                />
+                {categories.map((cat) => (
+                  <WallTab
+                    key={cat.name}
+                    active={selectedCategory === cat.name}
+                    label={displayCategoryName(cat.name, cat.title, locale)}
+                    count={cat.gameCount}
+                    onClick={() => onSelectCategory(cat.name)}
+                  />
+                ))}
+              </nav>
+            </div>
+          </div>
         )}
 
         <div className="ml-auto flex shrink-0 items-center gap-3">
@@ -93,6 +132,7 @@ function WallTab({
     <button
       type="button"
       onClick={onClick}
+      aria-current={active ? 'true' : undefined}
       className={cn('wall-header-tab', active && 'wall-header-tab--active')}
     >
       {label}

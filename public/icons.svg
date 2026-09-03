@@ -1,37 +1,47 @@
 <svg xmlns="http://www.w3.org/2000/svg">
-  <!--
-    Arcade Archive · 品牌符号精灵
-    用法: <svg><use href="/icons.svg#brand-mark" /></svg>
-  -->
+  <!-- Arcade Archive · 横置卡带 + 暂停（小尺寸可读） -->
 
-  <!-- 彩色完整标：柜体 + 铜脊 + 暂停 + 底灯 -->
   <symbol id="brand-mark" viewBox="0 0 32 32">
     <rect width="32" height="32" rx="6" fill="#0b0e14"/>
-    <rect x="5" y="4" width="22" height="24" rx="3" fill="#141925" stroke="#2a3344" stroke-width="1"/>
-    <path fill="#d4a24a" d="M5 7c0-1.657 1.343-3 3-3h1.2v24H8c-1.657 0-3-1.343-3-3V7Z"/>
-    <rect x="6.15" y="9" width="1.1" height="14" rx="0.55" fill="#0b0e14" opacity="0.35"/>
-    <rect x="12" y="8.5" width="12" height="9.5" rx="1.5" fill="#07090e" stroke="#d4a24a" stroke-opacity="0.5" stroke-width="1"/>
-    <rect x="15.2" y="10.8" width="2" height="5" rx="0.45" fill="#d4a24a"/>
-    <rect x="18.8" y="10.8" width="2" height="5" rx="0.45" fill="#d4a24a"/>
-    <rect x="11.5" y="23.2" width="13" height="2.2" rx="1.1" fill="#d4a24a"/>
-    <rect x="12.5" y="22.6" width="11" height="1.2" rx="0.6" fill="#f0d090" opacity="0.55"/>
+    <rect x="3" y="8" width="26" height="13" rx="2.5" fill="#1a2130"/>
+    <rect x="3" y="8" width="26" height="13" rx="2.5" fill="none" stroke="#d4a24a" stroke-width="1.5"/>
+    <rect x="6" y="10.5" width="16.5" height="8" rx="1.25" fill="#07090e"/>
+    <rect x="10" y="12.25" width="2.75" height="4.5" rx="0.55" fill="#d4a24a"/>
+    <rect x="15.25" y="12.25" width="2.75" height="4.5" rx="0.55" fill="#d4a24a"/>
+    <rect x="24" y="11.5" width="2.5" height="1.4" rx="0.35" fill="#d4a24a"/>
+    <rect x="24" y="13.8" width="2.5" height="1.4" rx="0.35" fill="#d4a24a"/>
+    <rect x="24" y="16.1" width="2.5" height="1.4" rx="0.35" fill="#d4a24a"/>
+    <rect x="7" y="22.5" width="2.4" height="3.2" rx="0.45" fill="#d4a24a"/>
+    <rect x="11.2" y="22.5" width="2.4" height="3.2" rx="0.45" fill="#d4a24a"/>
+    <rect x="15.4" y="22.5" width="2.4" height="3.2" rx="0.45" fill="#d4a24a"/>
+    <rect x="19.6" y="22.5" width="2.4" height="3.2" rx="0.45" fill="#d4a24a"/>
+    <rect x="23.8" y="22.5" width="2.4" height="3.2" rx="0.45" fill="#d4a24a"/>
   </symbol>
 
-  <!-- 单色版：currentColor，便于顶栏 / 按钮 -->
   <symbol id="brand-mark-mono" viewBox="0 0 32 32" fill="currentColor">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M6 4a4 4 0 0 0-4 4v16a4 4 0 0 0 4 4h20a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4H6Zm0 2h3v20H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Zm5 0h15a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H11V6Zm3.5 4.5a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h1.25a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1H14.5Zm5.75 0a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1H21.5a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-1.25ZM13 22.25a1 1 0 0 0 0 2h10a1 1 0 1 0 0-2H13Z"/>
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M4 9.5A2.5 2.5 0 0 1 6.5 7h19A2.5 2.5 0 0 1 28 9.5v10a2.5 2.5 0 0 1-2.5 2.5h-19A2.5 2.5 0 0 1 4 19.5v-10ZM6.5 9a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h19a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-19Zm2 2.25a.75.75 0 0 0-.75.75v5.5c0 .414.336.75.75.75H20a.75.75 0 0 0 .75-.75v-5.5a.75.75 0 0 0-.75-.75H8.5ZM11.25 13a.75.75 0 0 1 .75.75v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 .75-.75Zm4.5 0a.75.75 0 0 1 .75.75v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 .75-.75ZM23.25 12a.6.6 0 0 1 .6-.6h1.3a.6.6 0 0 1 .6.6v1a.6.6 0 0 1-.6.6h-1.3a.6.6 0 0 1-.6-.6v-1Zm0 3.25a.6.6 0 0 1 .6-.6h1.3a.6.6 0 0 1 .6.6v1a.6.6 0 0 1-.6.6h-1.3a.6.6 0 0 1-.6-.6v-1Zm0 3.25a.6.6 0 0 1 .6-.6h1.3a.6.6 0 0 1 .6.6v1a.6.6 0 0 1-.6.6h-1.3a.6.6 0 0 1-.6-.6v-1ZM7.5 23.25c0-.414.336-.75.75-.75h1.5c.414 0 .75.336.75.75v2.5a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1-.75-.75v-2.5Zm5.25-.75c.414 0 .75.336.75.75v2.5a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1-.75-.75v-2.5c0-.414.336-.75.75-.75h1.5Zm4.5 0c.414 0 .75.336.75.75v2.5a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1-.75-.75v-2.5c0-.414.336-.75.75-.75h1.5Zm4.5 0c.414 0 .75.336.75.75v2.5a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1-.75-.75v-2.5c0-.414.336-.75.75-.75h1.5Zm4.5 0c.414 0 .75.336.75.75v2.5a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1-.75-.75v-2.5c0-.414.336-.75.75-.75h1.5Z"
+    />
   </symbol>
 
-  <!-- 仅暂停键：可用于空态 / 加载 -->
   <symbol id="pause-mark" viewBox="0 0 24 24" fill="currentColor">
     <rect x="6" y="5" width="4.5" height="14" rx="1.2"/>
     <rect x="13.5" y="5" width="4.5" height="14" rx="1.2"/>
   </symbol>
 
-  <!-- 脊线灯条：极简识别符 -->
-  <symbol id="spine-lamp" viewBox="0 0 24 24" fill="none">
-    <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.5"/>
-    <rect x="3" y="3" width="3.5" height="18" rx="1" fill="currentColor"/>
-    <rect x="9" y="17.5" width="10" height="2" rx="1" fill="currentColor"/>
+  <symbol id="fc-cart-flat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+    <rect x="2.5" y="5" width="19" height="11" rx="2"/>
+    <rect x="5" y="7.25" width="10.5" height="6.5" rx="1"/>
+    <path d="M9 8.75v3.5M12.25 8.75v3.5"/>
+    <path d="M6 18.25v2.25M9.5 18.25v2.25M13 18.25v2.25M16.5 18.25v2.25"/>
+  </symbol>
+
+  <symbol id="fc-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
+    <rect x="2.5" y="4.5" width="19" height="12" rx="2"/>
+    <rect x="5" y="7" width="10.5" height="7" rx="1"/>
+    <path d="M9 8.5v4M12.25 8.5v4"/>
+    <path d="M6.5 18.5v2M10 18.5v2M13.5 18.5v2M17 18.5v2"/>
   </symbol>
 </svg>

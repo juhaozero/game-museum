@@ -87,7 +87,7 @@ export function ShelfPage() {
   const poolIds = (useMock ? MOCK_SHELF_GAMES : filteredGames).map((g) => g.id)
 
   return (
-    <>
+    <div className="mx-auto w-full max-w-[96rem]">
       {hasFeatured && (
         <FeaturedFilmstrip
           items={featuredExhibits.items}
@@ -165,6 +165,7 @@ export function ShelfPage() {
                     return game.href ? (
                       <Link
                         to={game.href}
+                        aria-label={game.name}
                         className="relative z-[1] block no-underline outline-offset-4"
                       >
                         {box}
@@ -180,6 +181,6 @@ export function ShelfPage() {
           )}
         </div>
       </div>
-    </>
+    </div>
   )
 }

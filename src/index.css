@@ -27,7 +27,6 @@
   --z-content: 10;
   --z-header: 20;
   --z-dropdown: 30;
-  --z-dock: 40;
   --z-lightbox: 50;
 }
 
@@ -234,9 +233,6 @@
   .z-dropdown {
     z-index: var(--z-dropdown);
   }
-  .z-dock {
-    z-index: var(--z-dock);
-  }
   .z-lightbox {
     z-index: var(--z-lightbox);
   }
@@ -250,12 +246,15 @@
       0 8px 24px var(--contact-shadow);
   }
 
-  /* —— 方案 B · 薄品牌灯箱顶栏 —— */
+  /* —— 方案 B · 薄品牌灯箱顶栏（sticky，长货架不丢导航） —— */
   .topbar {
-    position: relative;
+    position: sticky;
+    top: 0;
     z-index: var(--z-header);
     border-bottom: 1px solid var(--cabinet-edge);
-    background: color-mix(in srgb, var(--cabinet) 88%, transparent);
+    background: color-mix(in srgb, var(--cabinet) 86%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
   }
 
   /* Ambient · 全站唯一持续呼吸灯 */
@@ -275,29 +274,52 @@
   }
 
   .topbar-brand {
-    display: none;
+    display: flex;
     min-width: 0;
-    flex-direction: column;
-    gap: 0.15rem;
+    flex-direction: row;
+    align-items: center;
   }
 
-  @media (min-width: 420px) {
-    .topbar-brand {
-      display: flex;
-    }
-  }
-
+  /* 极小屏：单行缩写品牌，避免双行挤顶栏 */
   .topbar-brand-title {
     font-family: var(--font-display);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.06em;
-    line-height: 1.25;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: min(46vw, 9.5rem);
+  }
+
+  .topbar-brand-title--full {
+    display: none;
+  }
+
+  .topbar-brand-title--short {
+    display: block;
   }
 
   @media (min-width: 640px) {
+    .topbar-brand {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.15rem;
+    }
+
     .topbar-brand-title {
       font-size: 15px;
+      max-width: none;
+      line-height: 1.25;
+    }
+
+    .topbar-brand-title--full {
+      display: block;
+    }
+
+    .topbar-brand-title--short {
+      display: none;
     }
   }
 
@@ -331,17 +353,20 @@
 
   .topbar-mark {
     display: inline-flex;
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 1.85rem;
+    height: 1.85rem;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
+    border-radius: 5px;
     background: var(--accent);
     color: var(--bg);
   }
 
   .topbar-mark svg {
     display: block;
+    width: 1.15rem;
+    height: 1.15rem;
   }
 
   .topbar-nav {
@@ -590,14 +615,6 @@
     font-size: 13px;
   }
 
-  .shelf-search {
-    width: 100%;
-  }
-
-  .shelf-search-slot input[type='search']::-webkit-search-cancel-button {
-    -webkit-appearance: none;
-  }
-
   /* 字距：中文禁止负 tracking；标题收、标签开，拉开层次 */
   .type-label {
     font-family: var(--font-sans);
@@ -813,25 +830,56 @@
   }
 }
 
-.shelf-search--console {
-  padding: 1rem 1.1rem 1.1rem;
-  border: 1px solid var(--cabinet-edge);
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--cabinet) 92%, transparent);
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--accent) 8%, transparent),
-    0 10px 28px var(--contact-shadow);
-}
-
-.shelf-search--console .shelf-search-slot input {
-  min-height: 2.75rem;
-}
-
 /* 展墙头：分类灯条 + 计数（与封面墙同构图） */
 .wall-header {
   position: relative;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--hairline);
+}
+
+.wall-header-tabs {
+  position: relative;
+  min-width: 0;
+}
+
+.wall-header-tabs::before,
+.wall-header-tabs::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1.25rem;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 160ms ease-out;
+}
+
+.wall-header-tabs::before {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--bg) 92%, transparent),
+    transparent
+  );
+}
+
+.wall-header-tabs::after {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--bg) 92%, transparent),
+    transparent
+  );
+}
+
+.wall-header-tabs--overflow-start::before,
+.wall-header-tabs--overflow-end::after {
+  opacity: 1;
+}
+
+.wall-header-tabs-scroller {
+  min-width: 0;
 }
 
 .wall-header-tab {

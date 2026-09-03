@@ -7,6 +7,7 @@ const messages = {
     siteTitle: '游戏截图博物馆',
     brandLine1: '游戏截图',
     brandLine2: '博物馆',
+    brandShort: '截图博物馆',
     brandTagline: '玩家馆藏 · 截图收藏室',
     metaDescription:
       '一座私人游戏截图博物馆。封面即展签，每一张定格都是当时按下的暂停键。',
@@ -89,6 +90,7 @@ const messages = {
     siteTitle: 'GameShot Museum',
     brandLine1: 'GameShot',
     brandLine2: 'Museum',
+    brandShort: 'GameShot',
     brandTagline: 'Player archive · screenshot collection',
     metaDescription:
       'A private game screenshot museum. Each cover is a plaque; every frame is a pause I pressed.',

@@ -1,17 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="游戏截图博物馆">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="GameShot Museum">
   <title>GameShot Museum</title>
-  <!-- Arcade Archive mark · 16–32px favicon：柜体 + 铜脊线 + 暂停 + 底灯 -->
+  <!-- 横置卡带 + 暂停：小尺寸高对比剪影 -->
   <rect width="32" height="32" rx="6" fill="#0b0e14"/>
-  <rect x="5" y="4" width="22" height="24" rx="3" fill="#141925" stroke="#2a3344" stroke-width="1"/>
-  <!-- 左侧卡带脊线 -->
-  <path fill="#d4a24a" d="M5 7c0-1.657 1.343-3 3-3h1.2v24H8c-1.657 0-3-1.343-3-3V7Z"/>
-  <rect x="6.15" y="9" width="1.1" height="14" rx="0.55" fill="#0b0e14" opacity="0.35"/>
-  <!-- 截图框 -->
-  <rect x="12" y="8.5" width="12" height="9.5" rx="1.5" fill="#07090e" stroke="#d4a24a" stroke-opacity="0.5" stroke-width="1"/>
-  <!-- 暂停键：时间按下暂停 -->
-  <rect x="15.2" y="10.8" width="2" height="5" rx="0.45" fill="#d4a24a"/>
-  <rect x="18.8" y="10.8" width="2" height="5" rx="0.45" fill="#d4a24a"/>
-  <!-- marquee 底灯 -->
-  <rect x="11.5" y="23.2" width="13" height="2.2" rx="1.1" fill="#d4a24a"/>
-  <rect x="12.5" y="22.6" width="11" height="1.2" rx="0.6" fill="#f0d090" opacity="0.55"/>
+  <!-- 壳体 -->
+  <rect x="3" y="8" width="26" height="13" rx="2.5" fill="#1a2130"/>
+  <rect x="3" y="8" width="26" height="13" rx="2.5" fill="none" stroke="#d4a24a" stroke-width="1.5"/>
+  <!-- 标签区 -->
+  <rect x="6" y="10.5" width="16.5" height="8" rx="1.25" fill="#07090e"/>
+  <!-- 暂停（主识别） -->
+  <rect x="10" y="12.25" width="2.75" height="4.5" rx="0.55" fill="#d4a24a"/>
+  <rect x="15.25" y="12.25" width="2.75" height="4.5" rx="0.55" fill="#d4a24a"/>
+  <!-- 右侧触点块 -->
+  <rect x="24" y="11.5" width="2.5" height="1.4" rx="0.35" fill="#d4a24a"/>
+  <rect x="24" y="13.8" width="2.5" height="1.4" rx="0.35" fill="#d4a24a"/>
+  <rect x="24" y="16.1" width="2.5" height="1.4" rx="0.35" fill="#d4a24a"/>
+  <!-- 底部插针（加粗、减量） -->
+  <rect x="7" y="22.5" width="2.4" height="3.2" rx="0.45" fill="#d4a24a"/>
+  <rect x="11.2" y="22.5" width="2.4" height="3.2" rx="0.45" fill="#d4a24a"/>
+  <rect x="15.4" y="22.5" width="2.4" height="3.2" rx="0.45" fill="#d4a24a"/>
+  <rect x="19.6" y="22.5" width="2.4" height="3.2" rx="0.45" fill="#d4a24a"/>
+  <rect x="23.8" y="22.5" width="2.4" height="3.2" rx="0.45" fill="#d4a24a"/>
 </svg>

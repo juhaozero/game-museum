@@ -41,13 +41,6 @@ export function FavoritesPage() {
           {t('backToShelf')}
         </Link>
 
-        <p className="type-label mb-2 inline-flex items-center gap-2 text-accent">
-          <span
-            aria-hidden
-            className="inline-block size-1.5 rounded-[1px] bg-accent shadow-[0_0_10px_var(--shelf-glow)]"
-          />
-          {t('navFavorites')}
-        </p>
         <h1 className="type-hero text-balance text-2xl text-fg sm:text-3xl">
           {t('myFavorites')}
         </h1>

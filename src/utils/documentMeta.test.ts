@@ -18,7 +18,7 @@ describe('applyDocumentMeta', () => {
       url: 'https://ex.com/museum',
       image: 'https://cdn.ex.com/cover.jpg',
       locale: 'zh',
-      siteName: '游戏截图博物馆',
+      siteName: '游戏截图收藏架',
     })
 
     expect(document.title).toBe('测试馆')

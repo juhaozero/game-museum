@@ -55,7 +55,7 @@ export function applyDocumentMeta(input: DocumentMetaInput) {
     image,
     type = 'website',
     locale = 'zh',
-    siteName = 'GameShot Museum',
+    siteName = 'GameShot Shelf',
   } = input
 
   document.title = title

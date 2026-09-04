@@ -3,11 +3,11 @@ import { translate } from '@/i18n/messages'
 
 describe('translate', () => {
   it('returns zh site title by default locale', () => {
-    expect(translate('zh', 'siteTitle')).toBe('游戏截图博物馆')
+    expect(translate('zh', 'siteTitle')).toBe('游戏截图收藏架')
   })
 
   it('returns en site title', () => {
-    expect(translate('en', 'siteTitle')).toBe('GameShot Museum')
+    expect(translate('en', 'siteTitle')).toBe('GameShot Shelf')
   })
 
   it('interpolates values', () => {
